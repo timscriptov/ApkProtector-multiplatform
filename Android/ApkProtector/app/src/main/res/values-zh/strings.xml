@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- by  -->
+    <string name="app_name">Apk守护者</string>
+    <string name="select_apk">选择APK</string>
+    <string name="apk_path_to_recompile">Apk地址</string>
+    <string name="browse">浏览</string>
+    <string name="projects">项目</string>
+    <string name="create_keystore">创建私匙库</string>
+    <string name="about">关于</string>
+    <string name="exit">退出</string>
+
+    <string name="version">版本&#160;</string>
+    <string name="this_package_has_already_been_obfuscated_title">此安装包已经被混淆</string>
+    <string name="this_application_has_already_been_obfuscated_message">此安装包已经被混淆过且储存在SD卡. 你确定要继续覆盖操作吗?</string>
+    <string name="cancel">取消</string>
+
+    <string name="protected_apps">已加密应用</string>
+    <string name="file_not_found">ّ文件不存在!</string>
+
+    <string name="do_you_want_to_minimize_or_exit_message">你真的要退出吗?</string>
+    <string name="minimize">最小化</string>
+
+    <string name="obfuscate_complete">混淆完成!</string>
+    <string name="obfuscate_fail">混淆失败!</string>
+    <string name="show">显示</string>
+    <string name="apk_is_already_protected">此安装包已经被加密!</string>
+
+    <string name="choose_method_title">选择方法</string>
+    <string name="pick_from_sdcard">从SD卡选择APK</string>
+    <string name="pick_from_installed">从已安装应用中选择</string>
+    <string name="read_carefully_title">请仔细阅读</string>
+    <string name="warning_message">此操作将会帮你生成一个加密后的安装包  警告: 加密后的安装包可能会闪退, 显示错误报告或者正常运行. *还有一些APK没法混淆。</string>
+    <string name="invalid_apk_file">安装包已损坏!</string>
+    <string name="invalid_file">无效文件!</string>
+    <string name="save">保存</string>
+
+    <string name="alias">别名</string>
+    <string name="password">密码</string>
+    <string name="commom_name">常用名称</string>
+    <string name="organization">组织</string>
+    <string name="organization_unit">组织单位</string>
+    <string name="country">国家</string>
+    <string name="locality">地区</string>
+    <string name="keystore_already_exist">私匙库文件早已存在!</string>
+    <string name="creating_keystore_complete">私匙库创建完成!</string>
+
+    <string name="keystore_path">私匙库地址</string>
+    <string name="keystore_password">私匙库密码</string>
+    <string name="select_keystore">选择私匙库</string>
+    <string name="custom_keystore">自定义私匙库</string>
+    <string name="choose">选择</string>
+
+    <string name="select">选择</string>
+    <string name="error_vending">错误</string>
+    <string name="vending_message">你安装了没有经过授权的APK守护者。\n\n请在Google Play上购买授权版本。</string>
+    <string name="create">创建</string>
+    <string name="invalid_or_empty_info">信息无效或者为空</string>
+    <string name="about_not_found_email">没有安装邮箱软件</string>
+
+    <string name="settings">Settings</string>
+    <string name="warning">Warning</string>
+    <string name="different_signature">The apk and the installed application\'s signature information is inconsistent, whether to uninstall the application first?</string>
+    <string name="apk_deleted">\" deleted!\"</string>
+    <string name="title_pref_apk_signing">APK signer</string>
+    <string name="msg_pref_custom_keystore">Use a custom keystore file for signing APKs during build</string>
+    <string name="title_pref_custom_keystore">Custom keystore</string>
+    <string name="scoped_storage_title">Android 11 R changes</string>
+    <string name="scoped_storage_msg">Android 11 introduce a new file-management way called \"Scoped Storage\". You need to grant a special permission!</string>
+    <string name="protect_key_msg">Dexs custom encryption key</string>
+    <string name="protect_key_title">Protect Key</string>
+    <string name="about_msg1">ApkProtector is the protector and obfuscator for Android platforms. It helps you secure your applications and libraries against unauthorized or illegal use, reverse engineering, and cracking.</string>
+    <string name="about_msg2"><![CDATA[<br><i>PS: The application from Google Play does not support Android 11 and higher! It is recommended to download the application from AppGallery or Telegram</i>]]></string>
+    <string name="about_copyright"><![CDATA[<br>© Copyright 2019-2020 Тимашков Иван]]></string>
+    <string name="dex_protect">Dex Protect</string>
+    <string name="encrypt_resources">Encrypt Resources</string>
+    <string name="sign_apk">Sign Apk</string>
+    <string name="community">Community</string>
+    <string name="pref_msg_zipaligner">Enable to optimize the app</string>
+    <string name="pref_title_alignment">Alignment</string>
+    <string name="pref_msg_alignment">Alignment (in bytes) for uncompressed entries</string>
+    <string name="pref_msg_force">Overwrite output if it exists, fail otherwise.</string>
+    <string name="pref_msg_zopfli">Recompress compressed entries with more efficient algorithm. Copy compressed entries as-is, and unaligned, otherwise</string>
+    <string name="pref_msg_page_align_shared_libs">Align .so files to 4096 and other files to alignment, or all files to alignTo if false</string>
+    <string name="pref_title_dex_opt">Dexer optimizations</string>
+    <string name="pref_msg_dex_opt">Enable dexer optimizations. This will make the Apps run faster but cause longer build times</string>
+    <string name="pref_title_ignore_classes">Ignore Classes</string>
+    <string name="pref_msg_ignore_classes">Ignoring common open sourced libraries</string>
+    <string name="pref_title_old_dexloader">Old Dexloader</string>
+    <string name="pref_msg_old_dexloader">Use old dex/class loader</string>
+
+</resources>
