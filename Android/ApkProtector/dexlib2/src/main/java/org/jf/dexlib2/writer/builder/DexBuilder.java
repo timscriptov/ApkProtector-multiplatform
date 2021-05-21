@@ -44,6 +44,9 @@ import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.Field;
+import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.reference.CallSiteReference;
@@ -97,6 +100,7 @@ import org.jf.dexlib2.writer.util.StaticInitializerUtil;
 import org.jf.util.ExceptionWithContext;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;

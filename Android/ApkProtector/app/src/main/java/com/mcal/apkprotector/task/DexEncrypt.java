@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
+import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileCustomUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.StringUtils;
@@ -84,15 +85,23 @@ public class DexEncrypt {
         if (!assets.exists()) {
             assets.mkdir();
         }
-        File folder = new File(xpath + "/gen/assets/dex");
+        File folder = new File(xpath + "/gen/assets/" + Preferences.getDexFolderName());
         if (!folder.exists()) {
             folder.mkdir();
         }
         FileInputStream is = new FileInputStream(xpath + (!Preferences.isOptimizeDexBoolean() ? "/gen/" : "/gen/assets/sec-dex/") + name);
-        FileOutputStream os = new FileOutputStream(xpath + "/gen/assets/dex/" + name.replace("classes", name.equals("classes.dex") ? "classes-v1" : "classes-v").replace("dex", "bin"));
+        FileOutputStream os = new FileOutputStream(xpath + "/gen/assets/" + Preferences.getDexFolderName() + File.separator + getRandomClassesName(name));
         isx = new DeflaterInputStream(is);
         exfr(isx, os);
         isx.close();
+    }
+
+    public static String getRandomClassesName(String name) {
+        if (Preferences.getRandomName()) {
+            return name.replace("classes", name.equals("classes.dex") ? CommonUtils.getRandomString(8) : CommonUtils.getRandomString(8)).replace("dex", Preferences.getReplaceDexName());
+        } else {
+            return name.replace("classes", name.equals("classes.dex") ? "classes-v1" : "classes-v").replace("dex", "bin");
+        }
     }
 
     private static void opt_dex(Context context, String name) {

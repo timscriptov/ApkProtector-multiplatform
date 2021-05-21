@@ -344,4 +344,39 @@ public final class Preferences {
     public static boolean getSignatureV4() {
         return preferences.getBoolean("signatureV4", false);
     }
+
+
+
+
+
+
+
+
+    public static boolean getRandomName() {
+        return preferences.getBoolean("randomName", false);
+    }
+
+    public static String getDexFolderName() {
+        if (getRandomName()) {
+            return preferences.getString("dexFolderName", "dex");
+        } else {
+            return "dex";
+        }
+    }
+
+    public static String getReplaceDexName() {
+        if (getRandomName()) {
+            return preferences.getString("replaceDexName", "bin");
+        } else {
+            return "bin";
+        }
+    }
+
+    public static String getApplicationName() {
+        if (getRandomName()) {
+            return preferences.getString("applicationName", "com.mcal.apkprotector.ProxyApplication");
+        } else {
+            return "com.mcal.apkprotector.ProxyApplication";
+        }
+    }
 }

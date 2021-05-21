@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
@@ -22,6 +23,9 @@ public class SettingFragment extends PreferenceFragmentCompat implements SecureP
     private EditTextPreference protectKeyString;
     private SwitchPreference optimizeDex;
     private EditTextPreference ignoredClass;
+    private EditTextPreference dexFolderName;
+    private EditTextPreference replaceDexName;
+    private EditTextPreference applicationName;
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -43,6 +47,15 @@ public class SettingFragment extends PreferenceFragmentCompat implements SecureP
 
         protectKeyString = findPreference("protectKeyString");
         protectKeyString.setText(Preferences.isProtectKeyString(Utils.sealing(Utils.buildID())));
+
+        dexFolderName = findPreference("dexFolderName");
+        dexFolderName.setText(Preferences.getDexFolderName());
+
+        replaceDexName = findPreference("replaceDexName");
+        replaceDexName.setText(Preferences.getReplaceDexName());
+
+        applicationName = findPreference("applicationName");
+        applicationName.setText(Preferences.getApplicationName());
 
         optimizeDex = findPreference("optimizeDexBoolean");
         ignoredClass = findPreference("userIgnoredClasses");

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Random;
 
 public class CommonUtils {
 
@@ -109,5 +110,16 @@ public class CommonUtils {
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getRandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";//#
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 }

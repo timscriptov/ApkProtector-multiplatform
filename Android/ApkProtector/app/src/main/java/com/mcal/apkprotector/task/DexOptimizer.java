@@ -6,16 +6,9 @@ import com.android.dx.merge.CollisionPolicy;
 import com.android.dx.merge.DexMerger;
 
 import org.jetbrains.annotations.NotNull;
-import org.jf.dexlib2.DexFileFactory;
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.immutable.ImmutableDexFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Разделение дексов на несколько. Классы указанные в списке игнорирования не будут зашифрованы

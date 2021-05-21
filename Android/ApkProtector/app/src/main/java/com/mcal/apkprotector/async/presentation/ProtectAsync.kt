@@ -21,10 +21,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jf.dexlib2.DexFileFactory
+import org.jf.dexlib2.Opcodes
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.writer.pool.DexPool
 import ru.svolf.melissa.sheet.SweetViewDialog
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileInputStream
 import kotlin.coroutines.CoroutineContext
 
 
@@ -93,8 +96,8 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
         doProgress("Compiling…")
         if (Preferences.getDexProtectBoolean()) {
             if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
-                if (UnZipApk.unzip("$xpath/output/app.apk", "$xpath/gen/")) {
-                    if (ManifestPatcher.run(context)) {
+                if (ZipUtils.unpack("$xpath/output/app.apk", "$xpath/gen/")) {
+                    if (ManifestPatcher.manifestPatch(xpath + "/gen/AndroidManifest.xml")) {
                         doProgress("DEX - Optimising…")
                         if (DexEncrypt.enDex(context)) {
                             //if (DexPatching.renameAppClass(context)) {
@@ -103,7 +106,7 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
                                     if (renameAppClass()) {
                                         //DexEncrypt.addMyDex(context)
                                         doProgress("Building APK…")
-                                        if (BuildApk.buildApk("$xpath/gen", "$xpath/output/unsigned.apk")) {
+                                        if (ZipUtils.pack("$xpath/gen", "$xpath/output/unsigned.apk")) {
                                             SourceInfo.initialise("$path/output", mi!!)
                                             if (Preferences.getZipAlignerBoolean()) {
                                                 doProgress("Aligning Apk…")
@@ -226,22 +229,18 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
         return@withContext t
     }
 
-    private fun dexloaderName():  String {
-        return if (Preferences.getOldDexloaderBoolean()) {
-            "dexloader2.dex";
-        } else {
-            "dexloader.dex"
-        }
-    }
-
     private fun renameAppClass(): Boolean {
         return try {
             if (Preferences.isOptimizeDexBoolean()) {
-                if(FileCustomUtils.inputStreamAssets(context, dexloaderName(), "$xpath/gen/dexloader.dex")) {
-                    DexOptimizer().init("$xpath/gen")
+                if(FileCustomUtils.inputStreamAssets(context, "dexloader.dex", "$xpath/gen/dexloader.dex")) {
+                    if (DexPatcher.dexPatch(context, "$xpath/gen/dexloader.dex")) {
+                        DexOptimizer().init("$xpath/gen")
+                    }
                 }
             } else {
-                FileCustomUtils.inputStreamAssets(context, dexloaderName(), "$xpath/gen/classes.dex")
+                if(FileCustomUtils.inputStreamAssets(context, "dexloader.dex", "$xpath/gen/classes.dex")) {
+                    DexPatcher.dexPatch(context, "$xpath/gen/classes.dex")
+                }
             }
             true
         } catch (e: Exception) {

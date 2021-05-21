@@ -85,5 +85,14 @@
     <string name="pref_msg_ignore_classes">Ignoring common open sourced libraries</string>
     <string name="pref_title_old_dexloader">Old Dexloader</string>
     <string name="pref_msg_old_dexloader">Use old dex/class loader</string>
+    <string name="pref_title_hide_apkprotector">Hide ApkProtector</string>
+    <string name="pref_title_random_name">Randome name</string>
+    <string name="pref_msg_random_name">Random name of encrypted dexs</string>
+    <string name="pref_title_dex_folder_name">Dex folder name</string>
+    <string name="pref_msg_dex_folder_name">The name of the folder in which the dexs are stored</string>
+    <string name="pref_title_dex_suffix">Dex suffix</string>
+    <string name="pref_msg_dex_suffix">Encrypted dex file extension</string>
+    <string name="pref_title_application_name">Application name</string>
+    <string name="pref_msg_application_name">Base class for maintaining global application state</string>
 
 </resources>

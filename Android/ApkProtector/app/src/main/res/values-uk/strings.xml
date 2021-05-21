@@ -90,5 +90,14 @@
     <string name="pref_msg_ignore_classes">Игнорирование классов</string>
     <string name="pref_title_old_dexloader">Старый Dexloader</string>
     <string name="pref_msg_old_dexloader">Использовать старый dex/class загрузчик</string>
+    <string name="pref_title_hide_apkprotector">Скрыть ApkProtector</string>
+    <string name="pref_title_random_name">Рандомное имя</string>
+    <string name="pref_msg_random_name">Рандомное имя зашифрованных декс файлов</string>
+    <string name="pref_title_dex_folder_name">Имя папки</string>
+    <string name="pref_msg_dex_folder_name">Имя папки с зашифрованными декс файлами</string>
+    <string name="pref_title_dex_suffix">Расширение дексов</string>
+    <string name="pref_msg_dex_suffix">Расширение зашифрованных декс файлов</string>
+    <string name="pref_title_application_name">Имя application</string>
+    <string name="pref_msg_application_name">Базовый класс для поддержания глобального состояния приложения</string>
 
 </resources>
