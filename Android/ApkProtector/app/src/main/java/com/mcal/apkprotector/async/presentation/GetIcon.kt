@@ -40,7 +40,11 @@ enum class GetIcon {
     }
 
     @SuppressLint("StaticFieldLeak")
-    internal inner class RetrieveFileIcon(var origName: String, var imageView: ImageView, var type: FileType) : CoroutineScope {
+    internal inner class RetrieveFileIcon(
+        var origName: String,
+        var imageView: ImageView,
+        var type: FileType
+    ) : CoroutineScope {
         private var iconLoader = Job();
         override val coroutineContext: CoroutineContext
             get() = Dispatchers.Main + iconLoader
@@ -112,7 +116,10 @@ enum class GetIcon {
         options.inJustDecodeBounds = false
         val decodeFile = BitmapFactory.decodeFile(origName, options) ?: return null
         return try {
-            BitmapDrawable(getContext()!!.resources, ThumbnailUtils.extractThumbnail(decodeFile, ratio, ratio))
+            BitmapDrawable(
+                getContext()!!.resources,
+                ThumbnailUtils.extractThumbnail(decodeFile, ratio, ratio)
+            )
         } catch (e: IllegalArgumentException) {
             Log.e(TAG, "getImageIcon: ", e)
             null
@@ -154,7 +161,12 @@ enum class GetIcon {
         backgroundLoadIcon(filePath, holderView, fileType)
     }
 
-    private fun getIcon(curDirNull: Boolean, fileName: String?, filePath: String, imageView: ImageView) {
+    private fun getIcon(
+        curDirNull: Boolean,
+        fileName: String?,
+        filePath: String,
+        imageView: ImageView
+    ) {
         val fileExt = PathF.getExt(fileName).toLowerCase(Locale.ROOT)
         if (fileExt.isEmpty()) {
             imageView.setImageResource(R.drawable.ic_file)
@@ -176,14 +188,19 @@ enum class GetIcon {
                 imageView.setImageResource(R.drawable.ic_file)
                 return
             } else {
-                val mimeTypeFromExtension = mime.getMimeTypeFromExtension(PathF.getExt(fileName).toLowerCase())
+                val mimeTypeFromExtension =
+                    mime.getMimeTypeFromExtension(PathF.getExt(fileName).toLowerCase())
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(Uri.fromFile(File(fileName)), mimeTypeFromExtension)
-                val queryIntentActivities: List<*> = packMan.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                val queryIntentActivities: List<*> =
+                    packMan.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
                 var iconId = -1
                 for (i in queryIntentActivities.indices) {
                     val resolveInfo = queryIntentActivities[i] as ResolveInfo
-                    if ((iconId == -1 || resolveInfo.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) && !assocAll.contains(resolveInfo.activityInfo.applicationInfo.packageName)) {
+                    if ((iconId == -1 || resolveInfo.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) && !assocAll.contains(
+                            resolveInfo.activityInfo.applicationInfo.packageName
+                        )
+                    ) {
                         iconId = i
                     }
                 }

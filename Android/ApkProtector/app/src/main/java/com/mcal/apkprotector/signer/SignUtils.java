@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 
 import com.android.apksig.ApkSigner;
 import com.android.apksig.ApkVerifier;
-import com.mcal.apkprotector.App;
 import com.mcal.apkprotector.data.Preferences;
 
 import org.jetbrains.annotations.NotNull;

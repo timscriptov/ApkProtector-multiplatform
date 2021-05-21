@@ -15,21 +15,6 @@ import java.io.IOException;
  */
 
 public class DexOptimizer {
-    public void init(String path) {
-        String classesOp = path + "/classes-op.dex";
-        String classes = path + "/classes.dex";
-        String dexloader  = path + "/dexloader.dex";
-
-        if(new File(classesOp).exists()) {
-            if (dexMerge(dexloader, classesOp, classes)) {
-                new File(classesOp).delete();
-                new File(dexloader).delete();
-            }
-        } else {
-            new File(dexloader).renameTo(new File(classes));
-        }
-    }
-
     public static boolean dexMerge(@NotNull String inputDex, @NotNull String inputLibs, @NotNull String outputDex) {
         try {
             Dex[] toBeMerge = {new Dex(new File(inputDex)), new Dex(new File(inputLibs))};
@@ -40,6 +25,21 @@ public class DexOptimizer {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void init(String path) {
+        String classesOp = path + "/classes-op.dex";
+        String classes = path + "/classes.dex";
+        String dexloader = path + "/dexloader.dex";
+
+        if (new File(classesOp).exists()) {
+            if (dexMerge(dexloader, classesOp, classes)) {
+                new File(classesOp).delete();
+                new File(dexloader).delete();
+            }
+        } else {
+            new File(dexloader).renameTo(new File(classes));
         }
     }
 }

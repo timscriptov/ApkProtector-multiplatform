@@ -6,7 +6,6 @@ import android.util.Log;
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.CommonUtils;
-import com.mcal.apkprotector.utils.FileCustomUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.StringUtils;
 
@@ -23,7 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -35,10 +33,10 @@ import java.util.zip.DeflaterInputStream;
  */
 
 public class DexEncrypt {
+    private static final ArrayList<String> ignoredLibs = new ArrayList<>();
     private static String TAG = "ApkProtector";
     private static String xpath;
     private static DeflaterInputStream isx;
-    private static final ArrayList<String> ignoredLibs = new ArrayList<>();
 
     public static boolean enDex(@NotNull Context context) {
         xpath = context.getFilesDir().getAbsolutePath();

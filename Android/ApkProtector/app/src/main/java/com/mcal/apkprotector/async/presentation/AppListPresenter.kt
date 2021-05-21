@@ -45,10 +45,11 @@ class AppListPresenter : CoroutineScope {
         this.interactor = interactor
     }
 
-    private suspend fun doInBackground(): ArrayList<PackageInfoHolder?>? = withContext(Dispatchers.IO) {
-        onProgressUpdate("Retrieving installed application")
-        return@withContext getInstalledApps(context!!.get()!!)
-    }
+    private suspend fun doInBackground(): ArrayList<PackageInfoHolder?>? =
+        withContext(Dispatchers.IO) {
+            onProgressUpdate("Retrieving installed application")
+            return@withContext getInstalledApps(context!!.get()!!)
+        }
 
     private fun onPostExecute(AllPackages: ArrayList<PackageInfoHolder?>?) {
         interactor!!.setup(AllPackages)
@@ -114,7 +115,8 @@ class AppListPresenter : CoroutineScope {
                 }
                 val count = i + 1
                 val newInfo = PackageInfoHolder()
-                newInfo.packageLabel = p.applicationInfo.loadLabel(context.packageManager).toString()
+                newInfo.packageLabel =
+                    p.applicationInfo.loadLabel(context.packageManager).toString()
                 GlobalScope.launch {
                     doProgress("Loading application " + count + " of " + totalPackages + " (" + newInfo.packageLabel + ")")
                 }
@@ -127,7 +129,9 @@ class AppListPresenter : CoroutineScope {
                 res.add(newInfo)
             }
         }
-        val appNameComparator = Comparator { o1: PackageInfoHolder, o2: PackageInfoHolder -> o1.getPackageLabel().toLowerCase().compareTo(o2.getPackageLabel().toLowerCase()) }
+        val appNameComparator = Comparator { o1: PackageInfoHolder, o2: PackageInfoHolder ->
+            o1.getPackageLabel().toLowerCase().compareTo(o2.getPackageLabel().toLowerCase())
+        }
         Collections.sort(res, appNameComparator)
         return res
     }

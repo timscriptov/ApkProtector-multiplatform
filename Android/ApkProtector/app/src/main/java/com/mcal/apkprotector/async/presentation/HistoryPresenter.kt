@@ -24,7 +24,8 @@ class HistoryPresenter : CoroutineScope {
 
     fun execute(path: String) = launch {
         onPreExecute()
-        val result = doInBackground(path) // runs in background thread without blocking the Main Thread
+        val result =
+            doInBackground(path) // runs in background thread without blocking the Main Thread
         onPostExecute(result)
     }
 
@@ -34,50 +35,54 @@ class HistoryPresenter : CoroutineScope {
         activityWeakReference = WeakReference(activity)
     }
 
-    private suspend fun doInBackground(vararg params: String): ArrayList<SourceInfo?>? = withContext(Dispatchers.IO) {
-        val historyItems: ArrayList<SourceInfo?> = ArrayList()
-        val showJavaDir = File(params[0])
-        showJavaDir.mkdirs()
-        val nomedia = File(showJavaDir, ".nomedia")
-        if (!nomedia.exists() || !nomedia.isFile) {
-            try {
-                nomedia.createNewFile()
-            } catch (e: IOException) {
-                e.printStackTrace()
+    private suspend fun doInBackground(vararg params: String): ArrayList<SourceInfo?>? =
+        withContext(Dispatchers.IO) {
+            val historyItems: ArrayList<SourceInfo?> = ArrayList()
+            val showJavaDir = File(params[0])
+            showJavaDir.mkdirs()
+            val nomedia = File(showJavaDir, ".nomedia")
+            if (!nomedia.exists() || !nomedia.isFile) {
+                try {
+                    nomedia.createNewFile()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
-        }
-        val dir = File(params[0] + "/output")
-        if (dir.exists()) {
-            val files = dir.listFiles()
-            if (files != null && files.isNotEmpty()) for (file in files) {
-                if (Utils.sourceExists(file)) {
-                    historyItems.add(0, Utils.getSourceInfoFromSourcePath(file))
-                } else {
-                    try {
-                        if (file.exists()) {
-                            if (file.isDirectory) {
-                                FileUtils.deleteDirectory(file)
-                            } else {
-                                file.delete()
+            val dir = File(params[0] + "/output")
+            if (dir.exists()) {
+                val files = dir.listFiles()
+                if (files != null && files.isNotEmpty()) for (file in files) {
+                    if (Utils.sourceExists(file)) {
+                        historyItems.add(0, Utils.getSourceInfoFromSourcePath(file))
+                    } else {
+                        try {
+                            if (file.exists()) {
+                                if (file.isDirectory) {
+                                    FileUtils.deleteDirectory(file)
+                                } else {
+                                    file.delete()
+                                }
                             }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    if (file.exists() && !file.isDirectory) {
-                        file.delete()
+                        if (file.exists() && !file.isDirectory) {
+                            file.delete()
+                        }
                     }
                 }
             }
+            val AppNameComparator = Comparator { o1: SourceInfo, o2: SourceInfo ->
+                o1.packageLabel.toLowerCase().compareTo(o2.packageLabel.toLowerCase())
+            }
+            Collections.sort(historyItems, AppNameComparator)
+            return@withContext historyItems
         }
-        val AppNameComparator = Comparator { o1: SourceInfo, o2: SourceInfo -> o1.packageLabel.toLowerCase().compareTo(o2.packageLabel.toLowerCase()) }
-        Collections.sort(historyItems, AppNameComparator)
-        return@withContext historyItems
-    }
 
-    private suspend fun onPostExecute(AllPackages: List<SourceInfo?>?) = withContext(coroutineContext) {
-        activityWeakReference!!.get()!!.setupList(AllPackages!!)
-    }
+    private suspend fun onPostExecute(AllPackages: List<SourceInfo?>?) =
+        withContext(coroutineContext) {
+            activityWeakReference!!.get()!!.setupList(AllPackages!!)
+        }
 
     private suspend fun onPreExecute() = withContext(coroutineContext) {
     }

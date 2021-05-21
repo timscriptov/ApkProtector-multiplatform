@@ -1,15 +1,21 @@
 package com.mcal.apkprotector.utils;
 
 import com.mcal.apkprotector.data.Preferences;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pxb.android.axml.*;
-import pxb.android.axml.Axml.Node;
-import pxb.android.axml.Axml.Node.Attr;
 
 import java.io.IOException;
 import java.util.List;
+
+import pxb.android.axml.Axml;
+import pxb.android.axml.Axml.Node;
+import pxb.android.axml.Axml.Node.Attr;
+import pxb.android.axml.AxmlReader;
+import pxb.android.axml.AxmlVisitor;
+import pxb.android.axml.AxmlWriter;
+import pxb.android.axml.NodeVisitor;
 
 public class ManifestModify {
     private static final String NS_ANDROID = "http://schemas.android.com/apk/res/android";

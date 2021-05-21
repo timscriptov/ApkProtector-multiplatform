@@ -1,7 +1,5 @@
 package com.mcal.apkprotector.utils;
 
-import com.mcal.apkprotector.data.Constants;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

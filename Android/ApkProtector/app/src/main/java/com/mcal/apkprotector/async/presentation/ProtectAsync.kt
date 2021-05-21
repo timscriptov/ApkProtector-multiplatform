@@ -20,18 +20,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.jf.dexlib2.DexFileFactory
-import org.jf.dexlib2.Opcodes
-import org.jf.dexlib2.dexbacked.DexBackedDexFile
-import org.jf.dexlib2.writer.pool.DexPool
 import ru.svolf.melissa.sheet.SweetViewDialog
-import java.io.BufferedInputStream
 import java.io.File
-import java.io.FileInputStream
 import kotlin.coroutines.CoroutineContext
 
 
-class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: ProtectAsyncListener, @field:SuppressLint("StaticFieldLeak") private val context: Context) : CoroutineScope {
+class ProtectAsync(
+    @field:SuppressLint("StaticFieldLeak") private val listener: ProtectAsyncListener,
+    @field:SuppressLint("StaticFieldLeak") private val context: Context
+) : CoroutineScope {
     private val path: String = ScopedStorage.getStorageDirectory().toString() + "/ApkProtect"
     private val xpath: String = context.filesDir.absolutePath
     private var mi: MyAppInfo? = null
@@ -64,7 +61,10 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
             output.mkdir()
         }
         File(xpath).mkdirs()
-        Utils.delete(ScopedStorage.getStorageDirectory().toString() + File.separator + "ApkProtect" + File.separator + "Log.txt")
+        Utils.delete(
+            ScopedStorage.getStorageDirectory()
+                .toString() + File.separator + "ApkProtect" + File.separator + "Log.txt"
+        )
         Utils.deleteFolderContent("$xpath/gen")
         Utils.deleteFolderContent("$xpath/output")
     }
@@ -81,7 +81,8 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
         if (result) {
             listener.onCompleted()
         } else {
-            val sourceDir = File(ScopedStorage.getStorageDirectory().absolutePath + "/ApkProtect/output/" + MyAppInfo.getPackage() + "")
+            val sourceDir =
+                File(ScopedStorage.getStorageDirectory().absolutePath + "/ApkProtect/output/" + MyAppInfo.getPackage() + "")
             if (sourceDir.exists()) {
                 Utils.deleteFolder(sourceDir)
             }
@@ -101,31 +102,45 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
                         doProgress("DEX - Optimising…")
                         if (DexEncrypt.enDex(context)) {
                             //if (DexPatching.renameAppClass(context)) {
-                                doProgress("Dex - Merging…")
+                            doProgress("Dex - Merging…")
 
-                                    if (renameAppClass()) {
-                                        //DexEncrypt.addMyDex(context)
-                                        doProgress("Building APK…")
-                                        if (ZipUtils.pack("$xpath/gen", "$xpath/output/unsigned.apk")) {
-                                            SourceInfo.initialise("$path/output", mi!!)
-                                            if (Preferences.getZipAlignerBoolean()) {
-                                                doProgress("Aligning Apk…")
-                                                if (ZipAlign.runProcess("$xpath/output/unsigned.apk", "$xpath/output/aligned.apk")) {
-                                                    doProgress("Signing Apk…")
-                                                    if (SignatureTool.sign(context, File("$xpath/output/aligned.apk"), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
-                                                        doProgress("Done")
-                                                        t = true
-                                                    }
-                                                }
-                                            } else {
-                                                doProgress("Signing Apk…")
-                                                if (SignatureTool.sign(context, File("$xpath/output/unsigned.apk"), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
-                                                    doProgress("Done")
-                                                    t = true
-                                                }
+                            if (renameAppClass()) {
+                                //DexEncrypt.addMyDex(context)
+                                doProgress("Building APK…")
+                                if (ZipUtils.pack("$xpath/gen", "$xpath/output/unsigned.apk")) {
+                                    SourceInfo.initialise("$path/output", mi!!)
+                                    if (Preferences.getZipAlignerBoolean()) {
+                                        doProgress("Aligning Apk…")
+                                        if (ZipAlign.runProcess(
+                                                "$xpath/output/unsigned.apk",
+                                                "$xpath/output/aligned.apk"
+                                            )
+                                        ) {
+                                            doProgress("Signing Apk…")
+                                            if (SignatureTool.sign(
+                                                    context,
+                                                    File("$xpath/output/aligned.apk"),
+                                                    File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                                                )
+                                            ) {
+                                                doProgress("Done")
+                                                t = true
                                             }
                                         }
+                                    } else {
+                                        doProgress("Signing Apk…")
+                                        if (SignatureTool.sign(
+                                                context,
+                                                File("$xpath/output/unsigned.apk"),
+                                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                                            )
+                                        ) {
+                                            doProgress("Done")
+                                            t = true
+                                        }
                                     }
+                                }
+                            }
 
                             //}
                         }
@@ -137,21 +152,36 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
             doProgress("Copying apk…")
             if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
                 doProgress("Encrypting Resources…")
-                AndResGuard.proguard2(File("$xpath/output/app.apk"), File(path + "/output/" + MyAppInfo.getPackage() + "/"), File(path), MyAppInfo.getPackage())
+                AndResGuard.proguard2(
+                    File("$xpath/output/app.apk"),
+                    File(path + "/output/" + MyAppInfo.getPackage() + "/"),
+                    File(path),
+                    MyAppInfo.getPackage()
+                )
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
                     //if (ZipAlign.fnAapt(context, "$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                     doProgress("Aligning Apk…")
                     if (ZipAlign.runProcess("$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                         doProgress("Signing Apk…")
-                        if (SignatureTool.sign(context, File("$xpath/output/aligned.apk"), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
+                        if (SignatureTool.sign(
+                                context,
+                                File("$xpath/output/aligned.apk"),
+                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                            )
+                        ) {
                             doProgress("Done")
                             t = true
                         }
                     }
                 } else {
                     doProgress("Signing Apk…")
-                    if (SignatureTool.sign(context, File("$xpath/output/app.apk"), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
+                    if (SignatureTool.sign(
+                            context,
+                            File("$xpath/output/app.apk"),
+                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                        )
+                    ) {
                         doProgress("Done")
                         t = true
                     }
@@ -163,18 +193,28 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
             if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
-                //if (com.mcal.apkprotector.utils.ZipAligner.fnAapt(context, "$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
+                    //if (com.mcal.apkprotector.utils.ZipAligner.fnAapt(context, "$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                     doProgress("Aligning Apk…")
                     if (ZipAlign.runProcess("$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                         doProgress("Signing Apk…")
-                        if (SignatureTool.sign(context, File("$xpath/output/aligned.apk"), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
+                        if (SignatureTool.sign(
+                                context,
+                                File("$xpath/output/aligned.apk"),
+                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                            )
+                        ) {
                             doProgress("Done")
                             t = true
                         }
                     }
                 } else {
                     doProgress("Signing Apk…")
-                    if (SignatureTool.sign(context, File("$xpath/output/app.apk"), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
+                    if (SignatureTool.sign(
+                            context,
+                            File("$xpath/output/app.apk"),
+                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                        )
+                    ) {
                         doProgress("Done")
                         t = true
                     }
@@ -232,13 +272,23 @@ class ProtectAsync(@field:SuppressLint("StaticFieldLeak") private val listener: 
     private fun renameAppClass(): Boolean {
         return try {
             if (Preferences.isOptimizeDexBoolean()) {
-                if(FileCustomUtils.inputStreamAssets(context, "dexloader.dex", "$xpath/gen/dexloader.dex")) {
+                if (FileCustomUtils.inputStreamAssets(
+                        context,
+                        "dexloader.dex",
+                        "$xpath/gen/dexloader.dex"
+                    )
+                ) {
                     if (DexPatcher.dexPatch(context, "$xpath/gen/dexloader.dex")) {
                         DexOptimizer().init("$xpath/gen")
                     }
                 }
             } else {
-                if(FileCustomUtils.inputStreamAssets(context, "dexloader.dex", "$xpath/gen/classes.dex")) {
+                if (FileCustomUtils.inputStreamAssets(
+                        context,
+                        "dexloader.dex",
+                        "$xpath/gen/classes.dex"
+                    )
+                ) {
                     DexPatcher.dexPatch(context, "$xpath/gen/classes.dex")
                 }
             }

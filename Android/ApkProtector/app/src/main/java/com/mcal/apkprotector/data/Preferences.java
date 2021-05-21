@@ -346,12 +346,6 @@ public final class Preferences {
     }
 
 
-
-
-
-
-
-
     public static boolean getRandomName() {
         return preferences.getBoolean("randomName", false);
     }
