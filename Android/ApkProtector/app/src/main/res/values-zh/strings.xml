@@ -71,11 +71,12 @@
     <string name="protect_key_title">Protect Key</string>
     <string name="about_msg1">ApkProtector is the protector and obfuscator for Android platforms. It helps you secure your applications and libraries against unauthorized or illegal use, reverse engineering, and cracking.</string>
     <string name="about_msg2"><![CDATA[<br><i>PS: The application from Google Play does not support Android 11 and higher! It is recommended to download the application from AppGallery or Telegram</i>]]></string>
-    <string name="about_copyright"><![CDATA[<br>© Copyright 2019-2020 Тимашков Иван]]></string>
+    <string name="about_copyright"><![CDATA[<br>© Copyright 2019-2021 Тимашков Иван]]></string>
     <string name="dex_protect">Dex Protect</string>
     <string name="encrypt_resources">Encrypt Resources</string>
     <string name="sign_apk">Sign Apk</string>
     <string name="community">Community</string>
+
     <string name="pref_msg_zipaligner">Enable to optimize the app</string>
     <string name="pref_title_alignment">Alignment</string>
     <string name="pref_msg_alignment">Alignment (in bytes) for uncompressed entries</string>
@@ -86,8 +87,6 @@
     <string name="pref_msg_dex_opt">Enable dexer optimizations. This will make the Apps run faster but cause longer build times</string>
     <string name="pref_title_ignore_classes">Ignore Classes</string>
     <string name="pref_msg_ignore_classes">Ignoring common open sourced libraries</string>
-    <string name="pref_title_old_dexloader">Old Dexloader</string>
-    <string name="pref_msg_old_dexloader">Use old dex/class loader</string>
     <string name="pref_title_hide_apkprotector">Hide ApkProtector</string>
     <string name="pref_title_random_name">Randome name</string>
     <string name="pref_msg_random_name">Random name of encrypted dexs</string>

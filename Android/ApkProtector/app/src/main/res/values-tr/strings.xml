@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ApkProtector</string>
+    <string name="select_apk">APK Seç</string>
+    <string name="apk_path_to_recompile">Yeniden Derleme Apk Yolu</string>
+    <string name="browse">Gözat</string>
+    <string name="projects">Proje</string>
+    <string name="create_keystore">Anahtar Deposu Oluştur</string>
+    <string name="about">Hakkında</string>
+    <string name="exit">Çıkış</string>
+
+    <string name="version">Sürüm&#160;</string>
+    <string name="this_package_has_already_been_obfuscated_title">Bu Paket zaten gizlendi</string>
+    <string name="this_application_has_already_been_obfuscated_message">Bu uygulama zaten bir kez karartılmış ve çıktı uygulaması sdcard\'ınızda var. Ne yapmak istersiniz?</string>
+    <string name="cancel">İptal</string>
+
+    <string name="protected_apps">Korumalı Uygulama</string>
+    <string name="file_not_found">ّ Dosya bulunamadı!</string>
+
+    <string name="do_you_want_to_minimize_or_exit_message">Küçültmek mi yoksa çıkmak mı istiyorsunuz?</string>
+    <string name="minimize">Küçült</string>
+
+    <string name="obfuscate_complete">Gizleme Tamamlandı!</string>
+    <string name="obfuscate_fail">Gizleme Başarısız!</string>
+    <string name="show">Göster</string>
+    <string name="apk_is_already_protected">APK zaten korunuyor!</string>
+
+    <string name="choose_method_title">Yöntem Seçin</string>
+    <string name="pick_from_sdcard">sdcard\'dan seç</string>
+    <string name="pick_from_installed">Yüklenenden seç</string>
+    <string name="read_carefully_title">Dikkatlice okuyun</string>
+    <string name="warning_message">Bu, uygulamanızı güvenli bir klonlanmış uygulamaya dönüştürecektir UYARI: Klonlanmış uygulama çökebilir, hataları gösterir veya yanlış çalışır. * Bazı uygulamalar gizlenemez.</string>
+    <string name="invalid_apk_file">Geçersiz Apk Dosyası!</string>
+    <string name="invalid_file">Geçersiz Dosya!</string>
+    <string name="save">Kaydet</string>
+
+    <string name="alias">Takma Ad</string>
+    <string name="password">Şifre</string>
+    <string name="commom_name">Ortak Ad</string>
+    <string name="organization">Organizasyon</string>
+    <string name="organization_unit">Organizasyon Birimi</string>
+    <string name="country">Ülke</string>
+    <string name="locality">Konum</string>
+    <string name="keystore_already_exist">Anahtar Deposu Zaten Var!</string>
+    <string name="creating_keystore_complete">Anahtar Deposu Oluşturma Tamamlandı!</string>
+
+    <string name="keystore_path">Anahtar Deposu Yolu</string>
+    <string name="keystore_password">Anahtar Deposu Şifresi</string>
+    <string name="select_keystore">Anahtar Deposu Seç</string>
+    <string name="custom_keystore">Özel Anahtar Deposu</string>
+    <string name="choose">Seç</string>
+
+    <string name="select">Seç</string>
+
+    <string name="error_vending">Hata</string>
+    <string name="vending_message">Lisanssız bir sürümünüz var program yüklendi.\n\nBu programı kullanmak için Google Play\'den lisanslı bir sürüm satın almalısınız.</string>
+    <string name="create">Oluştur</string>
+    <string name="invalid_or_empty_info">Geçersiz veya Boş Bilgi</string>
+    <string name="about_not_found_email">Bulunamadı e-posta uygulaması</string>
+
+    <string name="settings">Ayarlar</string>
+    <string name="warning">Uyarı</string>
+    <string name="different_signature">Apk ve yüklü uygulama imza bilgileri tutarsızdır. Uygulamayı önce kaldırmak ister misiniz?</string>
+    <string name="apk_deleted">\"silindi! \"</string>
+    <string name="title_pref_apk_signing">APK imzalayan</string>
+    <string name="msg_pref_custom_keystore">Derleme sırasında APK\'ları imzalamak için özel bir anahtar deposu dosyası kullanın</string>
+    <string name="title_pref_custom_keystore">Özel anahtar deposu</string>
+    <string name="scoped_storage_title">Android 11 R değişiklikler</string>
+    <string name="scoped_storage_msg">Android 11, \"Kapsamlı Depolama \" adı verilen yeni bir dosya yönetimi sunar.</string>
+    <string name="protect_key_msg">Dexs özel şifreleme anahtarı</string>
+    <string name="protect_key_title">Protect Key</string>
+    <string name="about_msg1">ApkProtector, Android platformları için koruyucu ve gizleyicidir. Uygulamalarınızı ve kitaplıklarınızı yetkisiz veya yasa dışı kullanıma, tersine mühendislik ve kırılmaya karşı korumanıza yardımcı olur.</string>
+    <string name="about_msg2"><![CDATA[<br> <i> Not: Google Play\'deki uygulama Android 11 ve üstünü desteklemez! Uygulamayı AppGallery veya Telegram\'dan indirmeniz önerilir </i>]]></string>
+    <string name="about_copyright"><![CDATA[<br> © Copyright 2019–2021 Тимашков Иван]]></string>
+    <string name="dex_protect">Dex Protect</string>
+    <string name="encrypt_resources">Resources Şifrele</string>
+    <string name="sign_apk">Apk İmzala</string>
+    <string name="community">Topluluk</string>
+
+    <string name="pref_msg_zipaligner">Sıkıştırılmamış girişler için</string>
+    <string name="pref_title_alignment">Hizalama</string>
+    <string name="pref_msg_alignment">Hizalama (bayt cinsinden)</string>
+    <string name="pref_msg_force">Varsa çıktının üzerine yaz, aksi halde başarısız.</string>
+    <string name="pref_msg_zopfli">Sıkıştırılmış girişleri daha verimli algoritma ile yeniden sıkıştırın. Sıkıştırılmış girdileri olduğu gibi ve hizalanmamış olarak kopyalayın, aksi takdirde</string>
+    <string name="pref_msg_page_align_shared_libs">.so dosyalarını 4096\'ya ve diğer dosyaları hizalamak için veya tüm dosyaları hizalamak için hizalayın</string>
+    <string name="pref_title_dex_opt">Dexer optimizasyonları</string>
+    <string name="pref_msg_dex_opt">dexer optimizasyonlarını etkinleştirin. Bu, Uygulamaların daha hızlı çalışmasını sağlar ancak daha uzun derleme sürelerine neden olur</string>
+    <string name="pref_title_ignore_classes">Sınıfları Yoksay</string>
+    <string name="pref_msg_ignore_classes">Ortak açık kaynaklı kitaplıkları yok sayma</string>
+    <string name="pref_title_hide_apkprotector">ApkProtector\'ı Gizle</string>
+    <string name="pref_title_random_name">Randome adı</string>
+    <string name="pref_msg_random_name">Şifrelenmiş dex\'lerin rastgele adı</string>
+    <string name="pref_title_dex_folder_name">Dex klasörü adı</string>
+    <string name="pref_msg_dex_folder_name">Dekslerin depolandığı klasörün adı</string>
+    <string name="pref_title_dex_suffix">Dex soneki</string>
+    <string name="pref_msg_dex_suffix">Şifrelenmiş dex dosya uzantısı</string>
+    <string name="pref_title_application_name">Uygulama adı</string>
+    <string name="pref_msg_application_name">Global uygulama durumunu korumak için temel sınıf</string>
+
+</resources>

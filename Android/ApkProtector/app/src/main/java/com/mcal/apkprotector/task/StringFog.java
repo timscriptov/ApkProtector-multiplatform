@@ -2,8 +2,6 @@ package com.mcal.apkprotector.task;
 
 import android.util.Log;
 
-import com.mcal.stringfog.plugin.StringFogClassInjector;
-import com.mcal.stringfog.plugin.StringFogMappingPrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +9,7 @@ import java.io.IOException;
 public class StringFog {
     private static String TAG = "StringFog";
 
-    public static void doFogJar(String inputJar, String outputJar, String outputMapping) {
+    /*public static void doFogJar(String inputJar, String outputJar, String outputMapping) {
         try {
             StringFogMappingPrinter stringFogMappingPrinter = new StringFogMappingPrinter(new File(outputMapping, "stringFogMapping.txt"));
 
@@ -35,5 +33,5 @@ public class StringFog {
         } catch (IOException e) {
             Log.e(TAG, "doFog()  ", e);
         }
-    }
+    }*/
 }

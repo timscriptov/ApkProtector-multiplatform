@@ -3,6 +3,6 @@ include ':app',
         ':resguard',
         ':melissa',
         ':axml',
-        ':stringfog',
+        //':stringfog',
         ':dx',
         ':dexlib2'
