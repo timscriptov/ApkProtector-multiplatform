@@ -1,35 +1,45 @@
 package com.mcal.apkprotector;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 
+import com.mcal.apkprotector.data.Preferences;
+import com.mcal.apkprotector.multidex.MultiDex;
+import com.mcal.apkprotector.utils.CommonUtils;
+import com.mcal.apkprotector.utils.Reflect;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class ProtectApplication extends Application {
-
-    private static final String appName;
-
-    static {
-        appName = "android.app.Application";
-    }
+    @SuppressLint("StaticFieldLeak")
+    public static Context context;
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        //MultiDex.install(this);
+        MultiDex.install(this);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Application app = changeTopApplication(appName);
+        context = getApplicationContext();
+        Application app = changeTopApplication(realApplication());
         if (app != null) {
             app.onCreate();
         }
+    }
 
+    public static Context getContext() {
+        if (context == null) {
+            context = new ProtectApplication();
+        }
+        return context;
     }
 
     private Application changeTopApplication(String appClassName) {
@@ -70,5 +80,25 @@ public class ProtectApplication extends Application {
         Reflect.setFieldValue("android.app.ActivityThread", currentActivityThread, "mInitialApplication", app);
 
         return app;
+    }
+
+    public static @NotNull String realApplication() {
+        return CommonUtils.encryptStrings("$REAL_APPLICATION", 2);
+    }
+
+    public static @NotNull String protectKey() {
+        return CommonUtils.encryptStrings("$PROTECT_KEY", 2);
+    }
+
+    public static @NotNull String getDexDir() {
+        return CommonUtils.encryptStrings("$DEX_DIR", 2);// apkprotector_dex
+    }
+
+    public static @NotNull String getDexPrefix() {
+        return CommonUtils.encryptStrings("$DEX_PREFIX", 2);// classes-v
+    }
+
+    public static @NotNull String getDexSufix() {
+        return CommonUtils.encryptStrings("$DEX_SUFIX", 2);// .bin
     }
 }

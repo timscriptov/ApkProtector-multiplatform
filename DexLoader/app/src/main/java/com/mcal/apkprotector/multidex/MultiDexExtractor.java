@@ -5,14 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
-import com.mcal.apkprotector.Crypto;
+import com.mcal.apkprotector.ProtectApplication;
+import com.mcal.apkprotector.utils.DexEncryption;
 
-import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -32,7 +31,7 @@ import java.util.zip.ZipOutputStream;
  * during close.
  */
 final class MultiDexExtractor implements Closeable {
-    static final String DEX_SUFFIX = ".bin";
+    static final String DEX_SUFFIX = ProtectApplication.getDexSufix();
     static final String EXTRACTED_SUFFIX = ".zip";
     private static final String TAG = MultiDex.TAG;
     private static final String EXTRACTED_NAME_EXT = ".classes";
@@ -46,7 +45,6 @@ final class MultiDexExtractor implements Closeable {
     /**
      * Size of reading buffers.
      */
-    private static final int BUFFER_SIZE = 0x4000;
     /* Keep value away from 0 because it is a too probable time stamp value */
     private static final long NO_VALUE = -1L;
     private static final String LOCK_FILENAME = "MultiDex.lock";
@@ -54,8 +52,8 @@ final class MultiDexExtractor implements Closeable {
      * We look for additional dex files named {@code classes2.dex},
      * {@code classes3.dex}, etc.
      */
-    private static String APK_DEX_DIR = "assets/$assets_dir/";
-    private static String DEX_PREFIX = "$dex_prefix";
+    private static final String APK_DEX_DIR = "assets" + File.separator + ProtectApplication.getDexDir() + File.pathSeparatorChar;
+    private static final String DEX_PREFIX = ProtectApplication.getDexPrefix();
     private final File sourceApk;
     private final long sourceCrc;
     private final File dexDir;
@@ -134,7 +132,7 @@ final class MultiDexExtractor implements Closeable {
         /* Use commit() and not apply() as advised by the doc because we need synchronous writing of
          * the editor content and apply is doing an "asynchronous commit to disk".
          */
-        edit.commit();
+        edit.apply();
     }
 
     /**
@@ -143,7 +141,7 @@ final class MultiDexExtractor implements Closeable {
      */
     private static SharedPreferences getMultiDexPreferences(Context context) {
         return context.getSharedPreferences(PREFS_FILE,
-                Build.VERSION.SDK_INT < 11 /* Build.VERSION_CODES.HONEYCOMB */
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
                         ? Context.MODE_PRIVATE
                         : Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
     }
@@ -159,19 +157,13 @@ final class MultiDexExtractor implements Closeable {
                 extractTo.getParentFile());
         Log.i(TAG, "Extracting " + tmp.getPath());
         try {
-            out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(tmp)));
+            //out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(tmp)));
             try {
                 ZipEntry classesDex = new ZipEntry("classes.dex");
                 // keep zip entry time since it is the criteria used by Dalvik
                 classesDex.setTime(dexFile.getTime());
                 out.putNextEntry(classesDex);
-                Crypto.decrypt("$encrypt_key", in, out);
-                /*byte[] buffer = new byte[BUFFER_SIZE];
-                int length = in.read(buffer);
-                while (length != -1) {
-                    out.write(buffer, 0, length);
-                    length = in.read(buffer);
-                }*/
+                DexEncryption.decDex(in, out);
                 out.closeEntry();
             } finally {
                 out.close();

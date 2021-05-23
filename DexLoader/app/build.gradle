@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.mcal.apkprotector"
+        applicationId "ru.vologhat.apkprotector"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

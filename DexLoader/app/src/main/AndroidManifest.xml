@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mcal.apkprotector">
+    package="ru.vologhat.apkprotector">
 
     <application
-        android:name="com.mcal.apkprotector.ProtectApplication"/>
-
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:name="com.mcal.apkprotector.ProtectApplication">
+        <activity android:name="ru.vologhat.apkprotector.MainActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+    </application>
+    <meta-data
+        android:name="RealApplication"
+        android:value="恐恜恞思恞恐恒恟思恒恃恘恃恁恜恇恖恐恇恜恁思恣恁恜恇恖恐恇恲恃恃恟恚恐恒恇恚恜恝" />
 </manifest>
