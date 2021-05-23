@@ -1,7 +1,7 @@
 -keepattributes SourceFile, LineNumberTable
 -renamesourcefileattribute
 -allowaccessmodification
-
+-
 # zipsigner
 -keep class org.spongycastle.** { *; }
 #-keep class org.spongycastle.jcajce.provider.** { *; }
