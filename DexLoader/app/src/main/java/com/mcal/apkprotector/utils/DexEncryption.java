@@ -1,6 +1,6 @@
 package com.mcal.apkprotector.utils;
 
-import com.mcal.apkprotector.ProtectApplication;
+import com.mcal.apkprotector.data.Preferences;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -96,9 +96,9 @@ public class DexEncryption {
         }
     }
 
-    public static void decDex(InputStream is, @NotNull OutputStream os) {
+    public static void decDex(String protectKey, InputStream is, @NotNull OutputStream os) {
         try {
-            oss(is, os);
+            oss(protectKey, is, os);
             a(os);
             a(is);
         } catch (Exception e) {
@@ -109,8 +109,8 @@ public class DexEncryption {
         }
     }
 
-    private static void oss(@NotNull InputStream inputStream, OutputStream outputStream) throws Exception {
-        char[] chars = ProtectApplication.protectKey().toCharArray();
+    private static void oss(String protectKey, @NotNull InputStream inputStream, OutputStream outputStream) throws Exception {
+        char[] chars = protectKey.toCharArray();
         int[] __ = new int[4];
         int i = 1;
         int i2 = i + 1;

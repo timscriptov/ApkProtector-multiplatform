@@ -1,0 +1,22 @@
+{
+    "keystore":{
+        "keystoreCustom":true,
+        
+        "keystorePath":"debug.jks",
+        "keystorePassword":"debug",
+        "keystoreAlias":"debug",
+        "certPassword":"debug",
+        
+        "signatureV1Enabled":true,
+        "signatureV2Enabled":true,
+        "signatureV3Enabled":false,
+        "signatureV4Enabled":false
+    },
+
+    "secureOptions": {
+        "encryptionKey": "APKPROTECTOR2021",
+        "randomPackageName": false,
+        "randomAssetsResName": false
+    }
+
+}
