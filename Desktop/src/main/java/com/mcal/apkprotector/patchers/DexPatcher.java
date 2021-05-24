@@ -19,6 +19,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import static com.mcal.apkprotector.patchers.ManifestPatcher.*;
+
 public class DexPatcher {
 
     public static byte[] processDex() throws Exception {
@@ -37,8 +39,19 @@ public class DexPatcher {
                 String src = new String(StreamUtil.readBytes(new FileInputStream(smali)), StandardCharsets.UTF_8);
                 switch (smali.getName()) {
                     case "ProtectApplication.smali":
-                        src = src.replace("$REAL_APPLICATION", Preferences.getApplicationName())
-                                .replace("$PROTECT_KEY", CommonUtils.encryptStrings(Preferences.getProtectKey(), 2))
+                        if (customApplication) {
+                            LoggerUtils.writeLog("Custom application detected");
+                            if (customApplicationName.startsWith(".")) {
+                                LoggerUtils.writeLog("Custom application detected");
+                                if (packageName == null) {
+                                    LoggerUtils.writeLog("Package name is null.");
+                                    throw new NullPointerException("Package name is null.");
+                                }
+                                customApplicationName = packageName + customApplicationName;
+                            }
+                            src = src.replace("android.app.Application", customApplicationName);
+                        }
+                        src = src.replace("$PROTECT_KEY", CommonUtils.encryptStrings(Preferences.getProtectKey(), 2))
                                 .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getDexDir(), 2))
                                 .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getDexPrefix(), 2))
                                 .replace("$DEX_SUFIX", CommonUtils.encryptStrings(Preferences.getDexSuffix(), 2));

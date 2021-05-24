@@ -10,12 +10,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cd1335d-b75b-4abf-a964-a23f2c3749ef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexCrypto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexCrypto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/release/output/dexloader.dex" beforeDir="false" afterPath="$PROJECT_DIR$/out/release/output/dexloader.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/release/tools/dexloader.dex" beforeDir="false" afterPath="$PROJECT_DIR$/out/release/tools/dexloader.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/release/tools/smali/ProtectApplication.smali" beforeDir="false" afterPath="$PROJECT_DIR$/out/release/tools/smali/ProtectApplication.smali" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/patchers/DexPatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/patchers/DexPatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/release/app-release.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/ProtectApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/ProtectApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDex.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDex.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDexExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDexExtractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/ZipUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/ZipUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/CommonUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/CommonUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexCrypto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexCrypto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/Reflect.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/Reflect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/SecurityUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/SecurityUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
