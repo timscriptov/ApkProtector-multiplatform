@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2020 Muntashir Al-Islam
  * Copyright (C) 2018 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +15,9 @@
  */
 
 package com.android.apksig.internal.apk.v3;
+
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.getLengthPrefixedSlice;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.readLengthPrefixedByteArray;
 
 import com.android.apksig.ApkVerifier.Issue;
 import com.android.apksig.SigningCertificateLineage;
@@ -36,16 +38,25 @@ import com.android.apksig.util.RunnablesExecutor;
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.*;
-
-import static com.android.apksig.internal.apk.ApkSigningBlockUtils.getLengthPrefixedSlice;
-import static com.android.apksig.internal.apk.ApkSigningBlockUtils.readLengthPrefixedByteArray;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * APK Signature Scheme v3 verifier.
@@ -57,14 +68,8 @@ import static com.android.apksig.internal.apk.ApkSigningBlockUtils.readLengthPre
  * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature Scheme v2</a>
  */
 public abstract class V3SchemeVerifier {
-
-    private static final int APK_SIGNATURE_SCHEME_V3_BLOCK_ID = 0xf05368c0;
-
-    /**
-     * Hidden constructor to prevent instantiation.
-     */
-    private V3SchemeVerifier() {
-    }
+    /** Hidden constructor to prevent instantiation. */
+    private V3SchemeVerifier() {}
 
     /**
      * Verifies the provided APK's APK Signature Scheme v3 signatures and returns the result of
@@ -79,12 +84,12 @@ public abstract class V3SchemeVerifier {
      * this method returns a result with one or more errors and whose
      * {@code Result.verified == false}, or this method throws an exception.
      *
-     * @throws ApkFormatException         if the APK is malformed
-     * @throws NoSuchAlgorithmException   if the APK's signatures cannot be verified because a
-     *                                    required cryptographic algorithm implementation is missing
+     * @throws ApkFormatException if the APK is malformed
+     * @throws NoSuchAlgorithmException if the APK's signatures cannot be verified because a
+     *         required cryptographic algorithm implementation is missing
      * @throws SignatureNotFoundException if no APK Signature Scheme v3
-     *                                    signatures are found
-     * @throws IOException                if an I/O error occurs when reading the APK
+     * signatures are found
+     * @throws IOException if an I/O error occurs when reading the APK
      */
     public static ApkSigningBlockUtils.Result verify(
             RunnablesExecutor executor,
@@ -97,7 +102,7 @@ public abstract class V3SchemeVerifier {
                 ApkSigningBlockUtils.VERSION_APK_SIGNATURE_SCHEME_V3);
         SignatureInfo signatureInfo =
                 ApkSigningBlockUtils.findSignature(apk, zipSections,
-                        APK_SIGNATURE_SCHEME_V3_BLOCK_ID, result);
+                        V3SchemeConstants.APK_SIGNATURE_SCHEME_V3_BLOCK_ID, result);
 
         DataSource beforeApkSigningBlock = apk.slice(0, signatureInfo.apkSigningBlockOffset);
         DataSource centralDir =
@@ -130,7 +135,7 @@ public abstract class V3SchemeVerifier {
      * int)} for more information about the contract of this method.
      *
      * @param result result populated by this method with interesting information about the APK,
-     *               such as information about signers, and verification errors and warnings.
+     *        such as information about signers, and verification errors and warnings.
      */
     private static void verify(
             RunnablesExecutor executor,
@@ -199,8 +204,8 @@ public abstract class V3SchemeVerifier {
         }
 
         try {
-            result.signingCertificateLineage =
-                    SigningCertificateLineage.consolidateLineages(lineages);
+             result.signingCertificateLineage =
+                     SigningCertificateLineage.consolidateLineages(lineages);
         } catch (IllegalArgumentException e) {
             result.addError(Issue.V3_INCONSISTENT_LINEAGES);
         }
@@ -278,7 +283,7 @@ public abstract class V3SchemeVerifier {
             CertificateFactory certFactory,
             ApkSigningBlockUtils.Result.SignerInfo result,
             Set<ContentDigestAlgorithm> contentDigestsToVerify)
-            throws ApkFormatException, NoSuchAlgorithmException {
+                    throws ApkFormatException, NoSuchAlgorithmException {
         ByteBuffer signedData = getLengthPrefixedSlice(signerBlock);
         byte[] signedDataBytes = new byte[signedData.remaining()];
         signedData.get(signedDataBytes);
@@ -486,7 +491,7 @@ public abstract class V3SchemeVerifier {
                 byte[] value = ByteBufferUtils.toByteArray(attribute);
                 result.additionalAttributes.add(
                         new ApkSigningBlockUtils.Result.SignerInfo.AdditionalAttribute(id, value));
-                if (id == V3SchemeSigner.PROOF_OF_ROTATION_ATTR_ID) {
+                if (id == V3SchemeConstants.PROOF_OF_ROTATION_ATTR_ID) {
                     try {
                         // SigningCertificateLineage is verified when built
                         result.signingCertificateLineage =

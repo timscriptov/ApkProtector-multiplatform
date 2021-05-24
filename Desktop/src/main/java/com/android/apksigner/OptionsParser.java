@@ -101,7 +101,6 @@ class OptionsParser {
         mLastOptionOriginalForm = mPutBackLastOptionOriginalForm;
         mLastOptionValue = mPutBackLastOptionValue;
     }
-
     /**
      * Returns the original form of the current option. The original form includes the leading dash
      * or dashes. This is intended to be used for referencing the option in error messages.

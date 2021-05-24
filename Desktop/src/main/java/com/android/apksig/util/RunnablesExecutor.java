@@ -16,12 +16,12 @@
 
 package com.android.apksig.util;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.ThreadPoolExecutor;
-
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public interface RunnablesExecutor {
     static final RunnablesExecutor SINGLE_THREADED = p -> p.createRunnable().run();

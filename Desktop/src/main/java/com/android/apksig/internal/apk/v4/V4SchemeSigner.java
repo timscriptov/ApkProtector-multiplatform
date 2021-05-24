@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2020 Muntashir Al-Islam
  * Copyright (C) 2020 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +15,10 @@
  */
 
 package com.android.apksig.internal.apk.v4;
+
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeCertificates;
+import static com.android.apksig.internal.apk.v2.V2SchemeConstants.APK_SIGNATURE_SCHEME_V2_BLOCK_ID;
+import static com.android.apksig.internal.apk.v3.V3SchemeConstants.APK_SIGNATURE_SCHEME_V3_BLOCK_ID;
 
 import com.android.apksig.apk.ApkUtils;
 import com.android.apksig.internal.apk.ApkSigningBlockUtils;
@@ -40,11 +43,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.cert.CertificateEncodingException;
-import java.util.*;
-
-import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeCertificates;
-import static com.android.apksig.internal.apk.v2.V2SchemeSigner.APK_SIGNATURE_SCHEME_V2_BLOCK_ID;
-import static com.android.apksig.internal.apk.v3.V3SchemeSigner.APK_SIGNATURE_SCHEME_V3_BLOCK_ID;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * APK Signature Scheme V4 signer. V4 scheme file contains 2 mandatory fields - used during
@@ -71,11 +74,12 @@ public abstract class V4SchemeSigner {
      * Based on a public key, return a signing algorithm that supports verity.
      */
     public static List<SignatureAlgorithm> getSuggestedSignatureAlgorithms(PublicKey signingKey,
-                                                                           int minSdkVersion, boolean apkSigningBlockPaddingSupported)
+            int minSdkVersion, boolean apkSigningBlockPaddingSupported,
+            boolean deterministicDsaSigning)
             throws InvalidKeyException {
         List<SignatureAlgorithm> algorithms = V3SchemeSigner.getSuggestedSignatureAlgorithms(
                 signingKey, minSdkVersion,
-                apkSigningBlockPaddingSupported);
+                apkSigningBlockPaddingSupported, deterministicDsaSigning);
         // Keeping only supported algorithms.
         for (Iterator<SignatureAlgorithm> iter = algorithms.listIterator(); iter.hasNext(); ) {
             final SignatureAlgorithm algorithm = iter.next();
@@ -91,21 +95,19 @@ public abstract class V4SchemeSigner {
      * output file.
      */
     public static void generateV4Signature(
-            DataSource apkContent, SignerConfig signerConfig, File outputFile)
-            throws IOException, InvalidKeyException, NoSuchAlgorithmException {
-        Pair<V4Signature, byte[]> pair = generateV4Signature(apkContent, signerConfig);
-        try (final OutputStream output = new FileOutputStream(outputFile)) {
-            pair.getFirst().writeTo(output);
-            V4Signature.writeBytes(output, pair.getSecond());
-        } catch (IOException e) {
-            outputFile.delete();
-            throw e;
-        }
+        DataSource apkContent, SignerConfig signerConfig, File outputFile)
+        throws IOException, InvalidKeyException, NoSuchAlgorithmException {
+      Pair<V4Signature, byte[]> pair = generateV4Signature(apkContent, signerConfig);
+      try (final OutputStream output = new FileOutputStream(outputFile)) {
+        pair.getFirst().writeTo(output);
+        V4Signature.writeBytes(output, pair.getSecond());
+      } catch (IOException e) {
+        outputFile.delete();
+        throw e;
+      }
     }
 
-    /**
-     * Generate v4 signature and hash tree for a given APK.
-     */
+    /** Generate v4 signature and hash tree for a given APK. */
     public static Pair<V4Signature, byte[]> generateV4Signature(
             DataSource apkContent,
             SignerConfig signerConfig)
@@ -322,19 +324,20 @@ public abstract class V4SchemeSigner {
                 return 1;
             case CHUNKED_SHA512:
                 return 2;
+            default:
+                return -1;
         }
-        return -1;
     }
 
     private static boolean isSupported(final ContentDigestAlgorithm contentDigestAlgorithm,
-                                       boolean forV3Digest) {
+            boolean forV3Digest) {
         if (contentDigestAlgorithm == null) {
             return false;
         }
         if (contentDigestAlgorithm == ContentDigestAlgorithm.CHUNKED_SHA256
                 || contentDigestAlgorithm == ContentDigestAlgorithm.CHUNKED_SHA512
                 || (forV3Digest
-                && contentDigestAlgorithm == ContentDigestAlgorithm.VERITY_CHUNKED_SHA256)) {
+                     && contentDigestAlgorithm == ContentDigestAlgorithm.VERITY_CHUNKED_SHA256)) {
             return true;
         }
         return false;

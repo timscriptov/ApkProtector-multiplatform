@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2020 Muntashir Al-Islam
  * Copyright (C) 2016 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +16,25 @@
 
 package com.android.apksig.internal.util;
 
-import javax.security.auth.x500.X500Principal;
 import java.math.BigInteger;
-import java.security.*;
-import java.security.cert.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Principal;
+import java.security.Provider;
+import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import javax.security.auth.x500.X500Principal;
 
 /**
  * {@link X509Certificate} which delegates all method invocations to the provided delegate
@@ -202,8 +212,6 @@ public class DelegatingX509Certificate extends X509Certificate {
     @Override
     public void verify(PublicKey key, Provider sigProvider) throws CertificateException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         mDelegate.verify(key, sigProvider);
-        //} else throw new UnsupportedOperationException("Not supported before API 24");
     }
 }

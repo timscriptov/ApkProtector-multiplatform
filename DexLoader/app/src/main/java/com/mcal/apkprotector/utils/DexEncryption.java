@@ -1,12 +1,16 @@
 package com.mcal.apkprotector.utils;
 
+import android.annotation.SuppressLint;
 import android.media.MediaCodec;
 import android.util.Log;
+
+import com.mcal.apkprotector.ProtectApplication;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -35,8 +39,8 @@ public class DexEncryption {
     private static void doCrypto(int cipherMode, String key, InputStream is,
                                  OutputStream os) throws MediaCodec.CryptoException {
         try {
-            Key secretKey = new SecretKeySpec(key.getBytes("UTF-8"), ALGORITHM);
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            Key secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -55,7 +59,7 @@ public class DexEncryption {
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException | IOException ex) {
-            Log.d("Eccrypt", " " + ex);
+            Log.d("Encrypt", " " + ex);
         }
     }
 }

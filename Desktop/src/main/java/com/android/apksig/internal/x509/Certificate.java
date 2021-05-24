@@ -27,7 +27,6 @@ import com.android.apksig.internal.util.ByteBufferUtils;
 import com.android.apksig.internal.util.GuaranteedEncodedFormX509Certificate;
 import com.android.apksig.internal.util.X509CertificateUtils;
 
-import javax.security.auth.x500.X500Principal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.cert.CertificateException;
@@ -36,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.security.auth.x500.X500Principal;
 
 /**
  * X509 {@code Certificate} as specified in RFC 5280.

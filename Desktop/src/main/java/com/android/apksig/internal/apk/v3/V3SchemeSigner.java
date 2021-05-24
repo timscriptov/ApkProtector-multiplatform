@@ -16,15 +16,20 @@
 
 package com.android.apksig.internal.apk.v3;
 
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeAsLengthPrefixedElement;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeAsSequenceOfLengthPrefixedElements;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeCertificates;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodePublicKey;
+
 import com.android.apksig.SigningCertificateLineage;
 import com.android.apksig.internal.apk.ApkSigningBlockUtils;
-import com.android.apksig.internal.apk.ApkSigningBlockUtils.*;
+import com.android.apksig.internal.apk.ApkSigningBlockUtils.SignerConfig;
 import com.android.apksig.internal.apk.ContentDigestAlgorithm;
 import com.android.apksig.internal.apk.SignatureAlgorithm;
 import com.android.apksig.internal.util.Pair;
 import com.android.apksig.util.DataSource;
 import com.android.apksig.util.RunnablesExecutor;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -40,8 +45,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.android.apksig.internal.apk.ApkSigningBlockUtils.*;
-
 /**
  * APK Signature Scheme v3 signer.
  *
@@ -49,32 +52,30 @@ import static com.android.apksig.internal.apk.ApkSigningBlockUtils.*;
  * Signature Scheme v2 goals.
  *
  * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature Scheme v2</a>
- * <p>The main contribution of APK Signature Scheme v3 is the introduction of the {@link
- * SigningCertificateLineage}, which enables an APK to change its signing certificate as long as
- * it can prove the new siging certificate was signed by the old.
+ *     <p>The main contribution of APK Signature Scheme v3 is the introduction of the {@link
+ *     SigningCertificateLineage}, which enables an APK to change its signing certificate as long as
+ *     it can prove the new siging certificate was signed by the old.
  */
 public abstract class V3SchemeSigner {
+    public static final int APK_SIGNATURE_SCHEME_V3_BLOCK_ID =
+            V3SchemeConstants.APK_SIGNATURE_SCHEME_V3_BLOCK_ID;
+    public static final int PROOF_OF_ROTATION_ATTR_ID = V3SchemeConstants.PROOF_OF_ROTATION_ATTR_ID;
 
-    public static final int APK_SIGNATURE_SCHEME_V3_BLOCK_ID = 0xf05368c0;
-    public static final int PROOF_OF_ROTATION_ATTR_ID = 0x3ba06f8c;
-
-    /**
-     * Hidden constructor to prevent instantiation.
-     */
-    private V3SchemeSigner() {
-    }
+    /** Hidden constructor to prevent instantiation. */
+    private V3SchemeSigner() {}
 
     /**
      * Gets the APK Signature Scheme v3 signature algorithms to be used for signing an APK using the
      * provided key.
      *
      * @param minSdkVersion minimum API Level of the platform on which the APK may be installed (see
-     *                      AndroidManifest.xml minSdkVersion attribute).
+     *     AndroidManifest.xml minSdkVersion attribute).
      * @throws InvalidKeyException if the provided key is not suitable for signing APKs using APK
-     *                             Signature Scheme v3
+     *     Signature Scheme v3
      */
     public static List<SignatureAlgorithm> getSuggestedSignatureAlgorithms(PublicKey signingKey,
-                                                                           int minSdkVersion, boolean verityEnabled) throws InvalidKeyException {
+            int minSdkVersion, boolean verityEnabled, boolean deterministicDsaSigning)
+            throws InvalidKeyException {
         String keyAlgorithm = signingKey.getAlgorithm();
         if ("RSA".equalsIgnoreCase(keyAlgorithm)) {
             // Use RSASSA-PKCS1-v1_5 signature scheme instead of RSASSA-PSS to guarantee
@@ -99,7 +100,10 @@ public abstract class V3SchemeSigner {
         } else if ("DSA".equalsIgnoreCase(keyAlgorithm)) {
             // DSA is supported only with SHA-256.
             List<SignatureAlgorithm> algorithms = new ArrayList<>();
-            algorithms.add(SignatureAlgorithm.DSA_WITH_SHA256);
+            algorithms.add(
+                    deterministicDsaSigning ?
+                            SignatureAlgorithm.DETDSA_WITH_SHA256 :
+                            SignatureAlgorithm.DSA_WITH_SHA256);
             if (verityEnabled) {
                 algorithms.add(SignatureAlgorithm.VERITY_DSA_WITH_SHA256);
             }
@@ -126,20 +130,36 @@ public abstract class V3SchemeSigner {
     }
 
     public static ApkSigningBlockUtils.SigningSchemeBlockAndDigests
-    generateApkSignatureSchemeV3Block(
-            RunnablesExecutor executor,
-            DataSource beforeCentralDir,
-            DataSource centralDir,
-            DataSource eocd,
-            List<SignerConfig> signerConfigs)
-            throws IOException, InvalidKeyException, NoSuchAlgorithmException,
-            SignatureException {
+            generateApkSignatureSchemeV3Block(
+                    RunnablesExecutor executor,
+                    DataSource beforeCentralDir,
+                    DataSource centralDir,
+                    DataSource eocd,
+                    List<SignerConfig> signerConfigs)
+                    throws IOException, InvalidKeyException, NoSuchAlgorithmException,
+                            SignatureException {
         Pair<List<SignerConfig>, Map<ContentDigestAlgorithm, byte[]>> digestInfo =
                 ApkSigningBlockUtils.computeContentDigests(
                         executor, beforeCentralDir, centralDir, eocd, signerConfigs);
         return new ApkSigningBlockUtils.SigningSchemeBlockAndDigests(
                 generateApkSignatureSchemeV3Block(digestInfo.getFirst(), digestInfo.getSecond()),
                 digestInfo.getSecond());
+    }
+
+    public static byte[] generateV3SignerAttribute(
+            SigningCertificateLineage signingCertificateLineage) {
+        // FORMAT (little endian):
+        // * length-prefixed bytes: attribute pair
+        //   * uint32: ID
+        //   * bytes: value - encoded V3 SigningCertificateLineage
+        byte[] encodedLineage = signingCertificateLineage.encodeSigningCertificateLineage();
+        int payloadSize = 4 + 4 + encodedLineage.length;
+        ByteBuffer result = ByteBuffer.allocate(payloadSize);
+        result.order(ByteOrder.LITTLE_ENDIAN);
+        result.putInt(4 + encodedLineage.length);
+        result.putInt(V3SchemeConstants.PROOF_OF_ROTATION_ATTR_ID);
+        result.put(encodedLineage);
+        return result.array();
     }
 
     private static Pair<byte[], Integer> generateApkSignatureSchemeV3Block(
@@ -164,10 +184,10 @@ public abstract class V3SchemeSigner {
 
         return Pair.of(
                 encodeAsSequenceOfLengthPrefixedElements(
-                        new byte[][]{
-                                encodeAsSequenceOfLengthPrefixedElements(signerBlocks),
+                        new byte[][] {
+                            encodeAsSequenceOfLengthPrefixedElements(signerBlocks),
                         }),
-                APK_SIGNATURE_SCHEME_V3_BLOCK_ID);
+                V3SchemeConstants.APK_SIGNATURE_SCHEME_V3_BLOCK_ID);
     }
 
     private static byte[] generateSignerBlock(
@@ -289,7 +309,7 @@ public abstract class V3SchemeSigner {
         if (signerConfig.mSigningCertificateLineage == null) {
             return new byte[0];
         }
-        return signerConfig.mSigningCertificateLineage.generateV3SignerAttribute();
+        return generateV3SignerAttribute(signerConfig.mSigningCertificateLineage);
     }
 
     private static final class V3SignatureSchemeBlock {

@@ -37,7 +37,7 @@ public class DexPatcher {
                 String src = new String(StreamUtil.readBytes(new FileInputStream(smali)), StandardCharsets.UTF_8);
                 switch (smali.getName()) {
                     case "ProtectApplication.smali":
-                        src = src.replace("$REAL_APPLICATION", CommonUtils.encryptStrings(Preferences.getApplicationName(), 2))
+                        src = src.replace("$REAL_APPLICATION", Preferences.getApplicationName())
                                 .replace("$PROTECT_KEY", CommonUtils.encryptStrings(Preferences.getProtectKey(), 2))
                                 .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getDexDir(), 2))
                                 .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getDexPrefix(), 2))

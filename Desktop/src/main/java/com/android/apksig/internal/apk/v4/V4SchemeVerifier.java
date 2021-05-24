@@ -16,6 +16,8 @@
 
 package com.android.apksig.internal.apk.v4;
 
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.toHex;
+
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.ApkVerifier.Issue;
 import com.android.apksig.internal.apk.ApkSigningBlockUtils;
@@ -29,14 +31,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
-
-import static com.android.apksig.internal.apk.ApkSigningBlockUtils.toHex;
 
 /**
  * APK Signature Scheme V4 verifier.
@@ -212,8 +218,8 @@ public abstract class V4SchemeVerifier {
     }
 
     private static void verifyRootHashAndTree(DataSource apkContent,
-                                              ApkSigningBlockUtils.Result.SignerInfo signerInfo, byte[] expectedDigest,
-                                              byte[] expectedTree) throws IOException, NoSuchAlgorithmException {
+            ApkSigningBlockUtils.Result.SignerInfo signerInfo, byte[] expectedDigest,
+            byte[] expectedTree) throws IOException, NoSuchAlgorithmException {
         ApkSigningBlockUtils.VerityTreeAndDigest actualContentDigestInfo =
                 ApkSigningBlockUtils.computeChunkVerityTreeAndDigest(apkContent);
 

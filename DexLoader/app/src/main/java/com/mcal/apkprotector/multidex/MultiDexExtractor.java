@@ -25,7 +25,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-
 /**
  * Exposes application secondary dex files as files in the application data
  * directory.
@@ -33,7 +32,7 @@ import java.util.zip.ZipOutputStream;
  * during close.
  */
 final class MultiDexExtractor implements Closeable {
-    static final String DEX_SUFFIX = ProtectApplication.getDexSufix();
+    static final String DEX_SUFFIX = ProtectApplication.DEX_SUFFIX;
     static final String EXTRACTED_SUFFIX = ".zip";
     private static final String TAG = MultiDex.TAG;
     private static final String EXTRACTED_NAME_EXT = ".classes";
@@ -54,8 +53,10 @@ final class MultiDexExtractor implements Closeable {
      * We look for additional dex files named {@code classes2.dex},
      * {@code classes3.dex}, etc.
      */
-    private static final String APK_DEX_DIR = "assets" + File.separator + ProtectApplication.getDexDir() + File.separator;
-    private static final String DEX_PREFIX = ProtectApplication.getDexPrefix();
+    private static final String PROTECT_KEY = ProtectApplication.PROTECT_KEY;
+    private static final String DEX_DIR = ProtectApplication.DEX_DIR;
+    private static final String APK_DEX_DIR = "assets" + File.separator + DEX_DIR + File.separator;
+    private static final String DEX_PREFIX = ProtectApplication.DEX_PREFIX;
     private final File sourceApk;
     private final long sourceCrc;
     private final File dexDir;
@@ -167,7 +168,7 @@ final class MultiDexExtractor implements Closeable {
                 classesDex.setTime(dexFile.getTime());
                 out.putNextEntry(classesDex);
                 //DexEncryption.decDex(PROTECT_KEY, in, out);
-                DexEncryption.decrypt(ProtectApplication.protectKey(), in, out);
+                DexEncryption.decrypt(PROTECT_KEY, in, out);
                 out.closeEntry();
             } finally {
                 out.close();

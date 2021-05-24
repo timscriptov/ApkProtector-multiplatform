@@ -7,42 +7,20 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 
 import com.mcal.apkprotector.multidex.MultiDex;
+import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.Reflect;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class ProtectApplication extends Application {
+    public static final String DEX_SUFFIX = CommonUtils.encryptStrings("$DEX_SUFIX", 2);
+    public static final String DEX_PREFIX = CommonUtils.encryptStrings("$DEX_PREFIX", 2);
+    public static final String DEX_DIR = CommonUtils.encryptStrings("$DEX_DIR", 2);
+    public static final String PROTECT_KEY = CommonUtils.encryptStrings("$PROTECT_KEY", 2);
+    public static final String REAL_APPLICATION = "$REAL_APPLICATION";
+
     @SuppressLint("StaticFieldLeak")
     private static Context context;
-
-    public static @NotNull String realApplication() {
-        return "$REAL_APPLICATION";
-    }
-
-    public static @NotNull String protectKey() {
-        return "$PROTECT_KEY";
-    }
-
-    public static Context getContext() {
-        if (context == null) {
-            context = new ProtectApplication();
-        }
-        return context;
-    }
-
-    public static @NotNull String getDexDir() {
-        return "apkprotector_dex";
-    }
-
-    public static @NotNull String getDexPrefix() {
-        return "classes-v";
-    }
-
-    public static @NotNull String getDexSufix() {
-        return ".bin";
-    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -54,10 +32,17 @@ public class ProtectApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-        Application app = changeTopApplication(realApplication());
+        Application app = changeTopApplication(REAL_APPLICATION);
         if (app != null) {
             app.onCreate();
         }
+    }
+
+    public static Context getContext() {
+        if (context == null) {
+            context = new ProtectApplication();
+        }
+        return context;
     }
 
     private Application changeTopApplication(String appClassName) {

@@ -24,16 +24,24 @@ import com.android.apksig.apk.ApkFormatException;
 import com.android.apksig.apk.MinSdkVersionException;
 import com.android.apksig.util.DataSource;
 import com.android.apksig.util.DataSources;
-import org.conscrypt.OpenSSLProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import org.conscrypt.OpenSSLProvider;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.security.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.security.PublicKey;
+import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.DSAKey;
@@ -50,16 +58,18 @@ import java.util.List;
  */
 public class ApkSignerTool {
 
-    public static final int ZIP_MAGIC = 0x04034b50;
     private static final String VERSION = "0.9";
     private static final String HELP_PAGE_GENERAL = "help.txt";
     private static final String HELP_PAGE_SIGN = "help_sign.txt";
     private static final String HELP_PAGE_VERIFY = "help_verify.txt";
     private static final String HELP_PAGE_ROTATE = "help_rotate.txt";
     private static final String HELP_PAGE_LINEAGE = "help_lineage.txt";
+
     private static MessageDigest sha256 = null;
     private static MessageDigest sha1 = null;
     private static MessageDigest md5 = null;
+
+    public static final int ZIP_MAGIC = 0x04034b50;
 
     public static void main(String[] params) throws Exception {
         if ((params.length == 0) || ("--help".equals(params[0])) || ("-h".equals(params[0]))) {
@@ -98,7 +108,7 @@ public class ApkSignerTool {
             }
         } catch (ParameterException | OptionsParser.OptionsException e) {
             System.err.println(e.getMessage());
-            //System.exit(1);
+            System.exit(1);
             return;
         }
     }
@@ -116,7 +126,7 @@ public class ApkSignerTool {
         }
     }
 
-    private static void sign(String[] params) throws Exception {
+    public static void sign(String[] params) throws Exception {
         if (params.length == 0) {
             printUsage(HELP_PAGE_SIGN);
             return;
@@ -137,8 +147,9 @@ public class ApkSignerTool {
         int maxSdkVersion = Integer.MAX_VALUE;
         List<SignerParams> signers = new ArrayList<>(1);
         SignerParams signerParams = new SignerParams();
-        SignerParams sourceStampSignerParams = new SignerParams();
         SigningCertificateLineage lineage = null;
+        SignerParams sourceStampSignerParams = new SignerParams();
+        SigningCertificateLineage sourceStampLineage = null;
         List<ProviderInstallSpec> providers = new ArrayList<>();
         ProviderInstallSpec providerParams = new ProviderInstallSpec();
         OptionsParser optionsParser = new OptionsParser(params);
@@ -146,6 +157,7 @@ public class ApkSignerTool {
         String optionOriginalForm = null;
         boolean v4SigningFlagFound = false;
         boolean sourceStampFlagFound = false;
+        boolean deterministicDsaSigning = false;
         while ((optionName = optionsParser.nextOption()) != null) {
             optionOriginalForm = optionsParser.getOptionOriginalForm();
             if (("help".equals(optionName)) || ("h".equals(optionName))) {
@@ -242,6 +254,12 @@ public class ApkSignerTool {
             } else if ("stamp-signer".equals(optionName)) {
                 sourceStampFlagFound = true;
                 sourceStampSignerParams = processSignerParams(optionsParser);
+            } else if ("stamp-lineage".equals(optionName)) {
+                File stampLineageFile = new File(
+                        optionsParser.getRequiredValue("Stamp Lineage File"));
+                sourceStampLineage = getLineageFromInputFile(stampLineageFile);
+            } else if ("deterministic-dsa-signing".equals(optionName)) {
+                deterministicDsaSigning = optionsParser.getOptionalBooleanValue(false);
             } else {
                 throw new ParameterException(
                         "Unsupported option: " + optionOriginalForm + ". See --help for supported"
@@ -298,7 +316,8 @@ public class ApkSignerTool {
             for (SignerParams signer : signers) {
                 signerNumber++;
                 signer.setName("signer #" + signerNumber);
-                ApkSigner.SignerConfig signerConfig = getSignerConfig(signer, passwordRetriever);
+                ApkSigner.SignerConfig signerConfig = getSignerConfig(signer, passwordRetriever,
+                        deterministicDsaSigning);
                 if (signerConfig == null) {
                     return;
                 }
@@ -307,7 +326,8 @@ public class ApkSignerTool {
             if (sourceStampFlagFound) {
                 sourceStampSignerParams.setName("stamp signer");
                 sourceStampSignerConfig =
-                        getSignerConfig(sourceStampSignerParams, passwordRetriever);
+                        getSignerConfig(sourceStampSignerParams, passwordRetriever,
+                                deterministicDsaSigning);
                 if (sourceStampSignerConfig == null) {
                     return;
                 }
@@ -348,7 +368,8 @@ public class ApkSignerTool {
             apkSignerBuilder.setV4SignatureOutputFile(outputV4SignatureFile);
         }
         if (sourceStampSignerConfig != null) {
-            apkSignerBuilder.setSourceStampSignerConfig(sourceStampSignerConfig);
+            apkSignerBuilder.setSourceStampSignerConfig(sourceStampSignerConfig)
+                    .setSourceStampSigningCertificateLineage(sourceStampLineage);
         }
         ApkSigner apkSigner = apkSignerBuilder.build();
         try {
@@ -373,19 +394,19 @@ public class ApkSignerTool {
         }
     }
 
-    private static ApkSigner.@Nullable SignerConfig getSignerConfig(
-            SignerParams signer, PasswordRetriever passwordRetriever) {
+    private static ApkSigner.SignerConfig getSignerConfig(SignerParams signer,
+            PasswordRetriever passwordRetriever, boolean deterministicDsaSigning) {
         try {
             signer.loadPrivateKeyAndCerts(passwordRetriever);
         } catch (ParameterException e) {
             System.err.println(
                     "Failed to load signer \"" + signer.getName() + "\": " + e.getMessage());
-            //System.exit(2);
+            System.exit(2);
             return null;
         } catch (Exception e) {
             System.err.println("Failed to load signer \"" + signer.getName() + "\"");
             e.printStackTrace();
-            //System.exit(2);
+            System.exit(2);
             return null;
         }
         String v1SigBasename;
@@ -404,10 +425,15 @@ public class ApkSignerTool {
         } else {
             throw new RuntimeException("Neither KeyStore key alias nor private key file available");
         }
-        return new ApkSigner.SignerConfig.Builder(v1SigBasename, signer.getPrivateKey(), signer.getCerts()).build();
+        ApkSigner.SignerConfig signerConfig =
+                new ApkSigner.SignerConfig.Builder(
+                        v1SigBasename, signer.getPrivateKey(), signer.getCerts(),
+                        deterministicDsaSigning)
+                        .build();
+        return signerConfig;
     }
 
-    private static void verify(String @NotNull [] params) throws Exception {
+    private static void verify(String[] params) throws Exception {
         if (params.length == 0) {
             printUsage(HELP_PAGE_VERIFY);
             return;
@@ -421,10 +447,12 @@ public class ApkSignerTool {
         boolean printCerts = false;
         boolean verbose = false;
         boolean warningsTreatedAsErrors = false;
+        boolean verifySourceStamp = false;
         File v4SignatureFile = null;
         OptionsParser optionsParser = new OptionsParser(params);
         String optionName;
         String optionOriginalForm = null;
+        String sourceCertDigest = null;
         while ((optionName = optionsParser.nextOption()) != null) {
             optionOriginalForm = optionsParser.getOptionOriginalForm();
             if ("min-sdk-version".equals(optionName)) {
@@ -447,6 +475,11 @@ public class ApkSignerTool {
                         "Input V4 Signature File"));
             } else if ("in".equals(optionName)) {
                 inputApk = new File(optionsParser.getRequiredValue("Input APK file"));
+            } else if ("verify-source-stamp".equals(optionName)) {
+                verifySourceStamp = optionsParser.getOptionalBooleanValue(true);
+            } else if ("stamp-cert-digest".equals(optionName)) {
+                sourceCertDigest = optionsParser.getRequiredValue(
+                        "Expected source stamp certificate digest");
             } else {
                 throw new ParameterException(
                         "Unsupported option: " + optionOriginalForm + ". See --help for supported"
@@ -499,7 +532,9 @@ public class ApkSignerTool {
         ApkVerifier apkVerifier = apkVerifierBuilder.build();
         ApkVerifier.Result result;
         try {
-            result = apkVerifier.verify();
+            result = verifySourceStamp
+                    ? apkVerifier.verifySourceStamp(sourceCertDigest)
+                    : apkVerifier.verify();
         } catch (MinSdkVersionException e) {
             String msg = e.getMessage();
             if (!msg.endsWith(".")) {
@@ -510,8 +545,9 @@ public class ApkSignerTool {
                             + ". Use --min-sdk-version to override",
                     e);
         }
-        boolean verified = result.isVerified();
 
+        boolean verified = result.isVerified();
+        ApkVerifier.Result.SourceStampInfo sourceStampInfo = result.getSourceStampInfo();
         boolean warningsEncountered = false;
         if (verified) {
             List<X509Certificate> signerCerts = result.getSignerCertificates();
@@ -530,13 +566,19 @@ public class ApkSignerTool {
                         "Verified using v4 scheme (APK Signature Scheme v4): "
                                 + result.isVerifiedUsingV4Scheme());
                 System.out.println("Verified for SourceStamp: " + result.isSourceStampVerified());
-                System.out.println("Number of signers: " + signerCerts.size());
+                if (!verifySourceStamp) {
+                    System.out.println("Number of signers: " + signerCerts.size());
+                }
             }
             if (printCerts) {
                 int signerNumber = 0;
                 for (X509Certificate signerCert : signerCerts) {
                     signerNumber++;
                     printCertificate(signerCert, "Signer #" + signerNumber, verbose);
+                }
+                if (sourceStampInfo != null) {
+                    printCertificate(sourceStampInfo.getCertificate(), "Source Stamp Signer",
+                            verbose);
                 }
             }
         } else {
@@ -548,7 +590,7 @@ public class ApkSignerTool {
         }
 
         @SuppressWarnings("resource") // false positive -- this resource is not opened here
-        PrintStream warningsOut = warningsTreatedAsErrors ? System.err : System.out;
+                PrintStream warningsOut = warningsTreatedAsErrors ? System.err : System.out;
         for (ApkVerifier.IssueWithParams warning : result.getWarnings()) {
             warningsEncountered = true;
             warningsOut.println("WARNING: " + warning);
@@ -588,7 +630,6 @@ public class ApkSignerTool {
             }
         }
 
-        ApkVerifier.Result.SourceStampInfo sourceStampInfo = result.getSourceStampInfo();
         if (sourceStampInfo != null) {
             for (ApkVerifier.IssueWithParams error : sourceStampInfo.getErrors()) {
                 System.err.println("ERROR: SourceStamp: " + error);
@@ -599,11 +640,11 @@ public class ApkSignerTool {
         }
 
         if (!verified) {
-            //System.exit(1);
+            System.exit(1);
             return;
         }
         if ((warningsTreatedAsErrors) && (warningsEncountered)) {
-            //System.exit(1);
+            System.exit(1);
             return;
         }
     }
@@ -1033,41 +1074,6 @@ public class ApkSignerTool {
         System.out.println("Has auth capability          : " + capabilities.hasAuth());
     }
 
-    /**
-     * Loads the private key and certificates from either the specified keystore or files specified
-     * in the signer params using the provided passwordRetriever.
-     *
-     * @throws ParameterException if any errors are encountered when attempting to load
-     *                            the private key and certificates.
-     */
-    private static void loadPrivateKeyAndCerts(SignerParams params,
-                                               PasswordRetriever passwordRetriever) throws ParameterException {
-        try {
-            params.loadPrivateKeyAndCerts(passwordRetriever);
-            if (params.getKeystoreKeyAlias() != null) {
-                params.setName(params.getKeystoreKeyAlias());
-            } else if (params.getKeyFile() != null) {
-                String keyFileName = new File(params.getKeyFile()).getName();
-                int delimiterIndex = keyFileName.indexOf('.');
-                if (delimiterIndex == -1) {
-                    params.setName(keyFileName);
-                } else {
-                    params.setName(keyFileName.substring(0, delimiterIndex));
-                }
-            } else {
-                throw new RuntimeException(
-                        "Neither KeyStore key alias nor private key file available for "
-                                + params.getName());
-            }
-        } catch (ParameterException e) {
-            throw new ParameterException(
-                    "Failed to load signer \"" + params.getName() + "\":" + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ParameterException("Failed to load signer \"" + params.getName() + "\"");
-        }
-    }
-
     private static class ProviderInstallSpec {
         String className;
         String constructorParam;
@@ -1091,10 +1097,19 @@ public class ApkSignerTool {
             }
             Provider provider;
             if (constructorParam != null) {
-                // Single-arg Provider constructor
-                provider =
-                        (Provider) providerClass.getConstructor(String.class)
-                                .newInstance(constructorParam);
+                try {
+                    // Single-arg Provider constructor
+                    provider =
+                            (Provider) providerClass.getConstructor(String.class)
+                                    .newInstance(constructorParam);
+                } catch (NoSuchMethodException e) {
+                    // Starting from JDK 9 the single-arg constructor accepting the configuration
+                    // has been replaced by a configure(String) method to be invoked after
+                    // instantiating the Provider with the no-arg constructor.
+                    provider = (Provider) providerClass.getConstructor().newInstance();
+                    provider = (Provider) providerClass.getMethod("configure", String.class)
+                            .invoke(provider, constructorParam);
+                }
             } else {
                 // No-arg Provider constructor
                 provider = (Provider) providerClass.getConstructor().newInstance();
@@ -1105,6 +1120,41 @@ public class ApkSignerTool {
             } else {
                 Security.insertProviderAt(provider, position);
             }
+        }
+    }
+
+    /**
+     * Loads the private key and certificates from either the specified keystore or files specified
+     * in the signer params using the provided passwordRetriever.
+     *
+     * @throws ParameterException if any errors are encountered when attempting to load
+     *                            the private key and certificates.
+     */
+    private static void loadPrivateKeyAndCerts(SignerParams params,
+            PasswordRetriever passwordRetriever) throws ParameterException {
+        try {
+            params.loadPrivateKeyAndCerts(passwordRetriever);
+            if (params.getKeystoreKeyAlias() != null) {
+                params.setName(params.getKeystoreKeyAlias());
+            } else if (params.getKeyFile() != null) {
+                String keyFileName = new File(params.getKeyFile()).getName();
+                int delimiterIndex = keyFileName.indexOf('.');
+                if (delimiterIndex == -1) {
+                    params.setName(keyFileName);
+                } else {
+                    params.setName(keyFileName.substring(0, delimiterIndex));
+                }
+            } else {
+                throw new RuntimeException(
+                        "Neither KeyStore key alias nor private key file available for "
+                                + params.getName());
+            }
+        } catch (ParameterException e) {
+            throw new ParameterException(
+                    "Failed to load signer \"" + params.getName() + "\":" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ParameterException("Failed to load signer \"" + params.getName() + "\"");
         }
     }
 }

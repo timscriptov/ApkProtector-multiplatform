@@ -16,6 +16,16 @@
 
 package com.android.apksig.internal.pkcs7;
 
+import static com.android.apksig.internal.asn1.Asn1DerEncoder.ASN1_DER_NULL;
+import static com.android.apksig.internal.oid.OidConstants.OID_DIGEST_SHA1;
+import static com.android.apksig.internal.oid.OidConstants.OID_DIGEST_SHA256;
+import static com.android.apksig.internal.oid.OidConstants.OID_SIG_DSA;
+import static com.android.apksig.internal.oid.OidConstants.OID_SIG_EC_PUBLIC_KEY;
+import static com.android.apksig.internal.oid.OidConstants.OID_SIG_RSA;
+import static com.android.apksig.internal.oid.OidConstants.OID_SIG_SHA256_WITH_DSA;
+import static com.android.apksig.internal.oid.OidConstants.OID_TO_JCA_DIGEST_ALG;
+import static com.android.apksig.internal.oid.OidConstants.OID_TO_JCA_SIGNATURE_ALG;
+
 import com.android.apksig.internal.apk.v1.DigestAlgorithm;
 import com.android.apksig.internal.asn1.Asn1Class;
 import com.android.apksig.internal.asn1.Asn1Field;
@@ -27,9 +37,6 @@ import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
-
-import static com.android.apksig.internal.asn1.Asn1DerEncoder.ASN1_DER_NULL;
-import static com.android.apksig.internal.oid.OidConstants.*;
 
 /**
  * PKCS #7 {@code AlgorithmIdentifier} as specified in RFC 5652.
@@ -43,8 +50,7 @@ public class AlgorithmIdentifier {
     @Asn1Field(index = 1, type = Asn1Type.ANY, optional = true)
     public Asn1OpaqueObject parameters;
 
-    public AlgorithmIdentifier() {
-    }
+    public AlgorithmIdentifier() {}
 
     public AlgorithmIdentifier(String algorithmOid, Asn1OpaqueObject parameters) {
         this.algorithm = algorithmOid;
@@ -71,7 +77,8 @@ public class AlgorithmIdentifier {
      * when signing with the specified key and digest algorithm.
      */
     public static Pair<String, AlgorithmIdentifier> getSignerInfoSignatureAlgorithm(
-            PublicKey publicKey, DigestAlgorithm digestAlgorithm) throws InvalidKeyException {
+            PublicKey publicKey, DigestAlgorithm digestAlgorithm, boolean deterministicDsaSigning)
+            throws InvalidKeyException {
         String keyAlgorithm = publicKey.getAlgorithm();
         String jcaDigestPrefixForSigAlg;
         switch (digestAlgorithm) {
@@ -109,7 +116,9 @@ public class AlgorithmIdentifier {
                     throw new IllegalArgumentException(
                             "Unexpected digest algorithm: " + digestAlgorithm);
             }
-            return Pair.of(jcaDigestPrefixForSigAlg + "withDSA", sigAlgId);
+            String signingAlgorithmName =
+                    jcaDigestPrefixForSigAlg + (deterministicDsaSigning ? "withDetDSA" : "withDSA");
+            return Pair.of(signingAlgorithmName, sigAlgId);
         } else if ("EC".equalsIgnoreCase(keyAlgorithm)) {
             return Pair.of(
                     jcaDigestPrefixForSigAlg + "withECDSA",

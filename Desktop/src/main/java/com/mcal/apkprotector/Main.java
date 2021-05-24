@@ -1,6 +1,7 @@
 package com.mcal.apkprotector;
 
 import com.mcal.apkprotector.data.Constants;
+import com.mcal.apkprotector.fastzip.FastZip;
 import com.mcal.apkprotector.patchers.ManifestPatcher;
 import com.mcal.apkprotector.signer.SignatureTool;
 import com.mcal.apkprotector.utils.DexEncryption;

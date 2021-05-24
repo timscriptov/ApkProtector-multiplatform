@@ -16,6 +16,11 @@
 
 package com.android.apksig.internal.apk.v3;
 
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeAsLengthPrefixedElement;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.encodeAsSequenceOfLengthPrefixedElements;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.getLengthPrefixedSlice;
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.readLengthPrefixedByteArray;
+
 import com.android.apksig.apk.ApkFormatException;
 import com.android.apksig.internal.apk.ApkSigningBlockUtils;
 import com.android.apksig.internal.apk.SignatureAlgorithm;
@@ -26,7 +31,12 @@ import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -35,8 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-
-import static com.android.apksig.internal.apk.ApkSigningBlockUtils.*;
+import java.util.Objects;
 
 /**
  * APK Signer Lineage.
@@ -144,14 +153,14 @@ public class V3SigningCertificateLineage {
                         lastCert, SignatureAlgorithm.findById(signedSigAlgorithm),
                         SignatureAlgorithm.findById(sigAlgorithmId), signature, flags));
             }
-        } catch (ApkFormatException | BufferUnderflowException e) {
+        } catch(ApkFormatException | BufferUnderflowException e){
             throw new IOException("Failed to parse V3SigningCertificateLineage object", e);
-        } catch (NoSuchAlgorithmException | InvalidKeyException
-                | InvalidAlgorithmParameterException | SignatureException e) {
+        } catch(NoSuchAlgorithmException | InvalidKeyException
+                | InvalidAlgorithmParameterException | SignatureException e){
             throw new SecurityException(
                     "Failed to verify signature over signed data for certificate #" + nodeCount
                             + " when parsing V3SigningCertificateLineage object", e);
-        } catch (CertificateException e) {
+        } catch(CertificateException e){
             throw new SecurityException("Failed to decode certificate #" + nodeCount
                     + " when parsing V3SigningCertificateLineage object", e);
         }
@@ -176,7 +185,7 @@ public class V3SigningCertificateLineage {
         for (SigningCertificateNode node : signingCertificateLineage) {
             nodes.add(encodeSigningCertificateNode(node));
         }
-        byte[] encodedSigningCertificateLineage = encodeAsSequenceOfLengthPrefixedElements(nodes);
+        byte [] encodedSigningCertificateLineage = encodeAsSequenceOfLengthPrefixedElements(nodes);
 
         // add the version code (uint32) on top of the encoded nodes
         int payloadSize = 4 + encodedSigningCertificateLineage.length;
@@ -237,31 +246,6 @@ public class V3SigningCertificateLineage {
      */
     public static class SigningCertificateNode {
 
-        /**
-         * the signing cert for this node.  This is part of the data signed by the parent node.
-         */
-        public final X509Certificate signingCert;
-        /**
-         * the algorithm used by the this node's parent to bless this data.  Its ID value is part of
-         * the data signed by the parent node. {@code null} for first node.
-         */
-        public final SignatureAlgorithm parentSigAlgorithm;
-        /**
-         * signature over the signed data (above).  The signature is from this node's parent
-         * signing certificate, which should correspond to the signing certificate used to sign an
-         * APK before rotating to this one, and is formed using {@code signatureAlgorithm}.
-         */
-        public final byte[] signature;
-        /**
-         * the algorithm used by the this nodeto bless the next node's data.  Its ID value is part
-         * of the signed data of the next node. {@code null} for the last node.
-         */
-        public SignatureAlgorithm sigAlgorithm;
-        /**
-         * the flags detailing how the platform should treat this signing cert
-         */
-        public int flags;
-
         public SigningCertificateNode(
                 X509Certificate signingCert,
                 SignatureAlgorithm parentSigAlgorithm,
@@ -290,5 +274,41 @@ public class V3SigningCertificateLineage {
             // we made it
             return true;
         }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(signingCert, parentSigAlgorithm, sigAlgorithm, flags);
+            result = 31 * result + Arrays.hashCode(signature);
+            return result;
+        }
+
+        /**
+         * the signing cert for this node.  This is part of the data signed by the parent node.
+         */
+        public final X509Certificate signingCert;
+
+        /**
+         * the algorithm used by the this node's parent to bless this data.  Its ID value is part of
+         * the data signed by the parent node. {@code null} for first node.
+         */
+        public final SignatureAlgorithm parentSigAlgorithm;
+
+        /**
+         * the algorithm used by the this nodeto bless the next node's data.  Its ID value is part
+         * of the signed data of the next node. {@code null} for the last node.
+         */
+        public SignatureAlgorithm sigAlgorithm;
+
+        /**
+         * signature over the signed data (above).  The signature is from this node's parent
+         * signing certificate, which should correspond to the signing certificate used to sign an
+         * APK before rotating to this one, and is formed using {@code signatureAlgorithm}.
+         */
+        public final byte[] signature;
+
+        /**
+         * the flags detailing how the platform should treat this signing cert
+         */
+        public int flags;
     }
 }
