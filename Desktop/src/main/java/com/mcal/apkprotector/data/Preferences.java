@@ -2,7 +2,6 @@ package com.mcal.apkprotector.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mcal.apkprotector.Main;
 import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 
@@ -48,14 +47,6 @@ public class Preferences {
 
     public static boolean isRandomPackageName() {
         return config().secureConfig.randomPackageName;
-    }
-
-    public static boolean isRandomAssetsResName() {
-        return config().secureConfig.randomAssetsResName;
-    }
-
-    public static boolean isCustomSignature() {
-        return config().keystore.signatureV1Enabled;
     }
 
     public static String isSignaturePath() {
@@ -128,5 +119,9 @@ public class Preferences {
 
     public static String getApplicationName() {
         return getPackageName() + ".ProtectApplication";
+    }
+
+    public static boolean getZipaligner() {
+        return config().keystore.zipaligner;
     }
 }

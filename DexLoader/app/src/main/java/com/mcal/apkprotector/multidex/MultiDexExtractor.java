@@ -6,7 +6,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.mcal.apkprotector.ProtectApplication;
-import com.mcal.apkprotector.utils.Crypto;
+import com.mcal.apkprotector.utils.DexEncryption;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -62,6 +62,7 @@ final class MultiDexExtractor implements Closeable {
     private final RandomAccessFile lockRaf;
     private final FileChannel lockChannel;
     private final FileLock cacheLock;
+
     MultiDexExtractor(File sourceApk, File dexDir) throws IOException {
         Log.i(TAG, "MultiDexExtractor(" + sourceApk.getPath() + ", " + dexDir.getPath() + ")");
         this.sourceApk = sourceApk;
@@ -166,7 +167,7 @@ final class MultiDexExtractor implements Closeable {
                 classesDex.setTime(dexFile.getTime());
                 out.putNextEntry(classesDex);
                 //DexEncryption.decDex(PROTECT_KEY, in, out);
-                Crypto.decrypt(ProtectApplication.protectKey(), in, out);
+                DexEncryption.decrypt(ProtectApplication.protectKey(), in, out);
                 out.closeEntry();
             } finally {
                 out.close();

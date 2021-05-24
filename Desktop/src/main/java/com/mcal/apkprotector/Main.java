@@ -2,18 +2,16 @@ package com.mcal.apkprotector;
 
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.patchers.ManifestPatcher;
-import com.mcal.apkprotector.signer.SignerTool;
-import com.mcal.apkprotector.utils.*;
-import com.mcal.fastzip.FastZip;
+import com.mcal.apkprotector.signer.SignatureTool;
+import com.mcal.apkprotector.utils.DexEncryption;
+import com.mcal.apkprotector.utils.FileUtils;
+import com.mcal.apkprotector.utils.LoggerUtils;
 
-import java.io.*;
-import java.util.Random;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class Main {
-    //public static String randomPackName = "com.mcal.apkprotector";
-    //public static String randomDexPrefix = "classes-v";
-    //public static String randomDirName = "apkprotector_dex";
-
     public static void main(String... args) {
         FileUtils.deleteDir(new File(Constants.OUTPUT_PATH));
         FileUtils.deleteDir(new File(Constants.RELEASE_PATH));
@@ -48,8 +46,6 @@ public class Main {
 
         LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time));
 
-        //generateRandomData();
-
         try {
             FastZip.extract(apkPath, Constants.OUTPUT_PATH);
             LoggerUtils.writeLog("Success unpack: " + apkPath);
@@ -65,15 +61,13 @@ public class Main {
             //ManifestPatcher.parseManifest(new BufferedInputStream(new FileInputStream(Constants.MANIFEST_PATH)));
             LoggerUtils.writeLog("Success patch: " + Constants.MANIFEST_PATH);
 
-            Crypto.encodeDexes();
-            //DexEncryption.encodeDexes();
-            //DexDecryption.decodeDexes();
+            DexEncryption.encodeDexes();
             LoggerUtils.writeLog("Dex files successful encrypted");
 
             FastZip.repack(apkPath, Constants.UNSIGNED_PATH);
             LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH);
 
-            if (!SignerTool.sign(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {
+            if (!SignatureTool.sign(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {
                 LoggerUtils.writeLog("APK signing error");
                 FileUtils.deleteDir(new File(Constants.OUTPUT_PATH));
                 return;
@@ -87,14 +81,4 @@ public class Main {
         FileUtils.delete(new File(Constants.UNSIGNED_PATH));
         FileUtils.delete(new File(Constants.CACHE_PATH));
     }
-
-    /*private static void generateRandomData() {
-        if (Preferences.isRandomPackageName())
-            randomPackName = CommonUtils.generateRandomString(randomPackName);
-            Constants.PROXY_APP = Main.randomPackName + ".ProtectApplication";
-        if (Preferences.isRandomAssetsResName()) {
-            randomDexPrefix = CommonUtils.generateRandomString(randomDexPrefix);
-            randomDirName = CommonUtils.generateRandomString(randomDirName);
-        }
-    }*/
 }

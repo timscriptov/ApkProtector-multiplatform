@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 'android-S'
     buildToolsVersion "30.0.3"
 
     defaultConfig {
@@ -29,6 +29,4 @@ android {
 dependencies {
     //implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'org.jetbrains:annotations:20.1.0'
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
 }

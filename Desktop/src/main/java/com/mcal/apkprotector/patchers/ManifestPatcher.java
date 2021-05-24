@@ -3,25 +3,19 @@ package com.mcal.apkprotector.patchers;
 import bin.xml.decode.AXmlDecoder;
 import bin.xml.decode.AXmlResourceParser;
 import bin.xml.decode.XmlPullParser;
-import com.mcal.apkprotector.data.Preferences;
-import com.mcal.apkprotector.utils.LoggerUtils;
 import com.mcal.apkprotector.data.Constants;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import com.mcal.apkprotector.utils.LoggerUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ManifestPatcher {
     public static boolean customApplication = false;
     public static String customApplicationName = "";
     public static String packageName = "";
-
-    public static void parseManifest(InputStream is) throws IOException {
-        byte[] data = IOUtils.toByteArray(is);
-        ManifestModify mm = new ManifestModify(Preferences.getApplicationName());
-        FileUtils.writeByteArrayToFile(new File(Constants.MANIFEST_PATH), mm.modifyAxml(data));
-    }
 
     public static byte[] parseManifest() throws IOException {
         FileInputStream fis = new FileInputStream(Constants.MANIFEST_PATH);

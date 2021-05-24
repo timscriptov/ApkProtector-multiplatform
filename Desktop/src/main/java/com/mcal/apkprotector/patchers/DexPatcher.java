@@ -1,6 +1,7 @@
 package com.mcal.apkprotector.patchers;
 
 import bin.util.StreamUtil;
+import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
@@ -13,8 +14,6 @@ import org.jf.dexlib2.writer.builder.DexBuilder;
 import org.jf.dexlib2.writer.io.MemoryDataStore;
 import org.jf.smali.Smali;
 import org.jf.smali.SmaliOptions;
-import com.mcal.apkprotector.Main;
-import com.mcal.apkprotector.data.Constants;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -23,8 +22,8 @@ import java.util.Arrays;
 public class DexPatcher {
 
     public static byte[] processDex() throws Exception {
-        String dexPath = Constants.OUTPUT_PATH + File.separator + "multidex.dex";
-        FileUtils.copyFile(Constants.TOOLS_PATH + File.separator + "multidex.dex", dexPath);
+        String dexPath = Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
+        FileUtils.copyFile(Constants.DEXLOADER_PATH, dexPath);
         DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(dexPath)));
         DexBuilder dexBuilder = new DexBuilder(Opcodes.getDefault());
         try {
@@ -34,15 +33,15 @@ public class DexPatcher {
                     return !pathname.isDirectory() && pathname.getAbsolutePath().endsWith(".smali");
                 }
             });
-            for (File smali: smaliFiles) {
+            for (File smali : smaliFiles) {
                 String src = new String(StreamUtil.readBytes(new FileInputStream(smali)), StandardCharsets.UTF_8);
                 switch (smali.getName()) {
                     case "ProtectApplication.smali":
-                        src = src.replace("$REAL_APPLICATION", Preferences.getApplicationName())
-                                .replace("$PROTECT_KEY", Preferences.getProtectKey())
-                                .replace("$DEX_DIR", Preferences.getDexDir())
-                                .replace("$DEX_PREFIX", Preferences.getDexPrefix())
-                                .replace("$DEX_SUFIX", Preferences.getDexSuffix());
+                        src = src.replace("$REAL_APPLICATION", CommonUtils.encryptStrings(Preferences.getApplicationName(), 2))
+                                .replace("$PROTECT_KEY", CommonUtils.encryptStrings(Preferences.getProtectKey(), 2))
+                                .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getDexDir(), 2))
+                                .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getDexPrefix(), 2))
+                                .replace("$DEX_SUFIX", CommonUtils.encryptStrings(Preferences.getDexSuffix(), 2));
                         break;
                 }
                 src = src.replace("com/mcal/apkprotector",

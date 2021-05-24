@@ -1,6 +1,5 @@
 package com.mcal.apkprotector.utils;
 
-import com.mcal.apkprotector.data.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -183,14 +182,5 @@ public class FileUtils {
             }
             return sb.toString();
         }
-    }
-
-    public static File getTempFile() throws IOException {
-        File extDir = new File(getWorkPath() + File.separator + "cache");
-        if (extDir == null) throw new FileNotFoundException("External storage not available.");
-        if (!extDir.exists() && !extDir.mkdirs()) {
-            throw new IOException("Cannot create cache directory in the external storage.");
-        }
-        return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", extDir);
     }
 }

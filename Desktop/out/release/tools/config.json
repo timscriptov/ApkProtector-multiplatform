@@ -1,6 +1,6 @@
 {
     "keystore":{
-        "keystoreCustom":true,
+        "zipaligner":true,
         
         "keystorePath":"debug.jks",
         "keystorePassword":"debug",

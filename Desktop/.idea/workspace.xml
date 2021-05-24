@@ -20,17 +20,33 @@
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/release/output/multidex.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/release/tools/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/out/release/tools/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/release/tools/key/testkey.pk8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/release/tools/key/testkey.x509.pem" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/KeystoreConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/KeystoreConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Preferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Preferences.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/patchers/DexPatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/patchers/DexPatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/patchers/ManifestModify.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/patchers/ManifestPatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/patchers/ManifestPatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/signer/SignerTool.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/signer/SignerUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/CommonUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/CommonUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/Crypto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexDecryption.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/fastzip/FastZip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/fastzip/FastZip.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/fastzip/FastZipOutputStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/fastzip/FastZipOutputStream.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DexLoader/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DexLoader/app/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/proguard-rules.pro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DexLoader/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/release/app-release.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/ProtectApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/ProtectApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/data/Preferences.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDexExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDexExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/Crypto.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

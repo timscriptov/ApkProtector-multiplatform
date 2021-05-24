@@ -3,8 +3,8 @@ package com.mcal.apkprotector.data;
 import com.google.gson.annotations.SerializedName;
 
 public class KeystoreConfig {
-    @SerializedName("keystoreCustom")
-    public boolean keystoreCustom;
+    @SerializedName("zipaligner")
+    public boolean zipaligner;
 
     @SerializedName("keystorePath")
     public String keystorePath;
@@ -24,8 +24,7 @@ public class KeystoreConfig {
     @SerializedName("signatureV4Enabled")
     public boolean signatureV4Enabled;
 
-    public KeystoreConfig(boolean keystoreCustom, String keystorePath, String keystorePassword, String keystoreAlias, String certPassword, boolean signatureV1Enabled, boolean signatureV2Enabled, boolean signatureV3Enabled, boolean signatureV4Enabled) {
-        this.keystoreCustom = keystoreCustom;
+    public KeystoreConfig(String keystorePath, String keystorePassword, String keystoreAlias, String certPassword, boolean signatureV1Enabled, boolean signatureV2Enabled, boolean signatureV3Enabled, boolean signatureV4Enabled, boolean zipaligner) {
         this.keystorePath = keystorePath;
         this.keystorePassword = keystorePassword;
         this.keystoreAlias = keystoreAlias;
@@ -34,5 +33,6 @@ public class KeystoreConfig {
         this.signatureV2Enabled = signatureV2Enabled;
         this.signatureV3Enabled = signatureV3Enabled;
         this.signatureV4Enabled = signatureV4Enabled;
+        this.zipaligner = zipaligner;
     }
 }
