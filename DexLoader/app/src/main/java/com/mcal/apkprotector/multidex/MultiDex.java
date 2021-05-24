@@ -25,7 +25,7 @@ import java.util.zip.ZipFile;
 import dalvik.system.DexFile;
 
 public class MultiDex {
-    static final String TAG = "MultiDex";
+    static final String TAG = "ApkProtector";
     private static final String OLD_SECONDARY_FOLDER_NAME = "secondary-dexes";
     private static final String CODE_CACHE_NAME = "code_cache";
     private static final String CODE_CACHE_SECONDARY_FOLDER_NAME = "secondary-dexes";
