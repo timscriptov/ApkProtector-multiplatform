@@ -10,8 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0cd1335d-b75b-4abf-a964-a23f2c3749ef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Desktop.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/fileHashes/fileHashes.bin" afterDir="false" />
@@ -22,34 +20,18 @@
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/release/tools/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/out/release/tools/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/release/tools/dexloader.dex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/release/worldcraft.apk" beforeDir="false" afterPath="$PROJECT_DIR$/out/release/worldcraft.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bin/zip/ZipManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bin/zip/ZipManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bin/zip/ZipOutputStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bin/zip/ZipOutputStream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Config.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/ConfigKeystore.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Constants.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/data/Preferences.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/signer/SignUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/signer/SignatureTool.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/CommonUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/FileUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/LoggerUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/ManifestModify.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/ManifestPatcher.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/ZipUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/release/output/multidex.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/release/app-release.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/ProtectApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/ProtectApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/data/Preferences.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDexExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/multidex/MultiDexExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DexLoader/app/src/main/java/com/mcal/apkprotector/utils/DexEncryption.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,10 +88,10 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1sbFKlKaxtMoemQgauXwQPPbHL7" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">

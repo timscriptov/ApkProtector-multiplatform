@@ -3,9 +3,7 @@ package com.mcal.apkprotector;
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.patchers.ManifestPatcher;
 import com.mcal.apkprotector.signer.SignerTool;
-import com.mcal.apkprotector.utils.DexEncryption;
-import com.mcal.apkprotector.utils.FileUtils;
-import com.mcal.apkprotector.utils.LoggerUtils;
+import com.mcal.apkprotector.utils.*;
 import com.mcal.fastzip.FastZip;
 
 import java.io.*;
@@ -67,7 +65,9 @@ public class Main {
             //ManifestPatcher.parseManifest(new BufferedInputStream(new FileInputStream(Constants.MANIFEST_PATH)));
             LoggerUtils.writeLog("Success patch: " + Constants.MANIFEST_PATH);
 
-            DexEncryption.encodeDexes();
+            Crypto.encodeDexes();
+            //DexEncryption.encodeDexes();
+            //DexDecryption.decodeDexes();
             LoggerUtils.writeLog("Dex files successful encrypted");
 
             FastZip.repack(apkPath, Constants.UNSIGNED_PATH);

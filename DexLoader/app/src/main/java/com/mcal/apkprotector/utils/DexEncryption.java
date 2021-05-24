@@ -1,7 +1,5 @@
 package com.mcal.apkprotector.utils;
 
-import com.mcal.apkprotector.data.Preferences;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,25 +85,22 @@ public class DexEncryption {
         iArr2[1] = i2;
     }
 
+    public static void decDex(String protectKey, InputStream is, @NotNull OutputStream os) {
+        try {
+            oss(protectKey, is, os);
+            os.close();
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void a(Closeable closeable) {
         if (closeable == null) return;
         try {
             closeable.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void decDex(String protectKey, InputStream is, @NotNull OutputStream os) {
-        try {
-            oss(protectKey, is, os);
-            a(os);
-            a(is);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            a(is);
-            a(os);
         }
     }
 

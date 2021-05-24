@@ -1,6 +1,8 @@
 package com.mcal.apkprotector.utils;
 
 import com.mcal.apkprotector.data.Preferences;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.spongycastle.crypto.CryptoException;
 import com.mcal.apkprotector.data.Constants;
 
@@ -8,7 +10,6 @@ import java.io.*;
 import java.util.zip.DeflaterInputStream;
 
 public class DexEncryption {
-
     public static void encodeDexes() {
         File assets = new File(Constants.ASSETS_PATH);
         if (!assets.exists()) {
@@ -34,14 +35,14 @@ public class DexEncryption {
             outPath += Preferences.getDexPrefix() + name.replaceFirst(".+(\\d+).+", "$1") + Preferences.getDexSuffix();
         }
 
+        FileInputStream is = new FileInputStream(Constants.OUTPUT_PATH  + File.separator + name);
         FileOutputStream os = new FileOutputStream(outPath);
-
-        DeflaterInputStream isx = new DeflaterInputStream(new FileInputStream(name));
+        DeflaterInputStream isx = new DeflaterInputStream(is);
         exfr(isx, os);
         isx.close();
     }
 
-    private static void nDnv(int[] iArr, int[] iArr2) {
+    private static void nDnv(@NotNull int[] iArr, @NotNull int[] iArr2) {
         int i = iArr2[0];
         int i2 = iArr2[1];
         i2 = (((i2 >>> 8) | (i2 << 24)) + i) ^ iArr[0];
@@ -101,7 +102,9 @@ public class DexEncryption {
         iArr2[1] = i2;
     }
 
-    private static int[] FxIjsF(int[] iArr) {
+    @NotNull
+    @Contract(pure = true)
+    private static int[] FxIjsF(@NotNull int[] iArr) {
         int[] iArr2 = new int[27];
         int i = iArr[0];
         iArr2[0] = i;
@@ -114,7 +117,7 @@ public class DexEncryption {
         return iArr2;
     }
 
-    private static void exfr(InputStream inputStream, OutputStream outputStream) throws Exception {
+    private static void exfr(@NotNull InputStream inputStream, OutputStream outputStream) throws Exception {
         char[] toCharArray = Preferences.getProtectKey().toCharArray();
         int[] iArr = new int[4];
         int i = 1;

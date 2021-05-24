@@ -6,8 +6,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.mcal.apkprotector.ProtectApplication;
-import com.mcal.apkprotector.data.Preferences;
-import com.mcal.apkprotector.utils.DexEncryption;
+import com.mcal.apkprotector.utils.Crypto;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -34,8 +33,7 @@ import java.util.zip.ZipOutputStream;
  * during close.
  */
 final class MultiDexExtractor implements Closeable {
-    private static String PROTECT_KEY = "APKPROTECTOR2021";
-    static final String DEX_SUFFIX = ".bin";
+    static final String DEX_SUFFIX = ProtectApplication.getDexSufix();
     static final String EXTRACTED_SUFFIX = ".zip";
     private static final String TAG = MultiDex.TAG;
     private static final String EXTRACTED_NAME_EXT = ".classes";
@@ -56,8 +54,8 @@ final class MultiDexExtractor implements Closeable {
      * We look for additional dex files named {@code classes2.dex},
      * {@code classes3.dex}, etc.
      */
-    private static final String APK_DEX_DIR = "assets" + File.separator + "apkprotector_dex" + File.separator;
-    private static final String DEX_PREFIX = "classes-v";
+    private static final String APK_DEX_DIR = "assets" + File.separator + ProtectApplication.getDexDir() + File.separator;
+    private static final String DEX_PREFIX = ProtectApplication.getDexPrefix();
     private final File sourceApk;
     private final long sourceCrc;
     private final File dexDir;
@@ -167,7 +165,8 @@ final class MultiDexExtractor implements Closeable {
                 // keep zip entry time since it is the criteria used by Dalvik
                 classesDex.setTime(dexFile.getTime());
                 out.putNextEntry(classesDex);
-                DexEncryption.decDex(PROTECT_KEY, in, out);
+                //DexEncryption.decDex(PROTECT_KEY, in, out);
+                Crypto.decrypt(ProtectApplication.protectKey(), in, out);
                 out.closeEntry();
             } finally {
                 out.close();
