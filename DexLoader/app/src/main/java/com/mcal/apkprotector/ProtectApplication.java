@@ -17,7 +17,7 @@ public class ProtectApplication extends Application {
     public static final String DEX_PREFIX = CommonUtils.encryptStrings("$DEX_PREFIX", 2);
     public static final String DEX_DIR = CommonUtils.encryptStrings("$DEX_DIR", 2);
     public static final String PROTECT_KEY = CommonUtils.encryptStrings("$PROTECT_KEY", 2);
-    public static final String REAL_APPLICATION = "$REAL_APPLICATION";
+    public static final String REAL_APPLICATION = "android.app.Application";
 
     /*public static final String DEX_SUFFIX = CommonUtils.encryptStrings("思恑恚恝", 2);
     public static final String DEX_PREFIX = CommonUtils.encryptStrings("恐恟恒恀恀恖恀怞恅", 2);
