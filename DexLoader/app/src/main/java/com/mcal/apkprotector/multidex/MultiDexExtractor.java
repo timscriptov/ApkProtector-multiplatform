@@ -6,7 +6,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.mcal.apkprotector.ProtectApplication;
-import com.mcal.apkprotector.utils.DexEncryption;
+import com.mcal.apkprotector.utils.DexCrypto;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -167,9 +167,11 @@ final class MultiDexExtractor implements Closeable {
                 // keep zip entry time since it is the criteria used by Dalvik
                 classesDex.setTime(dexFile.getTime());
                 out.putNextEntry(classesDex);
-                //DexEncryption.decDex(PROTECT_KEY, in, out);
-                DexEncryption.decrypt(PROTECT_KEY, in, out);
+                //DexCrypto.decDex(PROTECT_KEY, in, out);
+                DexCrypto.decrypt(PROTECT_KEY, in, out);
                 out.closeEntry();
+            } catch (Exception e) {
+                e.printStackTrace();
             } finally {
                 out.close();
             }
