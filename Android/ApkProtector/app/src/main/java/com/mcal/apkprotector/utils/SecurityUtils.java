@@ -24,6 +24,9 @@ public class SecurityUtils {
 
     public static boolean illegalCodeCheck() throws ClassNotFoundException {
         return Class.forName("cc.binmt.signature.PmsHookApplication") != null ||
+                Class.forName("arm.a") == null ||
+                Class.forName("arm.ArmKill") == null ||
+                Class.forName("np.manager.Copyright") == null ||
                 Class.forName("anymy.sign.BinSignatureFix") != null ||
                 Class.forName("apkeditor.patch.signature.Fix") != null ||
                 Class.forName("com.anymy.reflection") != null ||
