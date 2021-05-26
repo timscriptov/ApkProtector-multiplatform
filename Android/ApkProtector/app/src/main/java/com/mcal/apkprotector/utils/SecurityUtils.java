@@ -1,6 +1,10 @@
 package com.mcal.apkprotector.utils;
 
+import android.content.Context;
 import android.os.Build;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class SecurityUtils {
     public static boolean isEmulator() {
@@ -35,5 +39,18 @@ public class SecurityUtils {
                 Class.forName("np.manager.FuckSign") == null ||
                 Class.forName("np.manager.Copyright") == null ||
                 Class.forName("cc.binmt.signature.Hook") != null;
+    }
+
+    public static boolean armCheck(Context context) throws IOException {
+        InputStream input = context.getResources().getAssets().open("Arm_Epic");
+
+        input.mark(1);
+        final int bytesRead = input.read(new byte[1]);
+        input.reset();
+        if (bytesRead != -1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

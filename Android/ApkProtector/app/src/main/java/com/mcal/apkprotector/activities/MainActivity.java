@@ -41,6 +41,7 @@ import com.mcal.apkprotector.view.CreateSignDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 public class MainActivity extends AppCompatActivity {
@@ -81,6 +82,14 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.shitstuff);
         View header = navigationView.getHeaderView(0);
         ((TextView) header.findViewById(R.id.version)).setText(CommonUtils.versionName(this));
+
+        try {
+            if (SecurityUtils.armCheck(this) || BuildConfig.DEBUG) {
+                Utils.showDialogWarn(this, "ApkProtector Security", getString(R.string.vending_message));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
