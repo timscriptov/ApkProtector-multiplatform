@@ -3,8 +3,8 @@ package com.mcal.apkprotector.fastzip;
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.patchers.DexPatcher;
-import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
+import com.mcal.apkprotector.utils.ScopedStorage;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -112,7 +112,7 @@ public class FastZip {
             }
 
             for (String file1 : files) {
-                file1 = file1.replace(FileUtils.getWorkPath() + File.separator, "");
+                file1 = file1.replace(ScopedStorage.getWorkPath() + File.separator, "");
                 if (file1.equals(name)) continue;
             }
             LoggerUtils.writeLog("Entry: " + entry.getName());

@@ -31,7 +31,6 @@ import java.io.File
 import java.io.FileOutputStream
 import kotlin.coroutines.CoroutineContext
 
-
 class ProtectAsync(
     @field:SuppressLint("StaticFieldLeak") private val listener: ProtectAsyncListener,
     @field:SuppressLint("StaticFieldLeak") private val context: Context

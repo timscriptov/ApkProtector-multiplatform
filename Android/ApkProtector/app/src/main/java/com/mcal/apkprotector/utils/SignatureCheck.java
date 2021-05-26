@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.mcal.apkprotector.BuildConfig;
+import com.mcal.apkprotector.data.Constants;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
@@ -89,7 +89,7 @@ public class SignatureCheck {
                 byte[] hash;
 
                 try {
-                    hash = MessageDigest.getInstance("MD5").digest(str.getBytes(StandardCharsets.UTF_8));
+                    hash = MessageDigest.getInstance("MD5").digest(str.getBytes(Constants.UTF_8));
                 } catch (NoSuchAlgorithmException e) {
                     return null;
                 }

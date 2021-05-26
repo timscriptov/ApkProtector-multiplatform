@@ -1,7 +1,5 @@
 package com.mcal.apkprotector.utils;
 
-import com.mcal.apkprotector.App;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -12,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.file.Files;
 
 public class FileUtils {
     public static boolean copyFileStream(@NotNull File file, @NotNull File file1) {
@@ -35,27 +32,18 @@ public class FileUtils {
         }
     }
 
-    public static String getWorkPath() {
-        return App.getContext().getFilesDir().getAbsolutePath();
-    }
-
-    public static boolean copyFile(InputStream src, String dest) {
+    public static void copyFile(InputStream source, String dest) throws IOException {
+        OutputStream os = null;
         try {
-            Files.copy(src, new File(dest).toPath());
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static boolean copyFile(String src, String dest) {
-        try {
-            Files.copy(new File(src).toPath(), new File(dest).toPath());
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            os = new FileOutputStream(new File(dest));
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = source.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            source.close();
+            os.close();
         }
     }
 
@@ -72,16 +60,14 @@ public class FileUtils {
         }
     }
 
-    public static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                if (!Files.isSymbolicLink(f.toPath())) {
-                    deleteDir(f);
-                }
+   public static boolean deleteDir(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDir(file);
             }
         }
-        file.delete();
+        return directoryToBeDeleted.delete();
     }
 
     public static String readFileToString(File file) throws IOException {

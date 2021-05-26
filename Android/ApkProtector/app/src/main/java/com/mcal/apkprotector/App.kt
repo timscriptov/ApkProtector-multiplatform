@@ -3,9 +3,12 @@ package com.mcal.apkprotector
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import com.mcal.apkprotector.data.Preferences
+import org.jetbrains.annotations.Nullable
 
 class App : Application() {
     override fun onCreate() {
@@ -21,6 +24,7 @@ class App : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         private var context: Context? = null
+        private var preferences: SharedPreferences? = null
 
         @JvmStatic
         fun getContext(): Context? {
@@ -28,6 +32,15 @@ class App : Application() {
                 context = App()
             }
             return context
+        }
+
+        @JvmStatic
+        @Nullable
+        fun getPreferences(): SharedPreferences {
+            if (preferences == null) {
+                preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext())
+            }
+            return preferences!!
         }
 
         /**

@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
-import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.StringUtils;
 
 import org.jetbrains.annotations.Contract;
