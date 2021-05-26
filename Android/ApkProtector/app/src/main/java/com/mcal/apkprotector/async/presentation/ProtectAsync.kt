@@ -10,10 +10,15 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import com.mcal.apkprotector.App
+import com.mcal.apkprotector.App.Companion.getContext
 import com.mcal.apkprotector.async.ProtectAsyncListener
+import com.mcal.apkprotector.data.Constants
 import com.mcal.apkprotector.data.Preferences
+import com.mcal.apkprotector.fastzip.FastZip
+import com.mcal.apkprotector.patchers.ManifestPatcher
 import com.mcal.apkprotector.signer.SignatureTool
-import com.mcal.apkprotector.task.*
+import com.mcal.apkprotector.task.AndResGuard
+import com.mcal.apkprotector.task.DexCrypto
 import com.mcal.apkprotector.utils.*
 import com.mcal.apkprotector.zipalign.ZipAlign
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +26,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.svolf.melissa.sheet.SweetViewDialog
+import java.io.ByteArrayInputStream
 import java.io.File
+import java.io.FileOutputStream
 import kotlin.coroutines.CoroutineContext
 
 
@@ -48,25 +55,10 @@ class ProtectAsync(
     private fun onPreExecute() {
         showProgressDialog()
         listener.onProcess()
-        val gen = File("$xpath/gen")
-        if (!gen.exists()) {
-            gen.mkdir()
-        }
-        val jar = File("$xpath/gen/jar")
-        if (!jar.exists()) {
-            jar.mkdir()
-        }
-        val output = File("$xpath/output")
-        if (!output.exists()) {
-            output.mkdir()
-        }
-        File(xpath).mkdirs()
-        Utils.delete(
-            ScopedStorage.getStorageDirectory()
-                .toString() + File.separator + "ApkProtect" + File.separator + "Log.txt"
-        )
-        Utils.deleteFolderContent("$xpath/gen")
-        Utils.deleteFolderContent("$xpath/output")
+        FileUtils.deleteDir(File(Constants.OUTPUT_PATH))
+        FileUtils.deleteDir(File(Constants.RELEASE_PATH))
+        FileUtils.delete(File(Constants.LOG_PATH))
+        FileUtils.delete(File(Constants.CACHE_PATH))
     }
 
     private fun onProgressUpdate(vararg values: String?) {
@@ -76,15 +68,17 @@ class ProtectAsync(
     private fun onPostExecute(result: Boolean) {
         dismissProgressDialog()
         System.gc()
-        Utils.deleteFolderContent("$xpath/gen")
-        Utils.deleteFolderContent("$xpath/output")
+        FileUtils.deleteDir(File(Constants.OUTPUT_PATH))
+        FileUtils.deleteDir(File(Constants.RELEASE_PATH))
+        FileUtils.deleteDir(File(Constants.CACHE_PATH))
+        FileUtils.deleteDir(File(Constants.SMALI_PATH))
         if (result) {
             listener.onCompleted()
         } else {
             val sourceDir =
                 File(ScopedStorage.getStorageDirectory().absolutePath + "/ApkProtect/output/" + MyAppInfo.getPackage() + "")
             if (sourceDir.exists()) {
-                Utils.deleteFolder(sourceDir)
+                FileUtils.deleteDir(sourceDir)
             }
             listener.onFailed()
         }
@@ -96,7 +90,102 @@ class ProtectAsync(
         mi = MyAppInfo(context, p1[0])
         doProgress("Compiling…")
         if (Preferences.getDexProtectBoolean()) {
-            if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
+
+            LoggerUtils.writeLog("----------ApkProtector running----------------")
+
+            LoggerUtils.writeLog("Default dir of ApkProtector" + System.getProperty("user.dir"))
+
+            val outputFolder = File(Constants.OUTPUT_PATH)
+            if (!outputFolder.exists()) {
+                outputFolder.mkdir()
+                LoggerUtils.writeLog("Dir created: " + outputFolder.absolutePath)
+            }
+
+            val dexesFolder = File(Constants.ASSETS_PATH + File.separator + "apkprotector_dex")
+            if (!dexesFolder.exists()) {
+                dexesFolder.mkdir()
+                LoggerUtils.writeLog("Dir created: " + dexesFolder.absolutePath)
+            }
+
+            val releaseFolder = File(Constants.RELEASE_PATH)
+            if (!releaseFolder.exists()) {
+                releaseFolder.mkdir()
+                LoggerUtils.writeLog("Dir created: " + releaseFolder.absolutePath)
+            }
+
+            val smaliFolder = File(Constants.SMALI_PATH)
+            if (!smaliFolder.exists()) {
+                smaliFolder.mkdir()
+                LoggerUtils.writeLog("Dir created: " + smaliFolder.absolutePath)
+            }
+
+            val time = System.currentTimeMillis()
+
+            LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time))
+
+            try {
+                val smaliPath = Constants.SMALI_PATH + File.separator + "ProtectApplication.smali"
+                FileCustomUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
+
+                doProgress("Decompiling…")
+                FastZip.extract(p1[0], Constants.OUTPUT_PATH)
+                LoggerUtils.writeLog("Success unpack: " + p1[0])
+                doProgress("Patching manifest…")
+                val bis = ByteArrayInputStream(ManifestPatcher.parseManifest())
+                val fos = FileOutputStream(Constants.MANIFEST_PATH)
+                val buffer = ByteArray(2048)
+                var len = 0
+                while (bis.read(buffer).also { len = it } > 0) {
+                    fos.write(buffer, 0, len)
+                }
+                fos.close()
+                LoggerUtils.writeLog("Success patch: " + Constants.MANIFEST_PATH)
+                doProgress("Encrypting dexes…")
+                DexCrypto.encodeDexes()
+                LoggerUtils.writeLog("Dex files successful encrypted")
+                doProgress("Compiling…")
+                FastZip.repack(p1[0], Constants.UNSIGNED_PATH)
+                LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH)
+                SourceInfo.initialise("$path/output", mi!!)
+                doProgress("Signing Apk…")
+                if (Preferences.getZipAlignerBoolean()) {
+                    doProgress("Aligning Apk…")
+                    if (ZipAlign.runProcess(Constants.UNSIGNED_PATH, "$xpath/output/aligned.apk")) {
+                        LoggerUtils.writeLog("APK aligned")
+                        doProgress("Signing Apk…")
+                        if (SignatureTool.sign(
+                                context,
+                                File("$xpath/output/aligned.apk"),
+                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                            )
+                        ) {
+                            LoggerUtils.writeLog("APK signed")
+                            doProgress("Done")
+                            t = true
+                        }
+                    }
+                } else {
+                    doProgress("Signing Apk…")
+                    if (SignatureTool.sign(
+                            context,
+                            File(Constants.UNSIGNED_PATH),
+                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                        )
+                    ) {
+                        LoggerUtils.writeLog("APK signed")
+                        doProgress("Done")
+                        t = true
+                    }
+                }
+            } catch (e: Exception) {
+                LoggerUtils.writeLog("$e")
+            }
+
+            //FileUtils.delete(File(Constants.OUTPUT_PATH))
+            //FileUtils.delete(File(Constants.UNSIGNED_PATH))
+            //FileUtils.delete(File(Constants.CACHE_PATH))
+
+            /*if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
                 if (ZipUtils.unpack("$xpath/output/app.apk", "$xpath/gen/")) {
                     if (ManifestPatcher.manifestPatch(xpath + "/gen/AndroidManifest.xml")) {
                         doProgress("DEX - Optimising…")
@@ -146,7 +235,7 @@ class ProtectAsync(
                         }
                     }
                 }
-            }
+            }*/
         }
         if (Preferences.getEncryptResourcesBoolean()) {
             doProgress("Copying apk…")
@@ -193,7 +282,6 @@ class ProtectAsync(
             if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
-                    //if (com.mcal.apkprotector.utils.ZipAligner.fnAapt(context, "$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                     doProgress("Aligning Apk…")
                     if (ZipAlign.runProcess("$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                         doProgress("Signing Apk…")
@@ -221,82 +309,7 @@ class ProtectAsync(
                 }
             }
         }
-        /*if (Preferences.getEncryptStringsBoolean()) {
-            doProgress("Copying apk…")
-            File("$xpath/gen/").mkdir()
-            ZipUtil.unpack(File(p1[0]), File("$xpath/gen/"));
-            //if (UnZipApk.unZipIt(p1[0], "$xpath/gen/")) {
-                // 3. Конвертация DEX в JAR
-                for (file in File("$xpath/gen").listFiles()) {
-                    if (file.name.endsWith(".dex")) {
-                        doProgress("DEX - Dex2Jar…")
-                        val jar = File("$xpath/gen/jar")
-                        if (!jar.exists()) {
-                            jar.mkdir()
-                        }
-                        //Dex2jar.from("$xpath/gen/" + file.name).to("$xpath/gen/jar/" + file.name.replace(".dex", ".jar"))
-                        File("$xpath/gen/" + file.name).delete()
-                    }
-                }
-                // 4. Шифрование строк в DEX
-                for (file in File("$xpath/gen/jar").listFiles()) {
-                    if (file.name.endsWith(".jar")) {
-                        doProgress("DEX - Encrypting classes…")
-                        File("$xpath/gen/classes/").mkdir()
-                        UnZipApk.unZipIt("$xpath/gen/jar/" + file.name, "$xpath/gen/classes/")
-                        StringFog.doFogClasses("$xpath/gen/classes/", path + "/output/" + MyAppInfo.getPackage())
-                    }
-                }
-                if (FileCustomUtils.inputStreamAssets(context, "dexloader.jar", "$xpath/gen/jar/dexloader.jar")) {
-                    // 4. Class2Dex
-                    doProgress("DEX - Dexing classes…")
-                    ZipUtil.unpack(File("$xpath/gen/jar/dexloader.jar"), File("$xpath/gen/classes/"))
-                    DexedClasses.dexBuildClasses(File("$xpath/gen/classes/"), File("$xpath/gen/"))
-                }
-                Utils.deleteFolderContent("$xpath/gen/jar")
-                Utils.deleteFolderContent("$xpath/gen/classes")
-                doProgress("Building APK…")
-                if (BuildApk.buildApk("$xpath/gen", "$xpath/output/unsigned.apk")) {
-                    doProgress("Signing APK…")
-                    SourceInfo.initialise("$path/output", mi!!)
-                    if (ApkSigner.signApk("$xpath/output/unsigned.apk", path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")) {
-                        doProgress("Done")
-                        t = true
-                    }
-                }
-            //}
-        }*/
         return@withContext t
-    }
-
-    private fun renameAppClass(): Boolean {
-        return try {
-            if (Preferences.isOptimizeDexBoolean()) {
-                if (FileCustomUtils.inputStreamAssets(
-                        context,
-                        "dexloader.dex",
-                        "$xpath/gen/dexloader.dex"
-                    )
-                ) {
-                    if (DexPatcher.dexPatch(context, "$xpath/gen/dexloader.dex")) {
-                        DexOptimizer().init("$xpath/gen")
-                    }
-                }
-            } else {
-                if (FileCustomUtils.inputStreamAssets(
-                        context,
-                        "dexloader.dex",
-                        "$xpath/gen/classes.dex"
-                    )
-                ) {
-                    DexPatcher.dexPatch(context, "$xpath/gen/classes.dex")
-                }
-            }
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
     }
 
     private suspend fun doProgress(value: String?) = withContext(coroutineContext) {
@@ -331,9 +344,5 @@ class ProtectAsync(
                 setPadding(dp16, dp16, dp16, dp16)
             })
         }
-    }
-
-    companion object {
-        private const val TAG = "ApkProtector"
     }
 }

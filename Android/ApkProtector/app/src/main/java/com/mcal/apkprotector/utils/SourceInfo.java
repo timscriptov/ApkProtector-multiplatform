@@ -1,14 +1,18 @@
 package com.mcal.apkprotector.utils;
 
-import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class SourceInfo {
 
@@ -29,8 +33,27 @@ public class SourceInfo {
             json.put("package_label", processService.getAppName());
             json.put("package_name", processService.getPackage());
             String filePath = path + "/" + processService.getPackage();
-            FileUtils.writeStringToFile(new File(filePath + "/info.mz"), json.toString());
-        } catch (IOException | JSONException e) {
+
+            File outputFolder = new File(filePath);
+            if (!outputFolder.exists()) {
+                outputFolder.mkdir();
+            }
+
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter( new FileWriter(filePath + "/info.mz"));
+                writer.write(json.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if ( writer != null)
+                        writer.close( );
+                } catch ( IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

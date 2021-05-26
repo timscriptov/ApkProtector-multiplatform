@@ -2,22 +2,7 @@ package com.mcal.apkprotector.task;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
-import com.mcal.apkprotector.data.Preferences;
-
 import org.jetbrains.annotations.NotNull;
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.rewriter.DexRewriter;
-import org.jf.dexlib2.rewriter.Rewriter;
-import org.jf.dexlib2.rewriter.RewriterModule;
-import org.jf.dexlib2.rewriter.Rewriters;
-import org.jf.dexlib2.writer.pool.DexPool;
-
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 
 public class DexPatcher {
     public static boolean dexPatch(Context context, String dexPath) {
@@ -39,7 +24,7 @@ public class DexPatcher {
 
     public static boolean renameAppClass(@NotNull Context context, String dexPath) {
         try {
-            //DexBackedDexFile dexFile = DexFileFactory.loadDexFile(dexPath, Opcodes.forApi(19));
+            /*//DexBackedDexFile dexFile = DexFileFactory.loadDexFile(dexPath, Opcodes.forApi(19));
 
             DexBackedDexFile dexFile = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(dexPath)));
 
@@ -57,7 +42,7 @@ public class DexPatcher {
             DexFile rewrittenDexFile = rewriter.rewriteDexFile(dexFile);
             DexPool.writeTo(dexPath, rewrittenDexFile);
             //new DexOptimizer().merge_multidex(xpath + "/gen");
-            //rewrite_dex();
+            //rewrite_dex();*/
             return true;
         } catch (Exception e) {
             e.printStackTrace();

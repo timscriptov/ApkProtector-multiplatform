@@ -1,11 +1,5 @@
 package com.mcal.apkprotector.task;
 
-import android.util.Log;
-
-
-import java.io.File;
-import java.io.IOException;
-
 public class StringFog {
     private static String TAG = "StringFog";
 

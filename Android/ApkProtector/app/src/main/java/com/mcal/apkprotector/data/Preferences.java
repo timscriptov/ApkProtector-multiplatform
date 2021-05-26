@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import com.mcal.apkprotector.App;
+import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.Utils;
 
 import org.jetbrains.annotations.Contract;
@@ -43,14 +44,6 @@ public final class Preferences {
 
     public static boolean getPageAlignSharedLibsBoolean() {
         return preferences.getBoolean("pageAlignSharedLibsBoolean", false);
-    }
-
-    public static boolean getEncryptStringsBoolean() {
-        return preferences.getBoolean("encryptStringsBoolean", false);
-    }
-
-    public static void setEncryptStringsBoolean(boolean flag) {
-        preferences.edit().putBoolean("encryptStringsBoolean", flag).apply();
     }
 
     public static boolean getDexProtectBoolean() {
@@ -93,14 +86,6 @@ public final class Preferences {
         return preferences.getBoolean("splashActivityBoolean", false);
     }
 
-    public static void isTitleNotificationString(String flag) {
-        preferences.edit().putString("titleNotificationString", flag).apply();
-    }
-
-    public static String isTitleNotificationString() {
-        return preferences.getString("titleNotificationString", "Security ApkProtector");
-    }
-
     public static void isTitleNotificationBoolean(boolean flag) {
         preferences.edit().putBoolean("titleNotificationBoolean", flag).apply();
     }
@@ -129,10 +114,6 @@ public final class Preferences {
         return preferences.getBoolean("welcomeMessageBoolean", false);
     }
 
-    public static void isCheckVPNBoolean(boolean flag) {
-        preferences.edit().putBoolean("checkVPNBoolean", flag).apply();
-    }
-
     public static boolean isCheckVPNBoolean() {
         return preferences.getBoolean("checkVPNBoolean", false);
     }
@@ -143,14 +124,6 @@ public final class Preferences {
 
     public static boolean isCrashNotificationBoolean() {
         return preferences.getBoolean("crashNotificationBoolean", false);
-    }
-
-    public static void isDeviceLockString(String flag) {
-        preferences.edit().putString("deviceLockString", flag).apply();
-    }
-
-    public static String isDeviceLockString() {
-        return preferences.getString("deviceLockString", "");
     }
 
     public static void isDeviceLockBoolean(boolean flag) {
@@ -175,14 +148,6 @@ public final class Preferences {
 
     public static boolean isHookCheckBoolean() {
         return preferences.getBoolean("hookCheckBoolean", false);
-    }
-
-    public static void isIllegalCodeCheckString(String flag) {
-        preferences.edit().putString("illegalCodeCheckString", flag).apply();
-    }
-
-    public static String isIllegalCodeCheckString() {
-        return preferences.getString("illegalCodeCheckString", "bin.mt.apksignaturekillerplus.HookApplication\ncc.binmt.signature.PmsHookApplication\ncc.binmt.signature.Hook");
     }
 
     public static void isIllegalCodeCheckBoolean(boolean flag) {
@@ -346,31 +311,47 @@ public final class Preferences {
     }
 
 
-    public static boolean getRandomName() {
-        return preferences.getBoolean("randomName", false);
+    public static String getProtectKey() {
+        return preferences.getString("protectKeyString", Utils.sealing(Utils.buildID()));
     }
 
-    public static String getDexFolderName() {
-        if (getRandomName()) {
-            return preferences.getString("dexFolderName", "dex");
+    public static String getDexDir() {
+        if (Preferences.isRandomPackageName()) {
+            return CommonUtils.generateRandomString(Constants.DEX_DIR);
         } else {
-            return "dex";
+            return Constants.DEX_DIR;
         }
     }
 
-    public static String getReplaceDexName() {
-        if (getRandomName()) {
-            return preferences.getString("replaceDexName", "bin");
+    public static String getPackageName() {
+        if (Preferences.isRandomPackageName()) {
+            return CommonUtils.generateRandomString(Constants.PACKAGE_NAME);
         } else {
-            return "bin";
+            return Constants.PACKAGE_NAME;
+        }
+    }
+
+    public static String getDexPrefix() {
+        if (Preferences.isRandomPackageName()) {
+            return CommonUtils.generateRandomString(Constants.DEX_PREFIX);
+        } else {
+            return Constants.DEX_PREFIX;
+        }
+    }
+
+    public static String getDexSuffix() {
+        if (Preferences.isRandomPackageName()) {
+            return CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
+        } else {
+            return Constants.DEX_SUFFIX;
         }
     }
 
     public static String getApplicationName() {
-        if (getRandomName()) {
-            return preferences.getString("applicationName", "com.mcal.apkprotector.ProxyApplication");
-        } else {
-            return "com.mcal.apkprotector.ProxyApplication";
-        }
+        return getPackageName() + ".ProtectApplication";
+    }
+
+    public static boolean isRandomPackageName() {
+        return preferences.getBoolean("randomName", false);
     }
 }

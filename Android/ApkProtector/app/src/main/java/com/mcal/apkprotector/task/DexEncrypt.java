@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
-import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.StringUtils;
 
@@ -79,7 +78,7 @@ public class DexEncrypt {
     }
 
     private static void okEnDex(String name) throws Exception {
-        File assets = new File(xpath + "/gen/assets");
+        /*File assets = new File(xpath + "/gen/assets");
         if (!assets.exists()) {
             assets.mkdir();
         }
@@ -91,15 +90,15 @@ public class DexEncrypt {
         FileOutputStream os = new FileOutputStream(xpath + "/gen/assets/" + Preferences.getDexFolderName() + File.separator + getRandomClassesName(name));
         isx = new DeflaterInputStream(is);
         exfr(isx, os);
-        isx.close();
+        isx.close();*/
     }
 
     public static String getRandomClassesName(String name) {
-        if (Preferences.getRandomName()) {
-            return name.replace("classes", name.equals("classes.dex") ? CommonUtils.getRandomString(8) : CommonUtils.getRandomString(8)).replace("dex", Preferences.getReplaceDexName());
-        } else {
-            return name.replace("classes", name.equals("classes.dex") ? "classes-v1" : "classes-v").replace("dex", "bin");
-        }
+        //if (Preferences.getRandomName()) {
+        // return name.replace("classes", name.equals("classes.dex") ? CommonUtils.getRandomString(8) : CommonUtils.getRandomString(8)).replace("dex", Preferences.getReplaceDexName());
+        // } else {
+        return name.replace("classes", name.equals("classes.dex") ? "classes-v1" : "classes-v").replace("dex", "bin");
+        // }
     }
 
     private static void opt_dex(Context context, String name) {
@@ -144,17 +143,16 @@ public class DexEncrypt {
         if (!assets.exists()) {
             assets.mkdir();
         }
-        InputStream inputStream = new FileInputStream(new File(xpath + "/gen/assets/open-dex/" + name));
+        InputStream initialStream = new FileInputStream(new File(xpath + "/gen/assets/open-dex/" + name));
         FileOutputStream outputStream;
         if (name.equals("classes.dex")) {
             outputStream = new FileOutputStream(xpath + "/gen/classes-op.dex");
         } else {
             outputStream = new FileOutputStream(xpath + "/gen/" + name);
         }
-        FileUtils.c(inputStream, outputStream);
-        inputStream.close();
-        outputStream.flush();
-        outputStream.close();
+        byte[] buffer = new byte[initialStream.available()];
+        initialStream.read(buffer);
+        outputStream.write(buffer);
     }
 
     private static void encDex() {

@@ -6,6 +6,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.mcal.apkprotector.data.Constants;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +16,17 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 public class CommonUtils {
+
+    public static String generateRandomString(String str) {
+        Random random = new Random();
+        char[] arr = str.toCharArray();
+        for (int i = 0; i < str.length(); i++) {
+            if (arr[i] != '.') {
+                arr[i] = Constants.ALPHABET.charAt(random.nextInt(Constants.ALPHABET.length()));
+            }
+        }
+        return new String(arr);
+    }
 
     @Contract(pure = true)
     public static boolean isSystemPackage(@NotNull PackageInfo pkgInfo) {

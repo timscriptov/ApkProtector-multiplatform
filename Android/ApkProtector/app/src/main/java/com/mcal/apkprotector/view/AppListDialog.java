@@ -60,7 +60,7 @@ public class AppListDialog implements AppInteractor {
 
                 holder.packageLabel.setText(pkg.packageLabel);
                 holder.packageName.setText(pkg.packageName);
-                holder.packageVersion.setText(R.string.version + pkg.packageVersion);
+                holder.packageVersion.setText(getContext().getString(R.string.version) + pkg.packageVersion);
                 holder.packageFilePath.setText(pkg.packageFilePath);
 
                 holder.packageIcon.setImageDrawable(pkg.packageIcon);

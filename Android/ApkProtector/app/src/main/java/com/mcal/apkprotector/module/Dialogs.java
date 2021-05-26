@@ -82,8 +82,8 @@ public class Dialogs {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.mcal.apkprotector")));
             dialog.cancel();
         });
-        dialog.addAction(R.drawable.ic_community_appgallery, "AppGallery", view -> {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://appgallery.cloud.huawei.com/ag/n/app/C104318339?locale=ru_RU&source=appshare&subsource=C104318339")));
+        dialog.addAction(R.drawable.ic_community_4pda, "4PDA", view -> {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://4pda.ru/forum/index.php?showtopic=971138")));
             dialog.cancel();
         });
         dialog.addAction(R.drawable.ic_community_gmail, "Gmail", view -> {

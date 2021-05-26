@@ -10,10 +10,10 @@ android {
     
     defaultConfig {
         applicationId "com.mcal.apkprotector"
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 30
-        versionCode 21
-        versionName "2.1"
+        versionCode 22
+        versionName "2.2"
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
@@ -81,7 +81,7 @@ dependencies {
     implementation project(':axml')
     //implementation project(':stringfog')
     implementation project(':dx')
-    implementation project(':dexlib2')
+    //implementation project(':dexlib2')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
@@ -105,7 +105,7 @@ dependencies {
 
     implementation 'com.github.megatronking.stringfog:xor:1.1.0'
     implementation 'commons-cli:commons-cli:1.4'
-    implementation 'commons-io:commons-io:2.8.0'
+    //implementation 'commons-io:commons-io:2.8.0'
     implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'org.zeroturnaround:zt-zip:1.14'
 }

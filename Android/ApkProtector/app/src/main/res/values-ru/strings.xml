@@ -70,7 +70,7 @@
     <string name="protect_key_msg">Пользовательский ключ шифрования dexs</string>
     <string name="protect_key_title">Ключ шифрования</string>
     <string name="about_msg1">ApkProtector - это защитник и обфускатор для Android приложений. Он поможет защитить ваши приложения и библиотеки от несанкционированного или незаконного использования, декомпилирования и взлома.</string>
-    <string name="about_msg2"><![CDATA[<br><i>PS: Приложение из Google Play не поддерживает Андроид 11 и выше! Рекомендуется загрузить приложение из AppGallery или telegram</i>]]></string>
+    <string name="about_msg2"><![CDATA[<br><i>PS: Приложение из Google Play не поддерживает Андроид 11 и выше! Рекомендуется загрузить приложение из 4PDA или Telegram</i>]]></string>
     <string name="about_copyright"><![CDATA[<br>© Copyright 2019–2021 Тимашков Иван]]></string>
     <string name="dex_protect">Зашифровать дексы</string>
     <string name="encrypt_resources">Зашифровать ресурсы</string>

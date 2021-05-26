@@ -70,7 +70,7 @@
     <string name="protect_key_msg">Dexs custom encryption key</string>
     <string name="protect_key_title">Protect Key</string>
     <string name="about_msg1">ApkProtector is the protector and obfuscator for Android platforms. It helps you secure your applications and libraries against unauthorized or illegal use, reverse engineering, and cracking.</string>
-    <string name="about_msg2"><![CDATA[<br><i>PS: The application from Google Play does not support Android 11 and higher! It is recommended to download the application from AppGallery or Telegram</i>]]></string>
+    <string name="about_msg2"><![CDATA[<br><i>PS: The application from Google Play does not support Android 11 and higher! It is recommended to download the application from 4PDA or Telegram</i>]]></string>
     <string name="about_copyright"><![CDATA[<br>© Copyright 2019-2021 Тимашков Иван]]></string>
     <string name="dex_protect">Dex Protect</string>
     <string name="encrypt_resources">Encrypt Resources</string>

@@ -70,7 +70,7 @@
     <string name="protect_key_msg">Dexs özel şifreleme anahtarı</string>
     <string name="protect_key_title">Protect Key</string>
     <string name="about_msg1">ApkProtector, Android platformları için koruyucu ve gizleyicidir. Uygulamalarınızı ve kitaplıklarınızı yetkisiz veya yasa dışı kullanıma, tersine mühendislik ve kırılmaya karşı korumanıza yardımcı olur.</string>
-    <string name="about_msg2"><![CDATA[<br> <i> Not: Google Play\'deki uygulama Android 11 ve üstünü desteklemez! Uygulamayı AppGallery veya Telegram\'dan indirmeniz önerilir </i>]]></string>
+    <string name="about_msg2"><![CDATA[<br> <i> Not: Google Play\'deki uygulama Android 11 ve üstünü desteklemez! Uygulamayı 4PDA veya Telegram\'dan indirmeniz önerilir </i>]]></string>
     <string name="about_copyright"><![CDATA[<br> © Copyright 2019–2021 Тимашков Иван]]></string>
     <string name="dex_protect">Dex Protect</string>
     <string name="encrypt_resources">Resources Şifrele</string>

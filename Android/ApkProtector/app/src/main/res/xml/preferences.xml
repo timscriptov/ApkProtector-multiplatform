@@ -4,45 +4,15 @@
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
         android:title="Dexer">
+        <!-- androidx.preference.SwitchPreference
+            android:title="@string/pref_title_hide_apkprotector"
+            android:key="randomName"
+            android:summary="@string/pref_msg_random_name"
+            android:defaultValue="false" / -->
         <androidx.preference.EditTextPreference
             android:title="@string/protect_key_title"
             android:key="protectKeyString"
             android:summary="@string/protect_key_msg" />
-        <androidx.preference.SwitchPreference
-            android:title="@string/pref_title_dex_opt"
-            android:key="optimizeDexBoolean"
-            android:summary="@string/pref_msg_dex_opt"
-            android:defaultValue="true" />
-        <androidx.preference.EditTextPreference
-            android:title="@string/pref_title_ignore_classes"
-            android:key="userIgnoredClasses"
-            android:summary="@string/pref_msg_ignore_classes"
-            android:dependency="optimizeDexBoolean" />
-    </androidx.preference.PreferenceCategory>
-
-    <androidx.preference.PreferenceCategory
-        android:layout="@layout/preference_category"
-        android:title="@string/pref_title_hide_apkprotector">
-        <androidx.preference.SwitchPreference
-            android:title="@string/pref_title_random_name"
-            android:key="randomName"
-            android:summary="@string/pref_msg_random_name"
-            android:defaultValue="false" />
-        <androidx.preference.EditTextPreference
-            android:title="@string/pref_title_dex_folder_name"
-            android:key="dexFolderName"
-            android:summary="@string/pref_msg_dex_folder_name"
-            android:dependency="randomName" />
-        <androidx.preference.EditTextPreference
-            android:title="@string/pref_title_dex_suffix"
-            android:key="replaceDexName"
-            android:summary="@string/pref_msg_dex_suffix"
-            android:dependency="randomName" />
-        <androidx.preference.EditTextPreference
-            android:title="@string/pref_title_application_name"
-            android:key="applicationName"
-            android:summary="@string/pref_msg_application_name"
-            android:dependency="randomName" />
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory

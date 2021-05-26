@@ -135,19 +135,19 @@ public class ManifestModify {
             Node randomName = new Node();
             randomName.name = "meta-data";
             randomName.attr(NS_ANDROID, "name", android.R.attr.name, 3, "RandomName");
-            randomName.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(String.valueOf(Preferences.getRandomName()), 2));
+            //randomName.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(String.valueOf(Preferences.getRandomName()), 2));
             applicationNode.children.add(randomName);
 
             Node dexFolderName = new Node();
             dexFolderName.name = "meta-data";
             dexFolderName.attr(NS_ANDROID, "name", android.R.attr.name, 3, "DexFolderName");
-            dexFolderName.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(Preferences.getDexFolderName(), 2));
+            //dexFolderName.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(Preferences.getDexFolderName(), 2));
             applicationNode.children.add(dexFolderName);
 
             Node replaceDexName = new Node();
             replaceDexName.name = "meta-data";
             replaceDexName.attr(NS_ANDROID, "name", android.R.attr.name, 3, "ReplaceDexName");
-            replaceDexName.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(Preferences.getReplaceDexName(), 2));
+            //replaceDexName.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(Preferences.getReplaceDexName(), 2));
             applicationNode.children.add(replaceDexName);
         }
     }

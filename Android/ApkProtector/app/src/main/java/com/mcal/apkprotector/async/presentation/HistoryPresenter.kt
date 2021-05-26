@@ -1,10 +1,10 @@
 package com.mcal.apkprotector.async.presentation
 
 import com.mcal.apkprotector.activities.HomeActivity
+import com.mcal.apkprotector.utils.FileUtils
 import com.mcal.apkprotector.utils.SourceInfo
 import com.mcal.apkprotector.utils.Utils
 import kotlinx.coroutines.*
-import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -58,7 +58,7 @@ class HistoryPresenter : CoroutineScope {
                         try {
                             if (file.exists()) {
                                 if (file.isDirectory) {
-                                    FileUtils.deleteDirectory(file)
+                                    FileUtils.deleteDir(file)
                                 } else {
                                     file.delete()
                                 }

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Build;
 
-import org.apache.commons.io.IOUtils;
+import com.mcal.apkprotector.utils.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,16 +33,14 @@ public class ZipAlign {
             AssetManager assets = context.getAssets();
             File aapt = new File(context.getFilesDir().getAbsolutePath(), "zipalign");
             InputStream aapt_in = assets.open(Build.CPU_ABI + "/bin/zipalign");
-            OutputStream aapu_out = new FileOutputStream(aapt);
-            IOUtils.copy(aapt_in, aapu_out);
+            FileUtils.copyFile(aapt_in, context.getFilesDir().getAbsolutePath() + File.separator + "zipalign");
             aapt_in.close();
-            aapu_out.close();
             aapt.setExecutable(true);
 
             //System.load("zipalign");
 
             if (!aapt.isFile()) {
-                IOUtils.copy(aapt_in, aapu_out);
+                FileUtils.copyFile(aapt_in, context.getFilesDir().getAbsolutePath() + File.separator + "zipalign");
             }
 
             // show arguments

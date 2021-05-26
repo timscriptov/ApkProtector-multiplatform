@@ -1,7 +1,7 @@
 -keepattributes SourceFile, LineNumberTable
 -renamesourcefileattribute
 -allowaccessmodification
--
+
 # zipsigner
 -keep class org.spongycastle.** { *; }
 #-keep class org.spongycastle.jcajce.provider.** { *; }
@@ -11,9 +11,6 @@
 
 # dexlib2
 -keep class com.google.common.collect.** { *; }
-
-# StringFog
--keep class com.mcal.stringfog.xor.StringFogImpl { *; }
 
 -keep class com.mcal.apkprotector.zipalign.ZipAlign { *; }
 
