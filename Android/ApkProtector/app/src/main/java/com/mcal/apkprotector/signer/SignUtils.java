@@ -105,7 +105,7 @@ public class SignUtils {
 
     public boolean verify(@NonNull File apk) {
         ApkVerifier.Builder builder = new ApkVerifier.Builder(apk);
-        if (SigSchemes.v4SchemeEnabled()) {
+        if (Preferences.getSignatureV4()) {
             if (idsigFile == null) {
                 throw new RuntimeException("idsig file is mandatory for v4 signature scheme.");
             }
@@ -117,16 +117,16 @@ public class SignUtils {
             Log.i("SignUtils::verify", apk.toString());
             boolean isVerify = result.isVerified();
             if (isVerify) {
-                if (SigSchemes.v1SchemeEnabled() && result.isVerifiedUsingV1Scheme())
+                if (Preferences.getSignatureV1() && result.isVerifiedUsingV1Scheme())
                     Log.i("SignUtils::verify", "V1 signature verification succeeded.");
                 else Log.w("SignUtils::verify", "V1 signature verification failed/disabled.");
-                if (SigSchemes.v2SchemeEnabled() && result.isVerifiedUsingV2Scheme())
+                if (Preferences.getSignatureV2() && result.isVerifiedUsingV2Scheme())
                     Log.i("SignUtils::verify", "V2 signature verification succeeded.");
                 else Log.w("SignUtils::verify", "V2 signature verification failed/disabled.");
-                if (SigSchemes.v3SchemeEnabled() && result.isVerifiedUsingV3Scheme())
+                if (Preferences.getSignatureV3() && result.isVerifiedUsingV3Scheme())
                     Log.i("SignUtils::verify", "V3 signature verification succeeded.");
                 else Log.w("SignUtils::verify", "V3 signature verification failed/disabled.");
-                if (SigSchemes.v4SchemeEnabled() && result.isVerifiedUsingV4Scheme())
+                if (Preferences.getSignatureV4() && result.isVerifiedUsingV4Scheme())
                     Log.i("SignUtils::verify", "V4 signature verification succeeded.");
                 else Log.w("SignUtils::verify", "V4 signature verification failed/disabled.");
                 List<X509Certificate> signerCertificates = result.getSignerCertificates();
@@ -138,7 +138,7 @@ public class SignUtils {
             for (ApkVerifier.IssueWithParams err : result.getErrors()) {
                 Log.e("SignUtils::verify", err.toString());
             }
-            if (SigSchemes.v1SchemeEnabled()) {
+            if (Preferences.getSignatureV1()) {
                 for (ApkVerifier.Result.V1SchemeSignerInfo signer : result.getV1SchemeIgnoredSigners()) {
                     String name = signer.getName();
                     for (ApkVerifier.IssueWithParams err : signer.getErrors()) {
@@ -165,10 +165,10 @@ public class SignUtils {
         builder.setOutputApk(out);
         builder.setCreatedBy("ApkProtector");
         if (minSdk != -1) builder.setMinSdkVersion(minSdk);
-        builder.setV1SigningEnabled(SigSchemes.v1SchemeEnabled());
-        builder.setV2SigningEnabled(SigSchemes.v2SchemeEnabled());
-        builder.setV3SigningEnabled(SigSchemes.v3SchemeEnabled());
-        if (SigSchemes.v4SchemeEnabled()) {
+        builder.setV1SigningEnabled(Preferences.getSignatureV1());
+        builder.setV2SigningEnabled(Preferences.getSignatureV2());
+        builder.setV3SigningEnabled(Preferences.getSignatureV3());
+        if (Preferences.getSignatureV4()) {
             if (idsigFile == null) {
                 throw new RuntimeException("idsig file is mandatory for v4 signature scheme.");
             }

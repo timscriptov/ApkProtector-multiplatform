@@ -18,7 +18,7 @@ public class Constants {
     public static String PACKAGE_NAME = "com.mcal.apkprotector";
     public static String DEX_PREFIX = "classes-v";
     public static String DEX_SUFFIX = ".bin";
-    public static String DEX_DIR = "apkprotector_dex";
+    public static String DEX_DIR = "dex";
 
     public static final String UTF_8 = "UTF-8";
 

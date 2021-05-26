@@ -11,297 +11,308 @@ import com.mcal.apkprotector.utils.Utils;
 import org.jetbrains.annotations.Contract;
 
 public final class Preferences {
+    private static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+
+    public Preferences() {
+        preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+    }
+
+    @Contract(pure = true)
+    public static SharedPreferences getDefSharedPreferences() {
+        return preferences;
+    }
+
     public static boolean getOldDexloaderBoolean() {
-        return App.getPreferences().getBoolean("oldDexloaderBoolean", false);
+        return preferences.getBoolean("oldDexloaderBoolean", false);
     }
 
     public static boolean getZipAlignerBoolean() {
-        return App.getPreferences().getBoolean("zipalignerBoolean", false);
+        return preferences.getBoolean("zipalignerBoolean", false);
     }
 
     public static String getAlignmentString() {
-        return App.getPreferences().getString("alignmentString", "4");
+        return preferences.getString("alignmentString", "4");
     }
 
     public static boolean getForceBoolean() {
-        return App.getPreferences().getBoolean("forceBoolean", false);
+        return preferences.getBoolean("forceBoolean", false);
     }
 
     public static boolean getZopfliBoolean() {
-        return App.getPreferences().getBoolean("zopfliBoolean", false);
+        return preferences.getBoolean("zopfliBoolean", false);
     }
 
     public static boolean getPageAlignSharedLibsBoolean() {
-        return App.getPreferences().getBoolean("pageAlignSharedLibsBoolean", false);
+        return preferences.getBoolean("pageAlignSharedLibsBoolean", false);
     }
 
     public static boolean getDexProtectBoolean() {
-        return App.getPreferences().getBoolean("dexProtectBoolean", false);
+        return preferences.getBoolean("dexProtectBoolean", false);
     }
 
     public static void setDexProtectBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("dexProtectBoolean", flag).apply();
+        preferences.edit().putBoolean("dexProtectBoolean", flag).apply();
     }
 
     public static boolean getEncryptResourcesBoolean() {
-        return App.getPreferences().getBoolean("encryptResourcesBoolean", false);
+        return preferences.getBoolean("encryptResourcesBoolean", false);
     }
 
     public static boolean getSignApkBoolean() {
-        return App.getPreferences().getBoolean("signApkBoolean", false);
+        return preferences.getBoolean("signApkBoolean", false);
     }
 
     public static void setSignApkBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("signApkBoolean", flag).apply();
+        preferences.edit().putBoolean("signApkBoolean", flag).apply();
     }
 
     public static String isProtectKeyString(String str) {
-        return App.getPreferences().getString("protectKeyString", str);
+        return preferences.getString("protectKeyString", str);
     }
 
     public static String getProtectKeyString() {
-        return App.getPreferences().getString("protectKeyString", Utils.sealing(Utils.buildID()));
+        return preferences.getString("protectKeyString", Utils.sealing(Utils.buildID()));
     }
 
     public static String isApkPath() {
-        return App.getPreferences().getString("apkPath", "");
+        return preferences.getString("apkPath", "");
     }
 
     public static void isSplashActivityBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("splashActivityBoolean", flag).apply();
+        preferences.edit().putBoolean("splashActivityBoolean", flag).apply();
     }
 
     public static boolean isSplashActivityBoolean() {
-        return App.getPreferences().getBoolean("splashActivityBoolean", false);
+        return preferences.getBoolean("splashActivityBoolean", false);
     }
 
     public static void isTitleNotificationBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("titleNotificationBoolean", flag).apply();
+        preferences.edit().putBoolean("titleNotificationBoolean", flag).apply();
     }
 
     public static boolean isTitleNotificationBoolean() {
-        return App.getPreferences().getBoolean("titleNotificationBoolean", false);
+        return preferences.getBoolean("titleNotificationBoolean", false);
     }
 
     public static void isWelcomeMessageString(String flag) {
-        App.getPreferences().edit().putString("welcomeMessageString", flag).apply();
+        preferences.edit().putString("welcomeMessageString", flag).apply();
     }
 
     public static String isWelcomeMessageString() {
-        return App.getPreferences().getString("welcomeMessageString", "Powered by ApkProtector");
+        return preferences.getString("welcomeMessageString", "Powered by ApkProtector");
     }
 
     public static int isWelcomeModeInt(int i) {
-        return App.getPreferences().getInt("welcomeModeInt", i);
+        return preferences.getInt("welcomeModeInt", i);
     }
 
     public static void isWelcomeMessageBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("welcomeMessageBoolean", flag).apply();
+        preferences.edit().putBoolean("welcomeMessageBoolean", flag).apply();
     }
 
     public static boolean isWelcomeMessageBoolean() {
-        return App.getPreferences().getBoolean("welcomeMessageBoolean", false);
+        return preferences.getBoolean("welcomeMessageBoolean", false);
     }
 
     public static boolean isCheckVPNBoolean() {
-        return App.getPreferences().getBoolean("checkVPNBoolean", false);
+        return preferences.getBoolean("checkVPNBoolean", false);
     }
 
     public static void isCrashNotificationBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("crashNotificationBoolean", flag).apply();
+        preferences.edit().putBoolean("crashNotificationBoolean", flag).apply();
     }
 
     public static boolean isCrashNotificationBoolean() {
-        return App.getPreferences().getBoolean("crashNotificationBoolean", false);
+        return preferences.getBoolean("crashNotificationBoolean", false);
     }
 
     public static void isDeviceLockBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("deviceLockBoolean", flag).apply();
+        preferences.edit().putBoolean("deviceLockBoolean", flag).apply();
     }
 
     public static boolean isDeviceLockBoolean() {
-        return App.getPreferences().getBoolean("deviceLockBoolean", false);
+        return preferences.getBoolean("deviceLockBoolean", false);
     }
 
     public static void isHookCheckString(String flag) {
-        App.getPreferences().edit().putString("hookCheckString", flag).apply();
+        preferences.edit().putString("hookCheckString", flag).apply();
     }
 
     public static String isHookCheckString() {
-        return App.getPreferences().getString("hookCheckString", "");
+        return preferences.getString("hookCheckString", "");
     }
 
     public static void isHookCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("hookCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("hookCheckBoolean", flag).apply();
     }
 
     public static boolean isHookCheckBoolean() {
-        return App.getPreferences().getBoolean("hookCheckBoolean", false);
+        return preferences.getBoolean("hookCheckBoolean", false);
     }
 
     public static void isIllegalCodeCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("illegalCodeCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("illegalCodeCheckBoolean", flag).apply();
     }
 
     public static boolean isIllegalCodeCheckBoolean() {
-        return App.getPreferences().getBoolean("illegalCodeCheckBoolean", false);
+        return preferences.getBoolean("illegalCodeCheckBoolean", false);
     }
 
     public static void isCloneCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("cloneCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("cloneCheckBoolean", flag).apply();
     }
 
     public static boolean isCloneCheckBoolean() {
-        return App.getPreferences().getBoolean("cloneCheckBoolean", false);
+        return preferences.getBoolean("cloneCheckBoolean", false);
     }
 
     public static void isEmulatorCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("emulatorCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("emulatorCheckBoolean", flag).apply();
     }
 
     public static boolean isEmulatorCheckBoolean() {
-        return App.getPreferences().getBoolean("emulatorCheckBoolean", false);
+        return preferences.getBoolean("emulatorCheckBoolean", false);
     }
 
     public static void isPlaystoreCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("playstoreCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("playstoreCheckBoolean", flag).apply();
     }
 
     public static boolean isPlaystoreCheckBoolean() {
-        return App.getPreferences().getBoolean("playstoreCheckBoolean", false);
+        return preferences.getBoolean("playstoreCheckBoolean", false);
     }
 
     public static void isDebugCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("debugCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("debugCheckBoolean", flag).apply();
     }
 
     public static boolean isDebugCheckBoolean() {
-        return App.getPreferences().getBoolean("debugCheckBoolean", false);
+        return preferences.getBoolean("debugCheckBoolean", false);
     }
 
     public static void isXposedCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("xposedCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("xposedCheckBoolean", flag).apply();
     }
 
     public static boolean isXposedCheckBoolean() {
-        return App.getPreferences().getBoolean("xposedCheckBoolean", false);
+        return preferences.getBoolean("xposedCheckBoolean", false);
     }
 
     public static void isMagiskCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("magiskCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("magiskCheckBoolean", flag).apply();
     }
 
     public static boolean isMagiskCheckBoolean() {
-        return App.getPreferences().getBoolean("magiskCheckBoolean", false);
+        return preferences.getBoolean("magiskCheckBoolean", false);
     }
 
     public static void isRootCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("rootCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("rootCheckBoolean", flag).apply();
     }
 
     public static boolean isRootCheckBoolean() {
-        return App.getPreferences().getBoolean("rootCheckBoolean", false);
+        return preferences.getBoolean("rootCheckBoolean", false);
     }
 
     public static void isSignatureCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("signatureCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("signatureCheckBoolean", flag).apply();
     }
 
     public static boolean isSignatureCheckBoolean() {
-        return App.getPreferences().getBoolean("signatureCheckBoolean", false);
+        return preferences.getBoolean("signatureCheckBoolean", false);
     }
 
     public static void isLuckyPatcherCheckBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("luckyPatcherCheckBoolean", flag).apply();
+        preferences.edit().putBoolean("luckyPatcherCheckBoolean", flag).apply();
     }
 
     public static boolean isLuckyPatcherCheckBoolean() {
-        return App.getPreferences().getBoolean("luckyPatcherCheckBoolean", false);
+        return preferences.getBoolean("luckyPatcherCheckBoolean", false);
     }
 
     public static String isUserIgnoredClasses(String str) {
-        return App.getPreferences().getString("userIgnoredClasses", str);
+        return preferences.getString("userIgnoredClasses", str);
     }
 
     public static String isCertPassword() {
-        return App.getPreferences().getString("certPassword", "");
+        return preferences.getString("certPassword", "");
     }
 
     public static String isSignaturePassword() {
-        return App.getPreferences().getString("signaturePassword", "");
+        return preferences.getString("signaturePassword", "");
     }
 
     public static String isSignatureAlias() {
-        return App.getPreferences().getString("signatureAlias", "");
+        return preferences.getString("signatureAlias", "");
     }
 
     public static String isSignaturePath() {
-        return App.getPreferences().getString("signaturePath", "");
+        return preferences.getString("signaturePath", "");
     }
 
     public static boolean isCustomSignature() {
-        return App.getPreferences().getBoolean("customSignature", false);
+        return preferences.getBoolean("customSignature", false);
     }
 
     public static boolean isOptimizeDexBoolean() {
-        return App.getPreferences().getBoolean("optimizeDexBoolean", true);
+        return preferences.getBoolean("optimizeDexBoolean", true);
     }
 
     public static void isCustomAppNameString(String flag) {
-        App.getPreferences().edit().putString("customAppNameString", flag).apply();
+        preferences.edit().putString("customAppNameString", flag).apply();
     }
 
     public static String isCustomAppNameString() {
-        return App.getPreferences().getString("customAppNameString", "com.mcal.apkprotector.ProxyApplication");
+        return preferences.getString("customAppNameString", "com.mcal.apkprotector.ProxyApplication");
     }
 
     public static void isCustomAppNameBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("customAppNameBoolean", flag).apply();
+        preferences.edit().putBoolean("customAppNameBoolean", flag).apply();
     }
 
     public static boolean isCustomAppNameBoolean() {
-        return App.getPreferences().getBoolean("customAppNameBoolean", false);
+        return preferences.getBoolean("customAppNameBoolean", false);
     }
 
     public static void isEncryptResourcesBoolean(boolean value) {
-        App.getPreferences().edit().putBoolean("encryptResourcesBoolean", value).apply();
+        preferences.edit().putBoolean("encryptResourcesBoolean", value).apply();
     }
 
     public static boolean isEncryptResourcesBoolean() {
-        return App.getPreferences().getBoolean("encryptResourcesBoolean", false);
+        return preferences.getBoolean("encryptResourcesBoolean", false);
     }
 
     public static void setEncryptResourcesBoolean(boolean flag) {
-        App.getPreferences().edit().putBoolean("encryptResourcesBoolean", flag).apply();
+        preferences.edit().putBoolean("encryptResourcesBoolean", flag).apply();
     }
 
     public static boolean isNightModeEnabled() {
-        return App.getPreferences().getBoolean("night_mode", false);
+        return preferences.getBoolean("night_mode", false);
     }
 
     public static void setNightModeEnabled(boolean flag) {
-        App.getPreferences().edit().putBoolean("night_mode", flag).apply();
+        preferences.edit().putBoolean("night_mode", flag).apply();
     }
 
     public static boolean getSignatureV1() {
-        return App.getPreferences().getBoolean("signatureV1", true);
+        return preferences.getBoolean("signatureV1", true);
     }
 
     public static boolean getSignatureV2() {
-        return App.getPreferences().getBoolean("signatureV2", true);
+        return preferences.getBoolean("signatureV2", true);
     }
 
     public static boolean getSignatureV3() {
-        return App.getPreferences().getBoolean("signatureV3", false);
+        return preferences.getBoolean("signatureV3", false);
     }
 
     public static boolean getSignatureV4() {
-        return App.getPreferences().getBoolean("signatureV4", false);
+        return preferences.getBoolean("signatureV4", false);
     }
 
 
     public static String getProtectKey() {
-        return App.getPreferences().getString("protectKeyString", Utils.sealing(Utils.buildID()));
+        return preferences.getString("protectKeyString", Utils.sealing(Utils.buildID()));
     }
 
     public static String getDexDir() {
@@ -341,6 +352,6 @@ public final class Preferences {
     }
 
     public static boolean isRandomPackageName() {
-        return App.getPreferences().getBoolean("randomName", false);
+        return preferences.getBoolean("randomNameBoolean", false);
     }
 }
