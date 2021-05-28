@@ -79,7 +79,7 @@ public class Dialogs {
         dialog.setTitle(R.string.community);
         dialog.setView(ll);
         dialog.addAction(R.drawable.ic_community_googleplay, "Google Play", view -> {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.mcal.apkprotector")));
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.mcal.dexprotect")));
             dialog.cancel();
         });
         dialog.addAction(R.drawable.ic_community_4pda, "4PDA", view -> {
