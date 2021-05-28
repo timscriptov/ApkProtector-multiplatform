@@ -45,15 +45,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+
 import javax.crypto.EncryptedPrivateKeyInfo;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-/** A utility class to load private key and certificates from a keystore or key and cert files. */
+/**
+ * A utility class to load private key and certificates from a keystore or key and cert files.
+ */
 public class SignerParams {
+    private final SignerCapabilities.Builder signerCapabilitiesBuilder =
+            new SignerCapabilities.Builder();
     private String name;
-
     private String keystoreFile;
     private String keystoreKeyAlias;
     private String keystorePasswordSpec;
@@ -63,16 +67,118 @@ public class SignerParams {
     private String keystoreProviderName;
     private String keystoreProviderClass;
     private String keystoreProviderArg;
-
     private String keyFile;
     private String certFile;
-
     private String v1SigFileBasename;
-
     private PrivateKey privateKey;
     private List<X509Certificate> certs;
-    private final SignerCapabilities.Builder signerCapabilitiesBuilder =
-            new SignerCapabilities.Builder();
+
+    /**
+     * Loads the password-protected keystore from storage.
+     *
+     * @param file file backing the keystore or {@code null} if the keystore is not file-backed, for
+     *             example, a PKCS #11 KeyStore.
+     */
+    private static void loadKeyStoreFromFile(KeyStore ks, String file, @NotNull List<char[]> passwords)
+            throws Exception {
+        Exception lastFailure = null;
+        for (char[] password : passwords) {
+            try {
+                if (file != null) {
+                    try (FileInputStream in = new FileInputStream(file)) {
+                        ks.load(in, password);
+                    }
+                } else {
+                    ks.load(null, password);
+                }
+                return;
+            } catch (Exception e) {
+                lastFailure = e;
+            }
+        }
+        if (lastFailure == null) {
+            throw new RuntimeException("No keystore passwords");
+        } else {
+            throw lastFailure;
+        }
+    }
+
+    private static Key getKeyStoreKey(KeyStore ks, String keyAlias, List<char[]> passwords)
+            throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+        UnrecoverableKeyException lastFailure = null;
+        for (char[] password : passwords) {
+            try {
+                return ks.getKey(keyAlias, password);
+            } catch (UnrecoverableKeyException e) {
+                lastFailure = e;
+            }
+        }
+        if (lastFailure == null) {
+            throw new RuntimeException("No key passwords");
+        } else {
+            throw lastFailure;
+        }
+    }
+
+    private static PKCS8EncodedKeySpec decryptPkcs8EncodedKey(
+            EncryptedPrivateKeyInfo encryptedPrivateKeyInfo, List<char[]> passwords)
+            throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
+        SecretKeyFactory keyFactory =
+                SecretKeyFactory.getInstance(encryptedPrivateKeyInfo.getAlgName());
+        InvalidKeySpecException lastKeySpecException = null;
+        InvalidKeyException lastKeyException = null;
+        for (char[] password : passwords) {
+            PBEKeySpec decryptionKeySpec = new PBEKeySpec(password);
+            try {
+                SecretKey decryptionKey = keyFactory.generateSecret(decryptionKeySpec);
+                return encryptedPrivateKeyInfo.getKeySpec(decryptionKey);
+            } catch (InvalidKeySpecException e) {
+                lastKeySpecException = e;
+            } catch (InvalidKeyException e) {
+                lastKeyException = e;
+            }
+        }
+        if ((lastKeyException == null) && (lastKeySpecException == null)) {
+            throw new RuntimeException("No passwords");
+        } else if (lastKeyException != null) {
+            throw lastKeyException;
+        } else {
+            throw lastKeySpecException;
+        }
+    }
+
+    private static PrivateKey loadPkcs8EncodedPrivateKey(PKCS8EncodedKeySpec spec)
+            throws InvalidKeySpecException, NoSuchAlgorithmException {
+        try {
+            return KeyFactory.getInstance("RSA").generatePrivate(spec);
+        } catch (InvalidKeySpecException expected) {
+        }
+        try {
+            return KeyFactory.getInstance("EC").generatePrivate(spec);
+        } catch (InvalidKeySpecException expected) {
+        }
+        try {
+            return KeyFactory.getInstance("DSA").generatePrivate(spec);
+        } catch (InvalidKeySpecException expected) {
+        }
+        throw new InvalidKeySpecException("Not an RSA, EC, or DSA private key");
+    }
+
+    private static byte[] readFully(File file) throws IOException {
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        try (FileInputStream in = new FileInputStream(file)) {
+            drain(in, result);
+        }
+        return result.toByteArray();
+    }
+
+    private static void drain(InputStream in, OutputStream out) throws IOException {
+        byte[] buf = new byte[65536];
+        int chunkSize;
+        while ((chunkSize = in.read(buf)) != -1) {
+            out.write(buf, 0, chunkSize);
+        }
+    }
 
     public String getName() {
         return name;
@@ -235,7 +341,7 @@ public class SignerParams {
                             ? this.keystorePasswordSpec
                             : PasswordRetriever.SPEC_STDIN;
             additionalPasswordEncodings =
-                    (passwordCharset != null) ? new Charset[] {passwordCharset} : new Charset[0];
+                    (passwordCharset != null) ? new Charset[]{passwordCharset} : new Charset[0];
             keystorePasswords =
                     passwordRetriever.getPasswords(keystorePasswordSpec,
                             "Keystore password for " + name, additionalPasswordEncodings);
@@ -340,53 +446,6 @@ public class SignerParams {
         }
     }
 
-    /**
-     * Loads the password-protected keystore from storage.
-     *
-     * @param file file backing the keystore or {@code null} if the keystore is not file-backed, for
-     *     example, a PKCS #11 KeyStore.
-     */
-    private static void loadKeyStoreFromFile(KeyStore ks, String file, @NotNull List<char[]> passwords)
-            throws Exception {
-        Exception lastFailure = null;
-        for (char[] password : passwords) {
-            try {
-                if (file != null) {
-                    try (FileInputStream in = new FileInputStream(file)) {
-                        ks.load(in, password);
-                    }
-                } else {
-                    ks.load(null, password);
-                }
-                return;
-            } catch (Exception e) {
-                lastFailure = e;
-            }
-        }
-        if (lastFailure == null) {
-            throw new RuntimeException("No keystore passwords");
-        } else {
-            throw lastFailure;
-        }
-    }
-
-    private static Key getKeyStoreKey(KeyStore ks, String keyAlias, List<char[]> passwords)
-            throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
-        UnrecoverableKeyException lastFailure = null;
-        for (char[] password : passwords) {
-            try {
-                return ks.getKey(keyAlias, password);
-            } catch (UnrecoverableKeyException e) {
-                lastFailure = e;
-            }
-        }
-        if (lastFailure == null) {
-            throw new RuntimeException("No key passwords");
-        } else {
-            throw lastFailure;
-        }
-    }
-
     private void loadPrivateKeyAndCertsFromFiles(PasswordRetriever passwordRetriever)
             throws Exception {
         if (keyFile == null) {
@@ -407,7 +466,7 @@ public class SignerParams {
             String passwordSpec =
                     (keyPasswordSpec != null) ? keyPasswordSpec : PasswordRetriever.SPEC_STDIN;
             Charset[] additionalPasswordEncodings =
-                    (passwordCharset != null) ? new Charset[] {passwordCharset} : new Charset[0];
+                    (passwordCharset != null) ? new Charset[]{passwordCharset} : new Charset[0];
             List<char[]> keyPasswords =
                     passwordRetriever.getPasswords(
                             passwordSpec, "Private key password for " + name,
@@ -443,65 +502,5 @@ public class SignerParams {
             certList.add((X509Certificate) cert);
         }
         this.certs = certList;
-    }
-
-    private static PKCS8EncodedKeySpec decryptPkcs8EncodedKey(
-            EncryptedPrivateKeyInfo encryptedPrivateKeyInfo, List<char[]> passwords)
-            throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
-        SecretKeyFactory keyFactory =
-                SecretKeyFactory.getInstance(encryptedPrivateKeyInfo.getAlgName());
-        InvalidKeySpecException lastKeySpecException = null;
-        InvalidKeyException lastKeyException = null;
-        for (char[] password : passwords) {
-            PBEKeySpec decryptionKeySpec = new PBEKeySpec(password);
-            try {
-                SecretKey decryptionKey = keyFactory.generateSecret(decryptionKeySpec);
-                return encryptedPrivateKeyInfo.getKeySpec(decryptionKey);
-            } catch (InvalidKeySpecException e) {
-                lastKeySpecException = e;
-            } catch (InvalidKeyException e) {
-                lastKeyException = e;
-            }
-        }
-        if ((lastKeyException == null) && (lastKeySpecException == null)) {
-            throw new RuntimeException("No passwords");
-        } else if (lastKeyException != null) {
-            throw lastKeyException;
-        } else {
-            throw lastKeySpecException;
-        }
-    }
-
-    private static PrivateKey loadPkcs8EncodedPrivateKey(PKCS8EncodedKeySpec spec)
-            throws InvalidKeySpecException, NoSuchAlgorithmException {
-        try {
-            return KeyFactory.getInstance("RSA").generatePrivate(spec);
-        } catch (InvalidKeySpecException expected) {
-        }
-        try {
-            return KeyFactory.getInstance("EC").generatePrivate(spec);
-        } catch (InvalidKeySpecException expected) {
-        }
-        try {
-            return KeyFactory.getInstance("DSA").generatePrivate(spec);
-        } catch (InvalidKeySpecException expected) {
-        }
-        throw new InvalidKeySpecException("Not an RSA, EC, or DSA private key");
-    }
-
-    private static byte[] readFully(File file) throws IOException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        try (FileInputStream in = new FileInputStream(file)) {
-            drain(in, result);
-        }
-        return result.toByteArray();
-    }
-
-    private static void drain(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[65536];
-        int chunkSize;
-        while ((chunkSize = in.read(buf)) != -1) {
-            out.write(buf, 0, chunkSize);
-        }
     }
 }
