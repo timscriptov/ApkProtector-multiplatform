@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="Dexer">
+        <!-- androidx.preference.SwitchPreference
+            android:title="@string/pref_title_hide_apkprotector"
+            android:key="randomNameBoolean"
+            android:summary="@string/pref_msg_random_name"
+            android:defaultValue="false"/ -->
+        <androidx.preference.EditTextPreference
+            android:title="@string/protect_key_title"
+            android:key="protectKeyString"
+            android:summary="@string/protect_key_msg" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="@string/title_pref_apk_signing">
+        <androidx.preference.SwitchPreference
+            android:title="@string/title_pref_custom_keystore"
+            android:key="customSignature"
+            android:summary="@string/msg_pref_custom_keystore"
+            android:defaultValue="false" />
+        <androidx.preference.SwitchPreference
+            android:title="Signature V1"
+            android:key="signatureV1"
+            android:summary="V1(Jar Signature)"
+            android:defaultValue="true" />
+        <androidx.preference.SwitchPreference
+            android:title="Signature V2"
+            android:key="signatureV2"
+            android:summary="V2(Full APK Signature)"
+            android:defaultValue="true" />
+        <androidx.preference.SwitchPreference
+            android:title="Signature V3"
+            android:key="signatureV3"
+            android:summary="V3(Full APK Signature)"
+            android:defaultValue="false" />
+        <androidx.preference.SwitchPreference
+            android:title="Signature V4"
+            android:key="signatureV4"
+            android:summary="V4(Full APK Signature)"
+            android:defaultValue="false" />
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="ZipAligner">
+        <androidx.preference.SwitchPreference
+            android:title="ZipAligner"
+            android:key="zipalignerBoolean"
+            android:summary="@string/pref_msg_zipaligner"
+            android:defaultValue="false" />
+        <androidx.preference.EditTextPreference
+            android:title="@string/pref_title_alignment"
+            android:key="alignmentString"
+            android:summary="@string/pref_msg_alignment"
+            android:defaultValue="4"/>
+        <androidx.preference.SwitchPreference
+            android:title="Force"
+            android:key="forceBoolean"
+            android:summary="@string/pref_msg_force"
+            android:defaultValue="false" />
+        <androidx.preference.SwitchPreference
+            android:title="Zopfli"
+            android:key="zopfliBoolean"
+            android:summary="@string/pref_msg_zopfli"
+            android:defaultValue="false" />
+        <androidx.preference.SwitchPreference
+            android:title="Page Align Shared Libs"
+            android:key="pageAlignSharedLibsBoolean"
+            android:summary="@string/pref_msg_page_align_shared_libs"
+            android:defaultValue="false" />
+    </androidx.preference.PreferenceCategory>
+</androidx.preference.PreferenceScreen>

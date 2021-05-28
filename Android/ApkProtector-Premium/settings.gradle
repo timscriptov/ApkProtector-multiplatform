@@ -1,0 +1,9 @@
+include ':app',
+        ':filepicker',
+        ':resguard',
+        ':melissa',
+        ':axml',
+        //':stringfog',
+        ':dx',
+        ':dexlib2',
+        ':expansionpanel'

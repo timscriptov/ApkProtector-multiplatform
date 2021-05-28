@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 'android-S'
+    buildToolsVersion '30.0.3'
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 2
+        versionName "1.1"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'org.ow2.asm:asm-all:5.0.4'
+    //implementation 'asm:asm-all:3.3.1'
+    implementation 'com.squareup:javapoet:1.13.0'
+    //implementation 'com.blankj:utilcode:1.29.0'
+    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'com.google.guava:guava:29.0-android'
+    implementation 'com.squareup:javawriter:2.5.1'
+}

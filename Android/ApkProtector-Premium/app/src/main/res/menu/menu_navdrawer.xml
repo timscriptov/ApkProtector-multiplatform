@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item"
+        android:icon="@drawable/ic_projects"
+        android:title="@string/projects" />
+    <item
+        android:id="@+id/keystore"
+        android:icon="@drawable/ic_keystore"
+        android:title="@string/create_keystore" />
+    <item
+        android:id="@+id/setting"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings" />
+    <item
+        android:id="@+id/community"
+        android:icon="@drawable/ic_community"
+        android:title="@string/community" />
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_info"
+        android:title="@string/about" />
+</menu>

@@ -1,0 +1,15 @@
+R_DEF: Internal format may change without notice
+local
+attr? animationDuration
+attr? back_layout
+attr? closeDrawable
+attr? disable_when_open
+attr? front_header_radius
+attr? front_layout
+attr? menuDrawable
+attr? peekHeight
+attr? toolbarId
+drawable close
+drawable menu
+string app_name
+styleable BackdropLayout front_layout back_layout toolbarId peekHeight menuDrawable closeDrawable animationDuration disable_when_open front_header_radius

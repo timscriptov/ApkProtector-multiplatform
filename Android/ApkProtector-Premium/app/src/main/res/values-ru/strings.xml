@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ApkProtector</string>
+    <string name="select_apk">Выберите APK</string>
+    <string name="apk_path_to_recompile">Apk путь для перекомпиляции</string>
+    <string name="browse">Открыть</string>
+    <string name="projects">Проекты</string>
+    <string name="create_keystore">Создать ключ</string>
+    <string name="about">О приложении</string>
+    <string name="exit">Выйти</string>
+
+    <string name="version">Версия&#160;</string>
+    <string name="this_package_has_already_been_obfuscated_title">Внимание</string>
+    <string name="this_application_has_already_been_obfuscated_message">Это приложение уже было зашифровано, приложение находится на вашей SD-карте.</string>
+    <string name="cancel">Отмена</string>
+
+    <string name="protected_apps">Ваши проекты</string>
+    <string name="file_not_found">ّФайл не найден!</string>
+
+    <string name="do_you_want_to_minimize_or_exit_message">Выйти или свернуть приложение?</string>
+    <string name="minimize">Свернуть</string>
+
+    <string name="obfuscate_complete">Обфускация завершена!</string>
+    <string name="obfuscate_fail">Ошибка обфускации!</string>
+    <string name="show">Посмотреть</string>
+    <string name="apk_is_already_protected">APK уже защищён!</string>
+
+    <string name="choose_method_title">Выберите вариант</string>
+    <string name="pick_from_sdcard">Во внутренней памяти</string>
+    <string name="pick_from_installed">Из установленных приложений</string>
+    <string name="read_carefully_title">Прочитай внимательно</string>
+    <string name="warning_message">ПРЕДУПРЕЖДЕНИЕ: Обфусцированное приложение может аварийно завершить работу, показывать ошибки или работать неправильно.</string>
+    <string name="invalid_apk_file">Apk файл повреждён!</string>
+    <string name="invalid_file">Файл повреждён!</string>
+    <string name="save">Сохранить</string>
+
+    <string name="alias">Имя ключа/Псевдоним</string>
+    <string name="password">Пароль</string>
+    <string name="commom_name">Имя и фамилия</string>
+    <string name="organization">Организация</string>
+    <string name="organization_unit">Подразделение организации</string>
+    <string name="country">Страна</string>
+    <string name="locality">Населённый пункт</string>
+    <string name="keystore_already_exist">Ключ уже существует!</string>
+    <string name="creating_keystore_complete">Ключ успешно создан!</string>
+
+    <string name="keystore_path">Путь</string>
+    <string name="keystore_password">Пароль</string>
+    <string name="select_keystore">Выберите ключ</string>
+    <string name="custom_keystore">Пользовательский ключ</string>
+    <string name="choose">Выбрать</string>
+
+    <string name="select">Выбрать</string>
+
+    <string name="error_vending">Ошибка</string>
+    <string name="vending_message">У Вас установлена не лицензионная версия программы.\n\nЧтобы использовать данную программу Вы должны приобрести лицензионную версию в Google Play.</string>
+    <string name="create">Создать</string>
+    <string name="invalid_or_empty_info">Неверная или пустая информация</string>
+    <string name="about_not_found_email">Не найдено приложение электронной почты</string>
+
+    <string name="settings">Настройки</string>
+    <string name="warning">Внимание</string>
+    <string name="different_signature">Подписи APK и приложения несовместимы, удалить установленное приложение?</string>
+    <string name="apk_deleted">\" удалён!\"</string>
+    <string name="title_pref_apk_signing">APK подпись</string>
+    <string name="msg_pref_custom_keystore">Используйте пользовательский ключ для подписания APK во время сборки</string>
+    <string name="title_pref_custom_keystore">Пользовательский ключ</string>
+    <string name="scoped_storage_title">Изменения в Android 11 R</string>
+    <string name="scoped_storage_msg">В Android 11 появился новый способ управления файлами под названием \"Scoped Storage\". Вам необходимо предоставить специальное разрешение!</string>
+    <string name="protect_key_msg">Пользовательский ключ шифрования dexs</string>
+    <string name="protect_key_title">Ключ шифрования</string>
+    <string name="about_msg1">ApkProtector - это защитник и обфускатор для Android приложений. Он поможет защитить ваши приложения и библиотеки от несанкционированного или незаконного использования, декомпилирования и взлома.</string>
+    <string name="about_msg2"><![CDATA[<br><i>PS: Приложение из Google Play не поддерживает Андроид 11 и выше! Рекомендуется загрузить приложение из 4PDA или Telegram</i>]]></string>
+    <string name="about_copyright"><![CDATA[<br>© Copyright 2019–2021 Тимашков Иван]]></string>
+    <string name="dex_protect">Зашифровать дексы</string>
+    <string name="encrypt_resources">Зашифровать ресурсы</string>
+    <string name="sign_apk">Подписать приложение</string>
+    <string name="community">Сообщество</string>
+
+    <string name="pref_msg_zipaligner">Включите для оптимизации приложения</string>
+    <string name="pref_title_alignment">Alignment</string>
+    <string name="pref_msg_alignment">Выравнивание (в байтах) для несжатых записей</string>
+    <string name="pref_msg_force">Перезаписать вывод, если он существует</string>
+    <string name="pref_msg_zopfli">Повторно сжимать сжатые записи с помощью более эффективного алгоритма.</string>
+    <string name="pref_msg_page_align_shared_libs">Выровнять файлы .so по 4096</string>
+    <string name="pref_title_dex_opt">Dexer оптимизация</string>
+    <string name="pref_msg_dex_opt">Увеличивает скорость работы приложения, но увеличивает время сборки</string>
+    <string name="pref_title_ignore_classes">Игнорирование классов</string>
+    <string name="pref_msg_ignore_classes">Игнорирование классов</string>
+    <string name="pref_title_hide_apkprotector">Скрыть ApkProtector</string>
+    <string name="pref_title_random_name">Рандомное имя</string>
+    <string name="pref_msg_random_name">Рандомное имя зашифрованных декс файлов</string>
+    <string name="pref_title_dex_folder_name">Имя папки</string>
+    <string name="pref_msg_dex_folder_name">Имя папки с зашифрованными декс файлами</string>
+    <string name="pref_title_dex_suffix">Расширение дексов</string>
+    <string name="pref_msg_dex_suffix">Расширение зашифрованных декс файлов</string>
+    <string name="pref_title_application_name">Имя application</string>
+    <string name="pref_msg_application_name">Базовый класс для поддержания глобального состояния приложения</string>
+
+</resources>

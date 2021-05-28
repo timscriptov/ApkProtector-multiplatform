@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 
 import com.mcal.apkprotector.multidex.MultiDex;
+import com.mcal.apkprotector.security.Security;
 import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.Reflect;
 
@@ -17,6 +18,8 @@ public class ProtectApplication extends Application {
     public static final String DEX_PREFIX = CommonUtils.encryptStrings("$DEX_PREFIX", 2);
     public static final String DEX_DIR = CommonUtils.encryptStrings("$DEX_DIR", 2);
     public static final String PROTECT_KEY = CommonUtils.encryptStrings("$PROTECT_KEY", 2);
+    public static final String DATA = CommonUtils.encryptStrings("$DATA", 2);
+    //public static final String PACKAGE_NAME = CommonUtils.encryptStrings("$PACKAGE_NAME", 2);
     public static final String REAL_APPLICATION = "android.app.Application";
 
     /*public static final String DEX_SUFFIX = CommonUtils.encryptStrings("思恑恚恝", 2);
@@ -24,16 +27,6 @@ public class ProtectApplication extends Application {
     public static final String DEX_DIR = CommonUtils.encryptStrings("恒恃恘恃恁恜恇恖恐恇恜恁恬恗恖恋", 2);
     public static final String PROTECT_KEY = CommonUtils.encryptStrings("恲恣恸恣恡恼恧恶恰恧恼恡态怃态怂", 2);
     public static final String REAL_APPLICATION = "com.mcal.apkprotector.App";*/
-
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
-
-    public static Context getContext() {
-        if (context == null) {
-            context = new ProtectApplication();
-        }
-        return context;
-    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -44,7 +37,7 @@ public class ProtectApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
+        new Security(this, DATA);
         Application app = changeTopApplication(REAL_APPLICATION);
         if (app != null) {
             app.onCreate();
