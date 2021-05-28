@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.mcal.apkprotector.BuildConfig;
+import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Constants;
 
 import org.jetbrains.annotations.Contract;
@@ -29,6 +30,7 @@ public class SignatureCheck {
         if (Objects.equals(stringToMD5(getApkSignInfo(context)), sign) || BuildConfig.DEBUG) {
             return true;
         } else {
+            Utils.showDialogWarn(context, "ApkProtector Security", context.getString(R.string.vending_message));
             return false;
         }
     }
