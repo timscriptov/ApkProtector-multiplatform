@@ -31,6 +31,7 @@ import com.mcal.dexprotect.fragment.HomeFragment;
 import com.mcal.dexprotect.module.Dialogs;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.ExceptionHandler;
+import com.mcal.dexprotect.utils.LuckyPatcherCheck;
 import com.mcal.dexprotect.utils.SecurityUtils;
 import com.mcal.dexprotect.utils.SignatureCheck;
 import com.mcal.dexprotect.utils.Utils;
@@ -83,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (LuckyPatcherCheck.isLucky(this)/* || BuildConfig.DEBUG*/) {
+                Utils.showDialogWarn(this, "ApkProtector Security", getString(R.string.vending_message));
+            }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
