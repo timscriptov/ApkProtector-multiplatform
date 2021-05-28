@@ -52,10 +52,6 @@
                 android:value=".activities.MainActivity" />
         </activity>
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1411495427741055~2660900351" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.mcal.dexprotect.fileprovider"
