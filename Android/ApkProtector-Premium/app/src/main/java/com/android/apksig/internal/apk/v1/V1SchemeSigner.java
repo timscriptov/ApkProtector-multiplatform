@@ -19,9 +19,6 @@ package com.android.apksig.internal.apk.v1;
 
 import android.util.Base64;
 
-import static com.android.apksig.internal.pkcs7.AlgorithmIdentifier.getSignerInfoDigestAlgorithmOid;
-import static com.android.apksig.internal.pkcs7.AlgorithmIdentifier.getSignerInfoSignatureAlgorithm;
-
 import com.android.apksig.apk.ApkFormatException;
 import com.android.apksig.internal.apk.ApkSigningBlockUtils;
 import com.android.apksig.internal.asn1.Asn1EncodingException;
@@ -55,6 +52,9 @@ import java.util.TreeMap;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import static com.android.apksig.internal.pkcs7.AlgorithmIdentifier.getSignerInfoDigestAlgorithmOid;
+import static com.android.apksig.internal.pkcs7.AlgorithmIdentifier.getSignerInfoSignatureAlgorithm;
+
 /**
  * APK signer which uses JAR signing (aka v1 signing scheme).
  *
@@ -63,49 +63,27 @@ import java.util.jar.Manifest;
 public abstract class V1SchemeSigner {
 
     public static final String MANIFEST_ENTRY_NAME = "META-INF/MANIFEST.MF";
-
+    static final String SF_ATTRIBUTE_NAME_ANDROID_APK_SIGNED_NAME_STR = "X-Android-APK-Signed";
     private static final Attributes.Name ATTRIBUTE_NAME_CREATED_BY =
             new Attributes.Name("Created-By");
     private static final String ATTRIBUTE_VALUE_MANIFEST_VERSION = "1.0";
     private static final String ATTRIBUTE_VALUE_SIGNATURE_VERSION = "1.0";
-
-    static final String SF_ATTRIBUTE_NAME_ANDROID_APK_SIGNED_NAME_STR = "X-Android-APK-Signed";
     private static final Attributes.Name SF_ATTRIBUTE_NAME_ANDROID_APK_SIGNED_NAME =
             new Attributes.Name(SF_ATTRIBUTE_NAME_ANDROID_APK_SIGNED_NAME_STR);
 
     /**
-     * Signer configuration.
+     * Hidden constructor to prevent instantiation.
      */
-    public static class SignerConfig {
-        /** Name. */
-        public String name;
-
-        /** Private key. */
-        public PrivateKey privateKey;
-
-        /**
-         * Certificates, with the first certificate containing the public key corresponding to
-         * {@link #privateKey}.
-         */
-        public List<X509Certificate> certificates;
-
-        /**
-         * Digest algorithm used for the signature.
-         */
-        public DigestAlgorithm signatureDigestAlgorithm;
+    private V1SchemeSigner() {
     }
-
-    /** Hidden constructor to prevent instantiation. */
-    private V1SchemeSigner() {}
 
     /**
      * Gets the JAR signing digest algorithm to be used for signing an APK using the provided key.
      *
      * @param minSdkVersion minimum API Level of the platform on which the APK may be installed (see
-     *        AndroidManifest.xml minSdkVersion attribute)
-     *
+     *                      AndroidManifest.xml minSdkVersion attribute)
      * @throws InvalidKeyException if the provided key is not suitable for signing APKs using
-     *         JAR signing (aka v1 signature scheme)
+     *                             JAR signing (aka v1 signature scheme)
      */
     public static DigestAlgorithm getSuggestedSignatureDigestAlgorithm(
             PublicKey signingKey, int minSdkVersion) throws InvalidKeyException {
@@ -223,15 +201,14 @@ public abstract class V1SchemeSigner {
      * JAR entries which need to be added to the APK as part of the signature.
      *
      * @param signerConfigs signer configurations, one for each signer. At least one signer config
-     *        must be provided.
-     *
-     * @throws ApkFormatException if the source manifest is malformed
+     *                      must be provided.
+     * @throws ApkFormatException       if the source manifest is malformed
      * @throws NoSuchAlgorithmException if a required cryptographic algorithm implementation is
-     *         missing
-     * @throws InvalidKeyException if a signing key is not suitable for this signature scheme or
-     *         cannot be used in general
-     * @throws SignatureException if an error occurs when computing digests of generating
-     *         signatures
+     *                                  missing
+     * @throws InvalidKeyException      if a signing key is not suitable for this signature scheme or
+     *                                  cannot be used in general
+     * @throws SignatureException       if an error occurs when computing digests of generating
+     *                                  signatures
      */
     public static List<Pair<String, byte[]>> sign(
             List<SignerConfig> signerConfigs,
@@ -240,8 +217,8 @@ public abstract class V1SchemeSigner {
             List<Integer> apkSigningSchemeIds,
             byte[] sourceManifestBytes,
             String createdBy)
-                    throws NoSuchAlgorithmException, ApkFormatException, InvalidKeyException,
-                            CertificateException, SignatureException {
+            throws NoSuchAlgorithmException, ApkFormatException, InvalidKeyException,
+            CertificateException, SignatureException {
         if (signerConfigs.isEmpty()) {
             throw new IllegalArgumentException("At least one signer config must be provided");
         }
@@ -258,12 +235,11 @@ public abstract class V1SchemeSigner {
      * JAR entries which need to be added to the APK as part of the signature.
      *
      * @param signerConfigs signer configurations, one for each signer. At least one signer config
-     *        must be provided.
-     *
+     *                      must be provided.
      * @throws InvalidKeyException if a signing key is not suitable for this signature scheme or
-     *         cannot be used in general
-     * @throws SignatureException if an error occurs when computing digests of generating
-     *         signatures
+     *                             cannot be used in general
+     * @throws SignatureException  if an error occurs when computing digests of generating
+     *                             signatures
      */
     public static List<Pair<String, byte[]>> signManifest(
             List<SignerConfig> signerConfigs,
@@ -271,8 +247,8 @@ public abstract class V1SchemeSigner {
             List<Integer> apkSigningSchemeIds,
             String createdBy,
             OutputManifestFile manifest)
-                    throws NoSuchAlgorithmException, InvalidKeyException, CertificateException,
-                            SignatureException {
+            throws NoSuchAlgorithmException, InvalidKeyException, CertificateException,
+            SignatureException {
         if (signerConfigs.isEmpty()) {
             throw new IllegalArgumentException("At least one signer config must be provided");
         }
@@ -407,12 +383,6 @@ public abstract class V1SchemeSigner {
         }
     }
 
-    public static class OutputManifestFile {
-        public byte[] contents;
-        public SortedMap<String, byte[]> individualSectionsContents;
-        public Attributes mainSectionAttributes;
-    }
-
     private static byte[] generateSignatureFile(
             List<Integer> apkSignatureSchemeIds,
             DigestAlgorithm manifestDigestAlgorithm,
@@ -483,16 +453,14 @@ public abstract class V1SchemeSigner {
         return out.toByteArray();
     }
 
-
-
     /**
      * Generates the CMS PKCS #7 signature block corresponding to the provided signature file and
      * signing configuration.
      */
     private static byte[] generateSignatureBlock(
             SignerConfig signerConfig, byte[] signatureFileBytes)
-                    throws NoSuchAlgorithmException, InvalidKeyException, CertificateException,
-                            SignatureException {
+            throws NoSuchAlgorithmException, InvalidKeyException, CertificateException,
+            SignatureException {
         // Obtain relevant bits of signing configuration
         List<X509Certificate> signerCerts = signerConfig.certificates;
         X509Certificate signingCert = signerCerts.get(0);
@@ -549,8 +517,6 @@ public abstract class V1SchemeSigner {
         }
     }
 
-
-
     private static String getEntryDigestAttributeName(DigestAlgorithm digestAlgorithm) {
         switch (digestAlgorithm) {
             case SHA1:
@@ -573,5 +539,37 @@ public abstract class V1SchemeSigner {
                 throw new IllegalArgumentException(
                         "Unexpected content digest algorithm: " + digestAlgorithm);
         }
+    }
+
+    /**
+     * Signer configuration.
+     */
+    public static class SignerConfig {
+        /**
+         * Name.
+         */
+        public String name;
+
+        /**
+         * Private key.
+         */
+        public PrivateKey privateKey;
+
+        /**
+         * Certificates, with the first certificate containing the public key corresponding to
+         * {@link #privateKey}.
+         */
+        public List<X509Certificate> certificates;
+
+        /**
+         * Digest algorithm used for the signature.
+         */
+        public DigestAlgorithm signatureDigestAlgorithm;
+    }
+
+    public static class OutputManifestFile {
+        public byte[] contents;
+        public SortedMap<String, byte[]> individualSectionsContents;
+        public Attributes mainSectionAttributes;
     }
 }

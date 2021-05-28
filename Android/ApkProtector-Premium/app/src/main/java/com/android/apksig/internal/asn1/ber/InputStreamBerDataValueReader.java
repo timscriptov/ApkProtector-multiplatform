@@ -35,11 +35,6 @@ public class InputStreamBerDataValueReader implements BerDataValueReader {
         mIn = in;
     }
 
-    @Override
-    public BerDataValue readDataValue() throws BerDataValueFormatException {
-        return readDataValue(mIn);
-    }
-
     /**
      * Returns the next data value or {@code null} if end of input has been reached.
      *
@@ -229,6 +224,11 @@ public class InputStreamBerDataValueReader implements BerDataValueReader {
         }
     }
 
+    @Override
+    public BerDataValue readDataValue() throws BerDataValueFormatException {
+        return readDataValue(mIn);
+    }
+
     private static class RecordingInputStream extends InputStream {
         private final InputStream mIn;
         private final ByteArrayOutputStream mBuf;
@@ -298,7 +298,8 @@ public class InputStreamBerDataValueReader implements BerDataValueReader {
         }
 
         @Override
-        public synchronized void mark(int readlimit) {}
+        public synchronized void mark(int readlimit) {
+        }
 
         @Override
         public synchronized void reset() throws IOException {

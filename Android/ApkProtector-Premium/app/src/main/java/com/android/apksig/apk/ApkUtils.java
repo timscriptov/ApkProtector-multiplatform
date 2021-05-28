@@ -24,6 +24,7 @@ import com.android.apksig.internal.zip.LocalFileRecord;
 import com.android.apksig.internal.zip.ZipUtils;
 import com.android.apksig.util.DataSource;
 import com.android.apksig.zip.ZipFormatException;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -43,15 +44,29 @@ public abstract class ApkUtils {
      */
     public static final String ANDROID_MANIFEST_ZIP_ENTRY_NAME = "AndroidManifest.xml";
 
-    /** Name of the SourceStamp certificate hash ZIP entry in APKs. */
+    /**
+     * Name of the SourceStamp certificate hash ZIP entry in APKs.
+     */
     public static final String SOURCE_STAMP_CERTIFICATE_HASH_ZIP_ENTRY_NAME = "stamp-cert-sha256";
-
-    private ApkUtils() {}
+    // See https://source.android.com/security/apksigning/v2.html
+    private static final long APK_SIG_BLOCK_MAGIC_HI = 0x3234206b636f6c42L;
+    private static final long APK_SIG_BLOCK_MAGIC_LO = 0x20676953204b5041L;
+    private static final int APK_SIG_BLOCK_MIN_SIZE = 32;
+    /**
+     * Android resource ID of the {@code android:minSdkVersion} attribute in AndroidManifest.xml.
+     */
+    private static final int MIN_SDK_VERSION_ATTR_ID = 0x0101020c;
+    /**
+     * Android resource ID of the {@code android:debuggable} attribute in AndroidManifest.xml.
+     */
+    private static final int DEBUGGABLE_ATTR_ID = 0x0101000f;
+    private ApkUtils() {
+    }
 
     /**
      * Finds the main ZIP sections of the provided APK.
      *
-     * @throws IOException if an I/O error occurred while reading the APK
+     * @throws IOException        if an I/O error occurred while reading the APK
      * @throws ZipFormatException if the APK is malformed
      */
     public static ZipSections findZipSections(DataSource apk)
@@ -69,7 +84,7 @@ public abstract class ApkUtils {
         if (cdStartOffset > eocdOffset) {
             throw new ZipFormatException(
                     "ZIP Central Directory start offset out of range: " + cdStartOffset
-                        + ". ZIP End of Central Directory offset: " + eocdOffset);
+                            + ". ZIP End of Central Directory offset: " + eocdOffset);
         }
 
         long cdSizeBytes = ZipUtils.getZipEocdCentralDirectorySizeBytes(eocdBuf);
@@ -92,75 +107,12 @@ public abstract class ApkUtils {
     }
 
     /**
-     * Information about the ZIP sections of an APK.
-     */
-    public static class ZipSections {
-        private final long mCentralDirectoryOffset;
-        private final long mCentralDirectorySizeBytes;
-        private final int mCentralDirectoryRecordCount;
-        private final long mEocdOffset;
-        private final ByteBuffer mEocd;
-
-        public ZipSections(
-                long centralDirectoryOffset,
-                long centralDirectorySizeBytes,
-                int centralDirectoryRecordCount,
-                long eocdOffset,
-                ByteBuffer eocd) {
-            mCentralDirectoryOffset = centralDirectoryOffset;
-            mCentralDirectorySizeBytes = centralDirectorySizeBytes;
-            mCentralDirectoryRecordCount = centralDirectoryRecordCount;
-            mEocdOffset = eocdOffset;
-            mEocd = eocd;
-        }
-
-        /**
-         * Returns the start offset of the ZIP Central Directory. This value is taken from the
-         * ZIP End of Central Directory record.
-         */
-        public long getZipCentralDirectoryOffset() {
-            return mCentralDirectoryOffset;
-        }
-
-        /**
-         * Returns the size (in bytes) of the ZIP Central Directory. This value is taken from the
-         * ZIP End of Central Directory record.
-         */
-        public long getZipCentralDirectorySizeBytes() {
-            return mCentralDirectorySizeBytes;
-        }
-
-        /**
-         * Returns the number of records in the ZIP Central Directory. This value is taken from the
-         * ZIP End of Central Directory record.
-         */
-        public int getZipCentralDirectoryRecordCount() {
-            return mCentralDirectoryRecordCount;
-        }
-
-        /**
-         * Returns the start offset of the ZIP End of Central Directory record. The record extends
-         * until the very end of the APK.
-         */
-        public long getZipEndOfCentralDirectoryOffset() {
-            return mEocdOffset;
-        }
-
-        /**
-         * Returns the contents of the ZIP End of Central Directory.
-         */
-        public ByteBuffer getZipEndOfCentralDirectory() {
-            return mEocd;
-        }
-    }
-
-    /**
      * Sets the offset of the start of the ZIP Central Directory in the APK's ZIP End of Central
      * Directory record.
      *
      * @param zipEndOfCentralDirectory APK's ZIP End of Central Directory record
-     * @param offset offset of the ZIP Central Directory relative to the start of the archive. Must
-     *        be between {@code 0} and {@code 2^32 - 1} inclusive.
+     * @param offset                   offset of the ZIP Central Directory relative to the start of the archive. Must
+     *                                 be between {@code 0} and {@code 2^32 - 1} inclusive.
      */
     public static void setZipEocdCentralDirectoryOffset(
             ByteBuffer zipEndOfCentralDirectory, long offset) {
@@ -169,17 +121,11 @@ public abstract class ApkUtils {
         ZipUtils.setZipEocdCentralDirectoryOffset(eocd, offset);
     }
 
-    // See https://source.android.com/security/apksigning/v2.html
-    private static final long APK_SIG_BLOCK_MAGIC_HI = 0x3234206b636f6c42L;
-    private static final long APK_SIG_BLOCK_MAGIC_LO = 0x20676953204b5041L;
-    private static final int APK_SIG_BLOCK_MIN_SIZE = 32;
-
     /**
      * Returns the APK Signing Block of the provided APK.
      *
-     * @throws IOException if an I/O error occurs
+     * @throws IOException                      if an I/O error occurs
      * @throws ApkSigningBlockNotFoundException if there is no APK Signing Block in the APK
-     *
      * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature Scheme v2</a>
      */
     public static ApkSigningBlock findApkSigningBlock(DataSource apk, ZipSections zipSections)
@@ -242,44 +188,9 @@ public abstract class ApkUtils {
     }
 
     /**
-     * Information about the location of the APK Signing Block inside an APK.
-     */
-    public static class ApkSigningBlock {
-        private final long mStartOffsetInApk;
-        private final DataSource mContents;
-
-        /**
-         * Constructs a new {@code ApkSigningBlock}.
-         *
-         * @param startOffsetInApk start offset (in bytes, relative to start of file) of the APK
-         *        Signing Block inside the APK file
-         * @param contents contents of the APK Signing Block
-         */
-        public ApkSigningBlock(long startOffsetInApk, DataSource contents) {
-            mStartOffsetInApk = startOffsetInApk;
-            mContents = contents;
-        }
-
-        /**
-         * Returns the start offset (in bytes, relative to start of file) of the APK Signing Block.
-         */
-        public long getStartOffset() {
-            return mStartOffsetInApk;
-        }
-
-        /**
-         * Returns the data source which provides the full contents of the APK Signing Block,
-         * including its footer.
-         */
-        public DataSource getContents() {
-            return mContents;
-        }
-    }
-
-    /**
      * Returns the contents of the APK's {@code AndroidManifest.xml}.
      *
-     * @throws IOException if an I/O error occurs while reading the APK
+     * @throws IOException        if an I/O error occurs while reading the APK
      * @throws ApkFormatException if the APK is malformed
      */
     public static ByteBuffer getAndroidManifest(DataSource apk)
@@ -314,22 +225,11 @@ public abstract class ApkUtils {
     }
 
     /**
-     * Android resource ID of the {@code android:minSdkVersion} attribute in AndroidManifest.xml.
-     */
-    private static final int MIN_SDK_VERSION_ATTR_ID = 0x0101020c;
-
-    /**
-     * Android resource ID of the {@code android:debuggable} attribute in AndroidManifest.xml.
-     */
-    private static final int DEBUGGABLE_ATTR_ID = 0x0101000f;
-
-    /**
      * Returns the lowest Android platform version (API Level) supported by an APK with the
      * provided {@code AndroidManifest.xml}.
      *
      * @param androidManifestContents contents of {@code AndroidManifest.xml} in binary Android
-     *        resource format
-     *
+     *                                resource format
      * @throws MinSdkVersionException if an error occurred while determining the API Level
      */
     public static int getMinSdkVersionFromBinaryAndroidManifest(
@@ -393,44 +293,6 @@ public abstract class ApkUtils {
         }
     }
 
-    private static class CodenamesLazyInitializer {
-
-        /**
-         * List of platform codename (first letter of) to API Level mappings. The list must be
-         * sorted by the first letter. For codenames not in the list, the assumption is that the API
-         * Level is incremented by one for every increase in the codename's first letter.
-         */
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        private static final Pair<Character, Integer>[] SORTED_CODENAMES_FIRST_CHAR_TO_API_LEVEL =
-                new Pair[] {
-            Pair.of('C', 2),
-            Pair.of('D', 3),
-            Pair.of('E', 4),
-            Pair.of('F', 7),
-            Pair.of('G', 8),
-            Pair.of('H', 10),
-            Pair.of('I', 13),
-            Pair.of('J', 15),
-            Pair.of('K', 18),
-            Pair.of('L', 20),
-            Pair.of('M', 22),
-            Pair.of('N', 23),
-            Pair.of('O', 25),
-        };
-
-        private static final Comparator<Pair<Character, Integer>> CODENAME_FIRST_CHAR_COMPARATOR =
-                new ByFirstComparator();
-
-        private static class ByFirstComparator implements Comparator<Pair<Character, Integer>> {
-            @Override
-            public int compare(Pair<Character, Integer> o1, Pair<Character, Integer> o2) {
-                char c1 = o1.getFirst();
-                char c2 = o2.getFirst();
-                return c1 - c2;
-            }
-        }
-    }
-
     /**
      * Returns the API Level corresponding to the provided platform codename.
      *
@@ -490,8 +352,7 @@ public abstract class ApkUtils {
      * See the {@code android:debuggable} attribute of the {@code application} element.
      *
      * @param androidManifestContents contents of {@code AndroidManifest.xml} in binary Android
-     *        resource format
-     *
+     *                                resource format
      * @throws ApkFormatException if the manifest is malformed
      */
     public static boolean getDebuggableFromBinaryAndroidManifest(
@@ -567,8 +428,7 @@ public abstract class ApkUtils {
      * {@code manifest} element.
      *
      * @param androidManifestContents contents of {@code AndroidManifest.xml} in binary Android
-     *        resource format
-     *
+     *                                resource format
      * @throws ApkFormatException if the manifest is malformed
      */
     public static String getPackageNameFromBinaryAndroidManifest(
@@ -616,5 +476,141 @@ public abstract class ApkUtils {
         }
         messageDigest.update(data);
         return messageDigest.digest();
+    }
+
+    /**
+     * Information about the ZIP sections of an APK.
+     */
+    public static class ZipSections {
+        private final long mCentralDirectoryOffset;
+        private final long mCentralDirectorySizeBytes;
+        private final int mCentralDirectoryRecordCount;
+        private final long mEocdOffset;
+        private final ByteBuffer mEocd;
+
+        public ZipSections(
+                long centralDirectoryOffset,
+                long centralDirectorySizeBytes,
+                int centralDirectoryRecordCount,
+                long eocdOffset,
+                ByteBuffer eocd) {
+            mCentralDirectoryOffset = centralDirectoryOffset;
+            mCentralDirectorySizeBytes = centralDirectorySizeBytes;
+            mCentralDirectoryRecordCount = centralDirectoryRecordCount;
+            mEocdOffset = eocdOffset;
+            mEocd = eocd;
+        }
+
+        /**
+         * Returns the start offset of the ZIP Central Directory. This value is taken from the
+         * ZIP End of Central Directory record.
+         */
+        public long getZipCentralDirectoryOffset() {
+            return mCentralDirectoryOffset;
+        }
+
+        /**
+         * Returns the size (in bytes) of the ZIP Central Directory. This value is taken from the
+         * ZIP End of Central Directory record.
+         */
+        public long getZipCentralDirectorySizeBytes() {
+            return mCentralDirectorySizeBytes;
+        }
+
+        /**
+         * Returns the number of records in the ZIP Central Directory. This value is taken from the
+         * ZIP End of Central Directory record.
+         */
+        public int getZipCentralDirectoryRecordCount() {
+            return mCentralDirectoryRecordCount;
+        }
+
+        /**
+         * Returns the start offset of the ZIP End of Central Directory record. The record extends
+         * until the very end of the APK.
+         */
+        public long getZipEndOfCentralDirectoryOffset() {
+            return mEocdOffset;
+        }
+
+        /**
+         * Returns the contents of the ZIP End of Central Directory.
+         */
+        public ByteBuffer getZipEndOfCentralDirectory() {
+            return mEocd;
+        }
+    }
+
+    /**
+     * Information about the location of the APK Signing Block inside an APK.
+     */
+    public static class ApkSigningBlock {
+        private final long mStartOffsetInApk;
+        private final DataSource mContents;
+
+        /**
+         * Constructs a new {@code ApkSigningBlock}.
+         *
+         * @param startOffsetInApk start offset (in bytes, relative to start of file) of the APK
+         *                         Signing Block inside the APK file
+         * @param contents         contents of the APK Signing Block
+         */
+        public ApkSigningBlock(long startOffsetInApk, DataSource contents) {
+            mStartOffsetInApk = startOffsetInApk;
+            mContents = contents;
+        }
+
+        /**
+         * Returns the start offset (in bytes, relative to start of file) of the APK Signing Block.
+         */
+        public long getStartOffset() {
+            return mStartOffsetInApk;
+        }
+
+        /**
+         * Returns the data source which provides the full contents of the APK Signing Block,
+         * including its footer.
+         */
+        public DataSource getContents() {
+            return mContents;
+        }
+    }
+
+    private static class CodenamesLazyInitializer {
+
+        /**
+         * List of platform codename (first letter of) to API Level mappings. The list must be
+         * sorted by the first letter. For codenames not in the list, the assumption is that the API
+         * Level is incremented by one for every increase in the codename's first letter.
+         */
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private static final Pair<Character, Integer>[] SORTED_CODENAMES_FIRST_CHAR_TO_API_LEVEL =
+                new Pair[]{
+                        Pair.of('C', 2),
+                        Pair.of('D', 3),
+                        Pair.of('E', 4),
+                        Pair.of('F', 7),
+                        Pair.of('G', 8),
+                        Pair.of('H', 10),
+                        Pair.of('I', 13),
+                        Pair.of('J', 15),
+                        Pair.of('K', 18),
+                        Pair.of('L', 20),
+                        Pair.of('M', 22),
+                        Pair.of('N', 23),
+                        Pair.of('O', 25),
+                };
+
+        private static final Comparator<Pair<Character, Integer>> CODENAME_FIRST_CHAR_COMPARATOR =
+                new ByFirstComparator();
+
+        private static class ByFirstComparator implements Comparator<Pair<Character, Integer>> {
+            @Override
+            public int compare(Pair<Character, Integer> o1, Pair<Character, Integer> o2) {
+                char c1 = o1.getFirst();
+                char c2 = o2.getFirst();
+                return c1 - c2;
+            }
+        }
     }
 }

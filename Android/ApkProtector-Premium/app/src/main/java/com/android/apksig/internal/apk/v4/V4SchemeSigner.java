@@ -75,7 +75,7 @@ public abstract class V4SchemeSigner {
      * Based on a public key, return a signing algorithm that supports verity.
      */
     public static List<SignatureAlgorithm> getSuggestedSignatureAlgorithms(PublicKey signingKey,
-            int minSdkVersion, boolean apkSigningBlockPaddingSupported)
+                                                                           int minSdkVersion, boolean apkSigningBlockPaddingSupported)
             throws InvalidKeyException {
         List<SignatureAlgorithm> algorithms = V3SchemeSigner.getSuggestedSignatureAlgorithms(
                 signingKey, minSdkVersion,
@@ -95,19 +95,21 @@ public abstract class V4SchemeSigner {
      * output file.
      */
     public static void generateV4Signature(
-        DataSource apkContent, SignerConfig signerConfig, File outputFile)
-        throws IOException, InvalidKeyException, NoSuchAlgorithmException {
-      Pair<V4Signature, byte[]> pair = generateV4Signature(apkContent, signerConfig);
-      try (final OutputStream output = new FileOutputStream(outputFile)) {
-        pair.getFirst().writeTo(output);
-        V4Signature.writeBytes(output, pair.getSecond());
-      } catch (IOException e) {
-        outputFile.delete();
-        throw e;
-      }
+            DataSource apkContent, SignerConfig signerConfig, File outputFile)
+            throws IOException, InvalidKeyException, NoSuchAlgorithmException {
+        Pair<V4Signature, byte[]> pair = generateV4Signature(apkContent, signerConfig);
+        try (final OutputStream output = new FileOutputStream(outputFile)) {
+            pair.getFirst().writeTo(output);
+            V4Signature.writeBytes(output, pair.getSecond());
+        } catch (IOException e) {
+            outputFile.delete();
+            throw e;
+        }
     }
 
-    /** Generate v4 signature and hash tree for a given APK. */
+    /**
+     * Generate v4 signature and hash tree for a given APK.
+     */
     public static Pair<V4Signature, byte[]> generateV4Signature(
             DataSource apkContent,
             SignerConfig signerConfig)
@@ -329,14 +331,14 @@ public abstract class V4SchemeSigner {
     }
 
     private static boolean isSupported(final ContentDigestAlgorithm contentDigestAlgorithm,
-            boolean forV3Digest) {
+                                       boolean forV3Digest) {
         if (contentDigestAlgorithm == null) {
             return false;
         }
         if (contentDigestAlgorithm == ContentDigestAlgorithm.CHUNKED_SHA256
                 || contentDigestAlgorithm == ContentDigestAlgorithm.CHUNKED_SHA512
                 || (forV3Digest
-                     && contentDigestAlgorithm == ContentDigestAlgorithm.VERITY_CHUNKED_SHA256)) {
+                && contentDigestAlgorithm == ContentDigestAlgorithm.VERITY_CHUNKED_SHA256)) {
             return true;
         }
         return false;

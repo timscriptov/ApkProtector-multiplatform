@@ -1,10 +1,7 @@
 package com.mcal.dexprotect.patchers;
 
-import android.content.Context;
-
 import com.mcal.dexprotect.App;
 import com.mcal.dexprotect.BuildConfig;
-import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.task.Security;
@@ -12,7 +9,6 @@ import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.FileCustomUtils;
 import com.mcal.dexprotect.utils.LoggerUtils;
 import com.mcal.dexprotect.utils.SecurityUtils;
-import com.mcal.dexprotect.utils.Utils;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedClassDef;

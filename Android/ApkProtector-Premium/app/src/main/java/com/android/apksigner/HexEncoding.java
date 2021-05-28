@@ -23,10 +23,13 @@ import java.nio.ByteBuffer;
  */
 class HexEncoding {
 
-    /** Hidden constructor to prevent instantiation. */
-    private HexEncoding() {}
-
     private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
+
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private HexEncoding() {
+    }
 
     /**
      * Encodes the provided data as a hexadecimal string.

@@ -124,7 +124,10 @@ class ProtectAsync(
                 FileCustomUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
 
                 doProgress("Decompiling…")
-                FileUtils.copyFileStream(File(p1[0]), File(Constants.RELEASE_PATH + File.separator + "app-temp.apk"))
+                FileUtils.copyFileStream(
+                    File(p1[0]),
+                    File(Constants.RELEASE_PATH + File.separator + "app-temp.apk")
+                )
                 FastZip.extract(p1[0], Constants.OUTPUT_PATH)
                 LoggerUtils.writeLog("Success unpack: " + p1[0])
                 doProgress("Patching manifest…")

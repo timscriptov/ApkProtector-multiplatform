@@ -25,7 +25,9 @@ public class CodenameMinSdkVersionException extends MinSdkVersionException {
 
     private static final long serialVersionUID = 1L;
 
-    /** Encountered codename. */
+    /**
+     * Encountered codename.
+     */
     private final String mCodename;
 
     /**

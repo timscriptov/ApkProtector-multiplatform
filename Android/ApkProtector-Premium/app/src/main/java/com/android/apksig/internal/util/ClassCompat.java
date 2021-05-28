@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class ClassCompat {
     public static <A extends Annotation> A getDeclaredAnnotation(Class<?> containerClass,
-                                                          Class<A> annotationClass) {
+                                                                 Class<A> annotationClass) {
         Objects.requireNonNull(annotationClass);
         Objects.requireNonNull(containerClass);
         // Loop over all directly-present annotations looking for a matching one

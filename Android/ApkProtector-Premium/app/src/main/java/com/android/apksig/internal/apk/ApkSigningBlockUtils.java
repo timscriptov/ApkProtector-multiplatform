@@ -17,10 +17,6 @@
 
 package com.android.apksig.internal.apk;
 
-import static com.android.apksig.internal.apk.ContentDigestAlgorithm.CHUNKED_SHA256;
-import static com.android.apksig.internal.apk.ContentDigestAlgorithm.CHUNKED_SHA512;
-import static com.android.apksig.internal.apk.ContentDigestAlgorithm.VERITY_CHUNKED_SHA256;
-
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.SigningCertificateLineage;
 import com.android.apksig.apk.ApkFormatException;
@@ -85,26 +81,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.security.auth.x500.X500Principal;
 
+import static com.android.apksig.internal.apk.ContentDigestAlgorithm.CHUNKED_SHA256;
+import static com.android.apksig.internal.apk.ContentDigestAlgorithm.CHUNKED_SHA512;
+import static com.android.apksig.internal.apk.ContentDigestAlgorithm.VERITY_CHUNKED_SHA256;
+
 public class ApkSigningBlockUtils {
 
-    private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
-    private static final long CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES = 1024 * 1024;
     public static final int ANDROID_COMMON_PAGE_ALIGNMENT_BYTES = 4096;
-    private static final byte[] APK_SIGNING_BLOCK_MAGIC =
-          new byte[] {
-              0x41, 0x50, 0x4b, 0x20, 0x53, 0x69, 0x67, 0x20,
-              0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x20, 0x34, 0x32,
-          };
-    private static final int VERITY_PADDING_BLOCK_ID = 0x42726577;
-
-    private static final ContentDigestAlgorithm[] V4_CONTENT_DIGEST_ALGORITHMS =
-            {CHUNKED_SHA512, VERITY_CHUNKED_SHA256, CHUNKED_SHA256};
-
     public static final int VERSION_SOURCE_STAMP = 0;
     public static final int VERSION_JAR_SIGNATURE_SCHEME = 1;
     public static final int VERSION_APK_SIGNATURE_SCHEME_V2 = 2;
     public static final int VERSION_APK_SIGNATURE_SCHEME_V3 = 3;
     public static final int VERSION_APK_SIGNATURE_SCHEME_V4 = 4;
+    private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
+    private static final long CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES = 1024 * 1024;
+    private static final byte[] APK_SIGNING_BLOCK_MAGIC =
+            new byte[]{
+                    0x41, 0x50, 0x4b, 0x20, 0x53, 0x69, 0x67, 0x20,
+                    0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x20, 0x34, 0x32,
+            };
+    private static final int VERITY_PADDING_BLOCK_ID = 0x42726577;
+    private static final ContentDigestAlgorithm[] V4_CONTENT_DIGEST_ALGORITHMS =
+            {CHUNKED_SHA512, VERITY_CHUNKED_SHA256, CHUNKED_SHA256};
 
     /**
      * Returns positive number if {@code alg1} is preferred over {@code alg2}, {@code -1} if
@@ -161,7 +159,6 @@ public class ApkSigningBlockUtils {
     }
 
 
-
     /**
      * Verifies integrity of the APK outside of the APK Signing Block by computing digests of the
      * APK and comparing them against the digests listed in APK Signing Block. The expected digests
@@ -215,7 +212,7 @@ public class ApkSigningBlockUtils {
                 if ((beforeApkSigningBlock.size() % ANDROID_COMMON_PAGE_ALIGNMENT_BYTES != 0)) {
                     throw new RuntimeException(
                             "APK Signing Block is not aligned on 4k boundary: " +
-                            beforeApkSigningBlock.size());
+                                    beforeApkSigningBlock.size());
                 }
 
                 long centralDirOffset = ZipUtils.getZipEocdCentralDirectoryOffset(eocd);
@@ -223,7 +220,7 @@ public class ApkSigningBlockUtils {
                 if (signingBlockSize % ANDROID_COMMON_PAGE_ALIGNMENT_BYTES != 0) {
                     throw new RuntimeException(
                             "APK Signing Block size is not multiple of page size: " +
-                            signingBlockSize);
+                                    signingBlockSize);
                 }
             }
         } catch (DigestException e) {
@@ -448,7 +445,7 @@ public class ApkSigningBlockUtils {
         computeOneMbChunkContentDigests(
                 executor,
                 oneMbChunkBasedAlgorithm,
-                new DataSource[] { beforeCentralDir, centralDir, eocd },
+                new DataSource[]{beforeCentralDir, centralDir, eocd},
                 contentDigests);
 
         if (digestAlgorithms.contains(VERITY_CHUNKED_SHA256)) {
@@ -593,184 +590,9 @@ public class ApkSigningBlockUtils {
         }
     }
 
-    private static class ChunkDigests {
-        private final ContentDigestAlgorithm algorithm;
-        private final int digestOutputSize;
-        private final byte[] concatOfDigestsOfChunks;
-
-        private ChunkDigests(ContentDigestAlgorithm algorithm, int chunkCount) {
-            this.algorithm = algorithm;
-            digestOutputSize = this.algorithm.getChunkDigestOutputSizeBytes();
-            concatOfDigestsOfChunks = new byte[1 + 4 + chunkCount * digestOutputSize];
-
-            // Fill the initial values of the concatenated digests of chunks, which is
-            // {0x5a, 4-bytes-of-little-endian-chunk-count, digests*...}.
-            concatOfDigestsOfChunks[0] = 0x5a;
-            setUnsignedInt32LittleEndian(chunkCount, concatOfDigestsOfChunks, 1);
-        }
-
-        private MessageDigest createMessageDigest() throws NoSuchAlgorithmException {
-            return MessageDigest.getInstance(algorithm.getJcaMessageDigestAlgorithm());
-        }
-
-        private int getOffset(int chunkIndex) {
-            return 1 + 4 + chunkIndex * digestOutputSize;
-        }
-    }
-
-    /**
-     * A per-thread digest worker.
-     */
-    private static class ChunkDigester implements Runnable {
-        private final ChunkSupplier dataSupplier;
-        private final List<ChunkDigests> chunkDigests;
-        private final List<MessageDigest> messageDigests;
-        private final DataSink mdSink;
-
-        private ChunkDigester(ChunkSupplier dataSupplier, List<ChunkDigests> chunkDigests) {
-            this.dataSupplier = dataSupplier;
-            this.chunkDigests = chunkDigests;
-            messageDigests = new ArrayList<>(chunkDigests.size());
-            for (ChunkDigests chunkDigest : chunkDigests) {
-                try {
-                    messageDigests.add(chunkDigest.createMessageDigest());
-                } catch (NoSuchAlgorithmException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-            mdSink = DataSinks.asDataSink(messageDigests.toArray(new MessageDigest[0]));
-        }
-
-        @Override
-        public void run() {
-            byte[] chunkContentPrefix = new byte[5];
-            chunkContentPrefix[0] = (byte) 0xa5;
-
-            try {
-                for (ChunkSupplier.Chunk chunk = dataSupplier.get();
-                     chunk != null;
-                     chunk = dataSupplier.get()) {
-                    int size = chunk.size;
-                    if (size > CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES) {
-                        throw new RuntimeException("Chunk size greater than expected: " + size);
-                    }
-
-                    // First update with the chunk prefix.
-                    setUnsignedInt32LittleEndian(size, chunkContentPrefix, 1);
-                    mdSink.consume(chunkContentPrefix, 0, chunkContentPrefix.length);
-
-                    // Then update with the chunk data.
-                    mdSink.consume(chunk.data);
-
-                    // Now finalize chunk for all algorithms.
-                    for (int i = 0; i < chunkDigests.size(); i++) {
-                        ChunkDigests chunkDigest = chunkDigests.get(i);
-                        int actualDigestSize = messageDigests.get(i).digest(
-                                chunkDigest.concatOfDigestsOfChunks,
-                                chunkDigest.getOffset(chunk.chunkIndex),
-                                chunkDigest.digestOutputSize);
-                        if (actualDigestSize != chunkDigest.digestOutputSize) {
-                            throw new RuntimeException(
-                                    "Unexpected output size of " + chunkDigest.algorithm
-                                            + " digest: " + actualDigestSize);
-                        }
-                    }
-                }
-            } catch (IOException | DigestException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
-     * Thread-safe 1MB DataSource chunk supplier. When bounds are met in a
-     * supplied {@link DataSource}, the data from the next {@link DataSource}
-     * are NOT concatenated. Only the next call to get() will fetch from the
-     * next {@link DataSource} in the input {@link DataSource} array.
-     */
-    private static class ChunkSupplier implements SupplierCompat<ChunkSupplier.Chunk> {
-        private final DataSource[] dataSources;
-        private final int[] chunkCounts;
-        private final int totalChunkCount;
-        private final AtomicInteger nextIndex;
-
-        private ChunkSupplier(DataSource[] dataSources) {
-            this.dataSources = dataSources;
-            chunkCounts = new int[dataSources.length];
-            int totalChunkCount = 0;
-            for (int i = 0; i < dataSources.length; i++) {
-                long chunkCount = getChunkCount(dataSources[i].size(),
-                        CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES);
-                if (chunkCount > Integer.MAX_VALUE) {
-                    throw new RuntimeException(
-                            String.format(
-                                    "Number of chunks in dataSource[%d] is greater than max int.",
-                                    i));
-                }
-                chunkCounts[i] = (int)chunkCount;
-                totalChunkCount = (int) (totalChunkCount + chunkCount);
-            }
-            this.totalChunkCount = totalChunkCount;
-            nextIndex = new AtomicInteger(0);
-        }
-
-        /**
-         * We map an integer index to the termination-adjusted dataSources 1MB chunks.
-         * Note that {@link Chunk}s could be less than 1MB, namely the last 1MB-aligned
-         * blocks in each input {@link DataSource} (unless the DataSource itself is
-         * 1MB-aligned).
-         */
-        @Override
-        public ChunkSupplier.Chunk get() {
-            int index = nextIndex.getAndIncrement();
-            if (index < 0 || index >= totalChunkCount) {
-                return null;
-            }
-
-            int dataSourceIndex = 0;
-            long dataSourceChunkOffset = index;
-            for (; dataSourceIndex < dataSources.length; dataSourceIndex++) {
-                if (dataSourceChunkOffset < chunkCounts[dataSourceIndex]) {
-                    break;
-                }
-                dataSourceChunkOffset -= chunkCounts[dataSourceIndex];
-            }
-
-            long remainingSize = Math.min(
-                    dataSources[dataSourceIndex].size() -
-                            dataSourceChunkOffset * CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES,
-                    CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES);
-
-            final int size = (int)remainingSize;
-            final ByteBuffer buffer = ByteBuffer.allocate(size);
-            try {
-                dataSources[dataSourceIndex].copyTo(
-                        dataSourceChunkOffset * CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES, size,
-                        buffer);
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to read chunk", e);
-            }
-            buffer.rewind();
-
-            return new Chunk(index, buffer, size);
-        }
-
-        static class Chunk {
-            private final int chunkIndex;
-            private final ByteBuffer data;
-            private final int size;
-
-            private Chunk(int chunkIndex, ByteBuffer data, int size) {
-                this.chunkIndex = chunkIndex;
-                this.data = data;
-                this.size = size;
-            }
-        }
-    }
-
     @SuppressWarnings("ByteBufferBackingArray")
     private static void computeApkVerityDigest(DataSource beforeCentralDir, DataSource centralDir,
-            DataSource eocd, Map<ContentDigestAlgorithm, byte[]> outputContentDigests)
+                                               DataSource eocd, Map<ContentDigestAlgorithm, byte[]> outputContentDigests)
             throws IOException, NoSuchAlgorithmException {
         ByteBuffer encoded = createVerityDigestBuffer(true);
         // Use 0s as salt for now.  This also needs to be consistent in the fsverify header for
@@ -797,19 +619,6 @@ public class ApkSigningBlockUtils {
         ByteBuffer encoded = ByteBuffer.allocate(backBufferSize);
         encoded.order(ByteOrder.LITTLE_ENDIAN);
         return encoded;
-    }
-
-    public static class VerityTreeAndDigest {
-        public final ContentDigestAlgorithm contentDigestAlgorithm;
-        public final byte[] rootHash;
-        public final byte[] tree;
-
-        VerityTreeAndDigest(ContentDigestAlgorithm contentDigestAlgorithm, byte[] rootHash,
-                byte[] tree) {
-            this.contentDigestAlgorithm = contentDigestAlgorithm;
-            this.rootHash = rootHash;
-            this.tree = tree;
-        }
     }
 
     @SuppressWarnings("ByteBufferBackingArray")
@@ -943,25 +752,25 @@ public class ApkSigningBlockUtils {
             result.put(element);
         }
         return result.array();
-      }
+    }
 
     public static byte[] encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
             List<Pair<Integer, byte[]>> sequence) {
-          int resultSize = 0;
-          for (Pair<Integer, byte[]> element : sequence) {
-              resultSize += 12 + element.getSecond().length;
-          }
-          ByteBuffer result = ByteBuffer.allocate(resultSize);
-          result.order(ByteOrder.LITTLE_ENDIAN);
-          for (Pair<Integer, byte[]> element : sequence) {
-              byte[] second = element.getSecond();
-              result.putInt(8 + second.length);
-              result.putInt(element.getFirst());
-              result.putInt(second.length);
-              result.put(second);
-          }
-          return result.array();
-      }
+        int resultSize = 0;
+        for (Pair<Integer, byte[]> element : sequence) {
+            resultSize += 12 + element.getSecond().length;
+        }
+        ByteBuffer result = ByteBuffer.allocate(resultSize);
+        result.order(ByteOrder.LITTLE_ENDIAN);
+        for (Pair<Integer, byte[]> element : sequence) {
+            byte[] second = element.getSecond();
+            result.putInt(8 + second.length);
+            result.putInt(element.getFirst());
+            result.putInt(second.length);
+            result.put(second);
+        }
+        return result.array();
+    }
 
     /**
      * Returns the APK Signature Scheme block contained in the provided APK file for the given ID
@@ -970,13 +779,12 @@ public class ApkSigningBlockUtils {
      * @param blockId the ID value in the APK Signing Block's sequence of ID-value pairs
      *                identifying the appropriate block to find, e.g. the APK Signature Scheme v2
      *                block ID.
-     *
      * @throws SignatureNotFoundException if the APK is not signed using given APK Signature Scheme
-     * @throws IOException if an I/O error occurs while reading the APK
+     * @throws IOException                if an I/O error occurs while reading the APK
      */
     public static SignatureInfo findSignature(
             DataSource apk, ApkUtils.ZipSections zipSections, int blockId, Result result)
-                    throws IOException, SignatureNotFoundException {
+            throws IOException, SignatureNotFoundException {
         // Find the APK Signing Block.
         DataSource apkSigningBlock;
         long apkSigningBlockOffset;
@@ -1010,7 +818,7 @@ public class ApkSigningBlockUtils {
      * padding is used to allow for verity-based APK verification.
      *
      * @return {@code Pair} containing the potentially new {@code DataSource} and the amount of
-     *         padding used.
+     * padding used.
      */
     public static Pair<DataSource, Integer> generateApkSigningBlockPadding(
             DataSource beforeCentralDir,
@@ -1065,9 +873,9 @@ public class ApkSigningBlockUtils {
 
         int resultSize =
                 8 // size
-                + blocksSize
-                + 8 // size
-                + 16 // magic
+                        + blocksSize
+                        + 8 // size
+                        + 16 // magic
                 ;
         ByteBuffer paddingPair = null;
         if (resultSize % ANDROID_COMMON_PAGE_ALIGNMENT_BYTES != 0) {
@@ -1113,22 +921,21 @@ public class ApkSigningBlockUtils {
      * given SignerConfigs.
      *
      * @param signerConfigs signer configurations, one for each signer At least one signer config
-     *        must be provided.
-     *
-     * @throws IOException if an I/O error occurs
+     *                      must be provided.
+     * @throws IOException              if an I/O error occurs
      * @throws NoSuchAlgorithmException if a required cryptographic algorithm implementation is
-     *         missing
-     * @throws SignatureException if an error occurs when computing digests of generating
-     *         signatures
+     *                                  missing
+     * @throws SignatureException       if an error occurs when computing digests of generating
+     *                                  signatures
      */
     public static Pair<List<SignerConfig>, Map<ContentDigestAlgorithm, byte[]>>
-            computeContentDigests(
-                    RunnablesExecutor executor,
-                    DataSource beforeCentralDir,
-                    DataSource centralDir,
-                    DataSource eocd,
-                    List<SignerConfig> signerConfigs)
-                            throws IOException, NoSuchAlgorithmException, SignatureException {
+    computeContentDigests(
+            RunnablesExecutor executor,
+            DataSource beforeCentralDir,
+            DataSource centralDir,
+            DataSource eocd,
+            List<SignerConfig> signerConfigs)
+            throws IOException, NoSuchAlgorithmException, SignatureException {
         if (signerConfigs.isEmpty()) {
             throw new IllegalArgumentException(
                     "No signer configs provided. At least one is required");
@@ -1172,7 +979,7 @@ public class ApkSigningBlockUtils {
      * requested platform versions. As a result, the result may contain more than one signature.
      *
      * @throws NoSupportedSignaturesException if no supported signatures were
-     *         found for an Android platform version in the range.
+     *                                        found for an Android platform version in the range.
      */
     public static List<SupportedSignature> getSignaturesToVerify(
             List<SupportedSignature> signatures, int minSdkVersion, int maxSdkVersion)
@@ -1200,7 +1007,7 @@ public class ApkSigningBlockUtils {
             SupportedSignature candidate = bestSigAlgorithmOnSdkVersion.get(sigMinSdkVersion);
             if ((candidate == null)
                     || (compareSignatureAlgorithm(
-                            sigAlgorithm, candidate.algorithm) > 0)) {
+                    sigAlgorithm, candidate.algorithm) > 0)) {
                 bestSigAlgorithmOnSdkVersion.put(sigMinSdkVersion, sig);
             }
         }
@@ -1209,7 +1016,7 @@ public class ApkSigningBlockUtils {
         if (minSdkVersion < minProvidedSignaturesVersion) {
             throw new NoSupportedSignaturesException(
                     "Minimum provided signature version " + minProvidedSignaturesVersion +
-                    " > minSdkVersion " + minSdkVersion);
+                            " > minSdkVersion " + minSdkVersion);
         }
         if (bestSigAlgorithmOnSdkVersion.isEmpty()) {
             throw new NoSupportedSignaturesException("No supported signature");
@@ -1222,26 +1029,6 @@ public class ApkSigningBlockUtils {
         return signaturesToVerify;
     }
 
-    public static class NoSupportedSignaturesException extends Exception {
-        private static final long serialVersionUID = 1L;
-
-        public NoSupportedSignaturesException(String message) {
-            super(message);
-        }
-    }
-
-    public static class SignatureNotFoundException extends Exception {
-        private static final long serialVersionUID = 1L;
-
-        public SignatureNotFoundException(String message) {
-            super(message);
-        }
-
-        public SignatureNotFoundException(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
-
     /**
      * uses the SignatureAlgorithms in the provided signerConfig to sign the provided data
      *
@@ -1249,7 +1036,7 @@ public class ApkSigningBlockUtils {
      */
     public static List<Pair<Integer, byte[]>> generateSignaturesOverData(
             SignerConfig signerConfig, byte[] data)
-                    throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
+            throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
         List<Pair<Integer, byte[]>> signatures =
                 new ArrayList<>(signerConfig.signatureAlgorithms.size());
         PublicKey publicKey = signerConfig.certificates.get(0).getPublicKey();
@@ -1304,14 +1091,14 @@ public class ApkSigningBlockUtils {
      * Wrap the signature according to CMS PKCS #7 RFC 5652.
      * The high-level simplified structure is as follows:
      * // ContentInfo
-     *     //   digestAlgorithm
-     *     //   SignedData
-     *     //     bag of certificates
-     *     //     SignerInfo
-     *     //       signing cert issuer and serial number (for locating the cert in the above bag)
-     *     //       digestAlgorithm
-     *     //       signatureAlgorithm
-     *     //       signature
+     * //   digestAlgorithm
+     * //   SignedData
+     * //     bag of certificates
+     * //     SignerInfo
+     * //       signing cert issuer and serial number (for locating the cert in the above bag)
+     * //       digestAlgorithm
+     * //       signatureAlgorithm
+     * //       signature
      *
      * @throws Asn1EncodingException if the ASN.1 structure could not be encoded
      */
@@ -1352,7 +1139,7 @@ public class ApkSigningBlockUtils {
 
     /**
      * Picks the correct v2/v3 digest for v4 signature verification.
-     *
+     * <p>
      * Keep in sync with pickBestDigestForV4 in framework's ApkSigningBlockUtils.
      */
     public static byte[] pickBestDigestForV4(Map<ContentDigestAlgorithm, byte[]> contentDigests) {
@@ -1364,11 +1151,221 @@ public class ApkSigningBlockUtils {
         return null;
     }
 
+    private static class ChunkDigests {
+        private final ContentDigestAlgorithm algorithm;
+        private final int digestOutputSize;
+        private final byte[] concatOfDigestsOfChunks;
+
+        private ChunkDigests(ContentDigestAlgorithm algorithm, int chunkCount) {
+            this.algorithm = algorithm;
+            digestOutputSize = this.algorithm.getChunkDigestOutputSizeBytes();
+            concatOfDigestsOfChunks = new byte[1 + 4 + chunkCount * digestOutputSize];
+
+            // Fill the initial values of the concatenated digests of chunks, which is
+            // {0x5a, 4-bytes-of-little-endian-chunk-count, digests*...}.
+            concatOfDigestsOfChunks[0] = 0x5a;
+            setUnsignedInt32LittleEndian(chunkCount, concatOfDigestsOfChunks, 1);
+        }
+
+        private MessageDigest createMessageDigest() throws NoSuchAlgorithmException {
+            return MessageDigest.getInstance(algorithm.getJcaMessageDigestAlgorithm());
+        }
+
+        private int getOffset(int chunkIndex) {
+            return 1 + 4 + chunkIndex * digestOutputSize;
+        }
+    }
+
+    /**
+     * A per-thread digest worker.
+     */
+    private static class ChunkDigester implements Runnable {
+        private final ChunkSupplier dataSupplier;
+        private final List<ChunkDigests> chunkDigests;
+        private final List<MessageDigest> messageDigests;
+        private final DataSink mdSink;
+
+        private ChunkDigester(ChunkSupplier dataSupplier, List<ChunkDigests> chunkDigests) {
+            this.dataSupplier = dataSupplier;
+            this.chunkDigests = chunkDigests;
+            messageDigests = new ArrayList<>(chunkDigests.size());
+            for (ChunkDigests chunkDigest : chunkDigests) {
+                try {
+                    messageDigests.add(chunkDigest.createMessageDigest());
+                } catch (NoSuchAlgorithmException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            mdSink = DataSinks.asDataSink(messageDigests.toArray(new MessageDigest[0]));
+        }
+
+        @Override
+        public void run() {
+            byte[] chunkContentPrefix = new byte[5];
+            chunkContentPrefix[0] = (byte) 0xa5;
+
+            try {
+                for (ChunkSupplier.Chunk chunk = dataSupplier.get();
+                     chunk != null;
+                     chunk = dataSupplier.get()) {
+                    int size = chunk.size;
+                    if (size > CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES) {
+                        throw new RuntimeException("Chunk size greater than expected: " + size);
+                    }
+
+                    // First update with the chunk prefix.
+                    setUnsignedInt32LittleEndian(size, chunkContentPrefix, 1);
+                    mdSink.consume(chunkContentPrefix, 0, chunkContentPrefix.length);
+
+                    // Then update with the chunk data.
+                    mdSink.consume(chunk.data);
+
+                    // Now finalize chunk for all algorithms.
+                    for (int i = 0; i < chunkDigests.size(); i++) {
+                        ChunkDigests chunkDigest = chunkDigests.get(i);
+                        int actualDigestSize = messageDigests.get(i).digest(
+                                chunkDigest.concatOfDigestsOfChunks,
+                                chunkDigest.getOffset(chunk.chunkIndex),
+                                chunkDigest.digestOutputSize);
+                        if (actualDigestSize != chunkDigest.digestOutputSize) {
+                            throw new RuntimeException(
+                                    "Unexpected output size of " + chunkDigest.algorithm
+                                            + " digest: " + actualDigestSize);
+                        }
+                    }
+                }
+            } catch (IOException | DigestException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * Thread-safe 1MB DataSource chunk supplier. When bounds are met in a
+     * supplied {@link DataSource}, the data from the next {@link DataSource}
+     * are NOT concatenated. Only the next call to get() will fetch from the
+     * next {@link DataSource} in the input {@link DataSource} array.
+     */
+    private static class ChunkSupplier implements SupplierCompat<ChunkSupplier.Chunk> {
+        private final DataSource[] dataSources;
+        private final int[] chunkCounts;
+        private final int totalChunkCount;
+        private final AtomicInteger nextIndex;
+
+        private ChunkSupplier(DataSource[] dataSources) {
+            this.dataSources = dataSources;
+            chunkCounts = new int[dataSources.length];
+            int totalChunkCount = 0;
+            for (int i = 0; i < dataSources.length; i++) {
+                long chunkCount = getChunkCount(dataSources[i].size(),
+                        CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES);
+                if (chunkCount > Integer.MAX_VALUE) {
+                    throw new RuntimeException(
+                            String.format(
+                                    "Number of chunks in dataSource[%d] is greater than max int.",
+                                    i));
+                }
+                chunkCounts[i] = (int) chunkCount;
+                totalChunkCount = (int) (totalChunkCount + chunkCount);
+            }
+            this.totalChunkCount = totalChunkCount;
+            nextIndex = new AtomicInteger(0);
+        }
+
+        /**
+         * We map an integer index to the termination-adjusted dataSources 1MB chunks.
+         * Note that {@link Chunk}s could be less than 1MB, namely the last 1MB-aligned
+         * blocks in each input {@link DataSource} (unless the DataSource itself is
+         * 1MB-aligned).
+         */
+        @Override
+        public ChunkSupplier.Chunk get() {
+            int index = nextIndex.getAndIncrement();
+            if (index < 0 || index >= totalChunkCount) {
+                return null;
+            }
+
+            int dataSourceIndex = 0;
+            long dataSourceChunkOffset = index;
+            for (; dataSourceIndex < dataSources.length; dataSourceIndex++) {
+                if (dataSourceChunkOffset < chunkCounts[dataSourceIndex]) {
+                    break;
+                }
+                dataSourceChunkOffset -= chunkCounts[dataSourceIndex];
+            }
+
+            long remainingSize = Math.min(
+                    dataSources[dataSourceIndex].size() -
+                            dataSourceChunkOffset * CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES,
+                    CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES);
+
+            final int size = (int) remainingSize;
+            final ByteBuffer buffer = ByteBuffer.allocate(size);
+            try {
+                dataSources[dataSourceIndex].copyTo(
+                        dataSourceChunkOffset * CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES, size,
+                        buffer);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to read chunk", e);
+            }
+            buffer.rewind();
+
+            return new Chunk(index, buffer, size);
+        }
+
+        static class Chunk {
+            private final int chunkIndex;
+            private final ByteBuffer data;
+            private final int size;
+
+            private Chunk(int chunkIndex, ByteBuffer data, int size) {
+                this.chunkIndex = chunkIndex;
+                this.data = data;
+                this.size = size;
+            }
+        }
+    }
+
+    public static class VerityTreeAndDigest {
+        public final ContentDigestAlgorithm contentDigestAlgorithm;
+        public final byte[] rootHash;
+        public final byte[] tree;
+
+        VerityTreeAndDigest(ContentDigestAlgorithm contentDigestAlgorithm, byte[] rootHash,
+                            byte[] tree) {
+            this.contentDigestAlgorithm = contentDigestAlgorithm;
+            this.rootHash = rootHash;
+            this.tree = tree;
+        }
+    }
+
+    public static class NoSupportedSignaturesException extends Exception {
+        private static final long serialVersionUID = 1L;
+
+        public NoSupportedSignaturesException(String message) {
+            super(message);
+        }
+    }
+
+    public static class SignatureNotFoundException extends Exception {
+        private static final long serialVersionUID = 1L;
+
+        public SignatureNotFoundException(String message) {
+            super(message);
+        }
+
+        public SignatureNotFoundException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
     /**
      * Signer configuration.
      */
     public static class SignerConfig {
-        /** Private key. */
+        /**
+         * Private key.
+         */
         public PrivateKey privateKey;
 
         /**
@@ -1389,14 +1386,14 @@ public class ApkSigningBlockUtils {
 
     public static class Result {
         public final int signatureSchemeVersion;
-
-        /** Whether the APK's APK Signature Scheme signature verifies. */
-        public boolean verified;
-
         public final List<Result.SignerInfo> signers = new ArrayList<>();
-        public SigningCertificateLineage signingCertificateLineage = null;
         private final List<ApkVerifier.IssueWithParams> mWarnings = new ArrayList<>();
         private final List<ApkVerifier.IssueWithParams> mErrors = new ArrayList<>();
+        /**
+         * Whether the APK's APK Signature Scheme signature verifies.
+         */
+        public boolean verified;
+        public SigningCertificateLineage signingCertificateLineage = null;
 
         public Result(int signatureSchemeVersion) {
             this.signatureSchemeVersion = signatureSchemeVersion;
@@ -1447,6 +1444,8 @@ public class ApkSigningBlockUtils {
         }
 
         public static class SignerInfo {
+            private final List<ApkVerifier.IssueWithParams> mWarnings = new ArrayList<>();
+            private final List<ApkVerifier.IssueWithParams> mErrors = new ArrayList<>();
             public int index;
             public List<X509Certificate> certs = new ArrayList<>();
             public List<ContentDigest> contentDigests = new ArrayList<>();
@@ -1458,9 +1457,6 @@ public class ApkSigningBlockUtils {
             public int minSdkVersion;
             public int maxSdkVersion;
             public SigningCertificateLineage signingCertificateLineage;
-
-            private final List<ApkVerifier.IssueWithParams> mWarnings = new ArrayList<>();
-            private final List<ApkVerifier.IssueWithParams> mErrors = new ArrayList<>();
 
             public void addError(ApkVerifier.Issue msg, Object... parameters) {
                 mErrors.add(new ApkVerifier.IssueWithParams(msg, parameters));
@@ -1491,7 +1487,7 @@ public class ApkSigningBlockUtils {
                 private final byte[] mValue;
 
                 public ContentDigest(int signatureAlgorithmId, byte[] value) {
-                    mSignatureAlgorithmId  = signatureAlgorithmId;
+                    mSignatureAlgorithmId = signatureAlgorithmId;
                     mValue = value;
                 }
 
@@ -1509,7 +1505,7 @@ public class ApkSigningBlockUtils {
                 private final byte[] mValue;
 
                 public Signature(int algorithmId, byte[] value) {
-                    mAlgorithmId  = algorithmId;
+                    mAlgorithmId = algorithmId;
                     mValue = value;
                 }
 
@@ -1527,7 +1523,7 @@ public class ApkSigningBlockUtils {
                 private final byte[] mValue;
 
                 public AdditionalAttribute(int id, byte[] value) {
-                    mId  = id;
+                    mId = id;
                     mValue = value.clone();
                 }
 

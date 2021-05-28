@@ -19,7 +19,8 @@ package com.android.apksig.internal.util;
 import java.nio.ByteBuffer;
 
 public final class ByteBufferUtils {
-    private ByteBufferUtils() {}
+    private ByteBufferUtils() {
+    }
 
     /**
      * Returns the remaining data of the provided buffer as a new byte array and advances the

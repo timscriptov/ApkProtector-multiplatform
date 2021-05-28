@@ -38,15 +38,15 @@ public class SourceInfo {
 
             BufferedWriter writer = null;
             try {
-                writer = new BufferedWriter( new FileWriter(filePath + "/info.mz"));
+                writer = new BufferedWriter(new FileWriter(filePath + "/info.mz"));
                 writer.write(json.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    if ( writer != null)
-                        writer.close( );
-                } catch ( IOException e) {
+                    if (writer != null)
+                        writer.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

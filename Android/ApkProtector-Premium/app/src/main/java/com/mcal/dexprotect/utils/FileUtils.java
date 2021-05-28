@@ -61,7 +61,7 @@ public class FileUtils {
         }
     }
 
-   public static boolean deleteDir(File directoryToBeDeleted) {
+    public static boolean deleteDir(File directoryToBeDeleted) {
         File[] allContents = directoryToBeDeleted.listFiles();
         if (allContents != null) {
             for (File file : allContents) {
@@ -75,7 +75,7 @@ public class FileUtils {
         StringBuilder text = new StringBuilder();
         FileInputStream fileStream = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(fileStream));
-        for ( String line; (line = br.readLine()) != null; )
+        for (String line; (line = br.readLine()) != null; )
             text.append(line).append(System.lineSeparator());
         return text.toString();
     }

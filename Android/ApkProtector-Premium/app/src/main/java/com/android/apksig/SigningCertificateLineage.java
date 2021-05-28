@@ -16,8 +16,6 @@
 
 package com.android.apksig;
 
-import static com.android.apksig.internal.apk.ApkSigningBlockUtils.getLengthPrefixedSlice;
-
 import com.android.apksig.apk.ApkFormatException;
 import com.android.apksig.apk.ApkUtils;
 import com.android.apksig.internal.apk.ApkSigningBlockUtils;
@@ -52,6 +50,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.android.apksig.internal.apk.ApkSigningBlockUtils.getLengthPrefixedSlice;
+
 /**
  * APK Signer Lineage.
  *
@@ -76,13 +76,19 @@ public class SigningCertificateLineage {
 
     private static final int CURRENT_VERSION = FIRST_VERSION;
 
-    /** accept data from already installed pkg with this cert */
+    /**
+     * accept data from already installed pkg with this cert
+     */
     private static final int PAST_CERT_INSTALLED_DATA = 1;
 
-    /** accept sharedUserId with pkg with this cert */
+    /**
+     * accept sharedUserId with pkg with this cert
+     */
     private static final int PAST_CERT_SHARED_USER_ID = 2;
 
-    /** grant SIGNATURE permissions to pkgs with this cert */
+    /**
+     * grant SIGNATURE permissions to pkgs with this cert
+     */
     private static final int PAST_CERT_PERMISSION = 4;
 
     /**
@@ -146,10 +152,11 @@ public class SigningCertificateLineage {
      * Extracts a Signing Certificate Lineage from a v3 signer proof-of-rotation attribute.
      *
      * <note>
-     *     this may not give a complete representation of an APK's signing certificate history,
-     *     since the APK may have multiple signers corresponding to different platform versions.
-     *     Use <code> readFromApkFile</code> to handle this case.
+     * this may not give a complete representation of an APK's signing certificate history,
+     * since the APK may have multiple signers corresponding to different platform versions.
+     * Use <code> readFromApkFile</code> to handle this case.
      * </note>
+     *
      * @param attrValue
      */
     public static SigningCertificateLineage readFromV3AttributeValue(byte[] attrValue)
@@ -158,7 +165,7 @@ public class SigningCertificateLineage {
                 V3SigningCertificateLineage.readSigningCertificateLineage(ByteBuffer.wrap(
                         attrValue).order(ByteOrder.LITTLE_ENDIAN));
         int minSdkVersion = calculateMinSdkVersion(parsedLineage);
-        return  new SigningCertificateLineage(minSdkVersion, parsedLineage);
+        return new SigningCertificateLineage(minSdkVersion, parsedLineage);
     }
 
     /**
@@ -166,7 +173,7 @@ public class SigningCertificateLineage {
      * signature block of the provided APK File.
      *
      * @throws IllegalArgumentException if the provided APK does not contain a V3 signature block,
-     * or if the V3 signature block does not contain a valid lineage.
+     *                                  or if the V3 signature block does not contain a valid lineage.
      */
     public static SigningCertificateLineage readFromApkFile(File apkFile)
             throws IOException, ApkFormatException {
@@ -181,7 +188,7 @@ public class SigningCertificateLineage {
      * signature block of the provided APK DataSource.
      *
      * @throws IllegalArgumentException if the provided APK does not contain a V3 signature block,
-     * or if the V3 signature block does not contain a valid lineage.
+     *                                  or if the V3 signature block does not contain a valid lineage.
      */
     public static SigningCertificateLineage readFromApkDataSource(DataSource apk)
             throws IOException, ApkFormatException {
@@ -237,7 +244,7 @@ public class SigningCertificateLineage {
      * signed data portion of a signer in a V3 signature block.
      *
      * @throws IllegalArgumentException if the provided signed data does not contain a valid
-     * lineage.
+     *                                  lineage.
      */
     public static SigningCertificateLineage readFromSignedData(ByteBuffer signedData)
             throws IOException, ApkFormatException {
@@ -282,6 +289,110 @@ public class SigningCertificateLineage {
         return result;
     }
 
+    private static SigningCertificateLineage read(ByteBuffer inputByteBuffer)
+            throws IOException {
+        ApkSigningBlockUtils.checkByteOrderLittleEndian(inputByteBuffer);
+        if (inputByteBuffer.remaining() < 8) {
+            throw new IllegalArgumentException(
+                    "Improper SigningCertificateLineage format: insufficient data for header.");
+        }
+
+        if (inputByteBuffer.getInt() != MAGIC) {
+            throw new IllegalArgumentException(
+                    "Improper SigningCertificateLineage format: MAGIC header mismatch.");
+        }
+        return read(inputByteBuffer, inputByteBuffer.getInt());
+    }
+
+    private static SigningCertificateLineage read(ByteBuffer inputByteBuffer, int version)
+            throws IOException {
+        switch (version) {
+            case FIRST_VERSION:
+                try {
+                    List<SigningCertificateNode> nodes =
+                            V3SigningCertificateLineage.readSigningCertificateLineage(
+                                    getLengthPrefixedSlice(inputByteBuffer));
+                    int minSdkVersion = calculateMinSdkVersion(nodes);
+                    return new SigningCertificateLineage(minSdkVersion, nodes);
+                } catch (ApkFormatException e) {
+                    // unable to get a proper length-prefixed lineage slice
+                    throw new IOException("Unable to read list of signing certificate nodes in "
+                            + "SigningCertificateLineage", e);
+                }
+            default:
+                throw new IllegalArgumentException(
+                        "Improper SigningCertificateLineage format: unrecognized version.");
+        }
+    }
+
+    private static int calculateMinSdkVersion(List<SigningCertificateNode> nodes) {
+        if (nodes == null) {
+            throw new IllegalArgumentException("Can't calculate minimum SDK version of null nodes");
+        }
+        int minSdkVersion = AndroidSdkVersion.P; // lineage introduced in P
+        for (SigningCertificateNode node : nodes) {
+            if (node.sigAlgorithm != null) {
+                int nodeMinSdkVersion = node.sigAlgorithm.getMinSdkVersion();
+                if (nodeMinSdkVersion > minSdkVersion) {
+                    minSdkVersion = nodeMinSdkVersion;
+                }
+            }
+        }
+        return minSdkVersion;
+    }
+
+    private static int calculateDefaultFlags() {
+        return PAST_CERT_INSTALLED_DATA | PAST_CERT_PERMISSION
+                | PAST_CERT_SHARED_USER_ID | PAST_CERT_AUTH;
+    }
+
+    /**
+     * Consolidates all of the lineages found in an APK into one lineage, which is the longest one.
+     * In so doing, it also checks that all of the smaller lineages are contained in the largest,
+     * and that they properly cover the desired platform ranges.
+     * <p>
+     * An APK may contain multiple lineages, one for each signer, which correspond to different
+     * supported platform versions.  In this event, the lineage(s) from the earlier platform
+     * version(s) need to be present in the most recent (longest) one to make sure that when a
+     * platform version changes.
+     *
+     * <note> This does not verify that the largest lineage corresponds to the most recent supported
+     * platform version.  That check requires is performed during v3 verification. </note>
+     */
+    public static SigningCertificateLineage consolidateLineages(
+            List<SigningCertificateLineage> lineages) {
+        if (lineages == null || lineages.isEmpty()) {
+            return null;
+        }
+        int largestIndex = 0;
+        int maxSize = 0;
+
+        // determine the longest chain
+        for (int i = 0; i < lineages.size(); i++) {
+            int curSize = lineages.get(i).size();
+            if (curSize > maxSize) {
+                largestIndex = i;
+                maxSize = curSize;
+            }
+        }
+
+        List<SigningCertificateNode> largestList = lineages.get(largestIndex).mSigningLineage;
+        // make sure all other lineages fit into this one, with the same capabilities
+        for (int i = 0; i < lineages.size(); i++) {
+            if (i == largestIndex) {
+                continue;
+            }
+            List<SigningCertificateNode> underTest = lineages.get(i).mSigningLineage;
+            if (!underTest.equals(largestList.subList(0, underTest.size()))) {
+                throw new IllegalArgumentException("Inconsistent SigningCertificateLineages. "
+                        + "Not all lineages are subsets of each other.");
+            }
+        }
+
+        // if we've made it this far, they all check out, so just return the largest
+        return lineages.get(largestIndex);
+    }
+
     public void writeToFile(File file) throws IOException {
         if (file == null) {
             throw new NullPointerException("file == null");
@@ -303,7 +414,7 @@ public class SigningCertificateLineage {
      * flags associated with the new signer are set to a default value.
      *
      * @param parent current signing certificate of the containing APK
-     * @param child new signing certificate which will sign the APK contents
+     * @param child  new signing certificate which will sign the APK contents
      */
     public SigningCertificateLineage spawnDescendant(SignerConfig parent, SignerConfig child)
             throws CertificateEncodingException, InvalidKeyException, NoSuchAlgorithmException,
@@ -319,8 +430,8 @@ public class SigningCertificateLineage {
      * Add a new signing certificate to the lineage.  This effectively creates a signing certificate
      * rotation event, forcing APKs which include this lineage to be signed by the new signer.
      *
-     * @param parent current signing certificate of the containing APK
-     * @param child new signing certificate which will sign the APK contents
+     * @param parent            current signing certificate of the containing APK
+     * @param child             new signing certificate which will sign the APK contents
      * @param childCapabilities flags
      */
     public SigningCertificateLineage spawnDescendant(
@@ -423,58 +534,6 @@ public class SigningCertificateLineage {
         SigningCertificateNode firstNode = new SigningCertificateNode(
                 parent.getCertificate(), null, null, new byte[0], signerCapabilities.getFlags());
         return new SigningCertificateLineage(mMinSdkVersion, Collections.singletonList(firstNode));
-    }
-
-    private static SigningCertificateLineage read(ByteBuffer inputByteBuffer)
-            throws IOException {
-        ApkSigningBlockUtils.checkByteOrderLittleEndian(inputByteBuffer);
-        if (inputByteBuffer.remaining() < 8) {
-            throw new IllegalArgumentException(
-                    "Improper SigningCertificateLineage format: insufficient data for header.");
-        }
-
-        if (inputByteBuffer.getInt() != MAGIC) {
-            throw new IllegalArgumentException(
-                    "Improper SigningCertificateLineage format: MAGIC header mismatch.");
-        }
-        return read(inputByteBuffer, inputByteBuffer.getInt());
-    }
-
-    private static SigningCertificateLineage read(ByteBuffer inputByteBuffer, int version)
-            throws IOException {
-        switch (version) {
-            case FIRST_VERSION:
-                try {
-                    List<SigningCertificateNode> nodes =
-                            V3SigningCertificateLineage.readSigningCertificateLineage(
-                                    getLengthPrefixedSlice(inputByteBuffer));
-                    int minSdkVersion = calculateMinSdkVersion(nodes);
-                    return new SigningCertificateLineage(minSdkVersion, nodes);
-                } catch (ApkFormatException e) {
-                    // unable to get a proper length-prefixed lineage slice
-                    throw new IOException("Unable to read list of signing certificate nodes in "
-                            + "SigningCertificateLineage", e);
-                }
-            default:
-                throw new IllegalArgumentException(
-                        "Improper SigningCertificateLineage format: unrecognized version.");
-        }
-    }
-
-    private static int calculateMinSdkVersion(List<SigningCertificateNode> nodes) {
-        if (nodes == null) {
-            throw new IllegalArgumentException("Can't calculate minimum SDK version of null nodes");
-        }
-        int minSdkVersion = AndroidSdkVersion.P; // lineage introduced in P
-        for (SigningCertificateNode node : nodes) {
-            if (node.sigAlgorithm != null) {
-                int nodeMinSdkVersion = node.sigAlgorithm.getMinSdkVersion();
-                if (nodeMinSdkVersion > minSdkVersion) {
-                    minSdkVersion = nodeMinSdkVersion;
-                }
-            }
-        }
-        return minSdkVersion;
     }
 
     private ByteBuffer write() {
@@ -636,11 +695,6 @@ public class SigningCertificateLineage {
         return false;
     }
 
-    private static int calculateDefaultFlags() {
-        return PAST_CERT_INSTALLED_DATA | PAST_CERT_PERMISSION
-                | PAST_CERT_SHARED_USER_ID | PAST_CERT_AUTH;
-    }
-
     /**
      * Returns a new SigingCertificateLineage which terminates at the node corresponding to the
      * given certificate.  This is useful in the event of rotating to a new signing algorithm that
@@ -650,7 +704,6 @@ public class SigningCertificateLineage {
      *
      * @param x509Certificate the signing certificate for which to search
      * @return A new SigningCertificateLineage if the given certificate is present.
-     *
      * @throws IllegalArgumentException if the provided certificate is not in the lineage.
      */
     public SigningCertificateLineage getSubLineage(X509Certificate x509Certificate) {
@@ -669,60 +722,13 @@ public class SigningCertificateLineage {
     }
 
     /**
-     * Consolidates all of the lineages found in an APK into one lineage, which is the longest one.
-     * In so doing, it also checks that all of the smaller lineages are contained in the largest,
-     * and that they properly cover the desired platform ranges.
-     *
-     * An APK may contain multiple lineages, one for each signer, which correspond to different
-     * supported platform versions.  In this event, the lineage(s) from the earlier platform
-     * version(s) need to be present in the most recent (longest) one to make sure that when a
-     * platform version changes.
-     *
-     * <note> This does not verify that the largest lineage corresponds to the most recent supported
-     * platform version.  That check requires is performed during v3 verification. </note>
-     */
-    public static SigningCertificateLineage consolidateLineages(
-            List<SigningCertificateLineage> lineages) {
-        if (lineages == null || lineages.isEmpty()) {
-            return null;
-        }
-        int largestIndex = 0;
-        int maxSize = 0;
-
-        // determine the longest chain
-        for (int i = 0; i < lineages.size(); i++) {
-            int curSize = lineages.get(i).size();
-            if (curSize > maxSize) {
-                largestIndex = i;
-                maxSize = curSize;
-            }
-        }
-
-        List<SigningCertificateNode> largestList = lineages.get(largestIndex).mSigningLineage;
-        // make sure all other lineages fit into this one, with the same capabilities
-        for (int i = 0; i < lineages.size(); i++) {
-            if (i == largestIndex) {
-                continue;
-            }
-            List<SigningCertificateNode> underTest = lineages.get(i).mSigningLineage;
-            if (!underTest.equals(largestList.subList(0, underTest.size()))) {
-                throw new IllegalArgumentException("Inconsistent SigningCertificateLineages. "
-                        + "Not all lineages are subsets of each other.");
-            }
-        }
-
-        // if we've made it this far, they all check out, so just return the largest
-        return lineages.get(largestIndex);
-    }
-
-    /**
      * Representation of the capabilities the APK would like to grant to its old signing
      * certificates.  The {@code SigningCertificateLineage} provides two conceptual data structures.
-     *   1) proof of rotation - Evidence that other parties can trust an APK's current signing
-     *      certificate if they trust an older one in this lineage
-     *   2) self-trust - certain capabilities may have been granted by an APK to other parties based
-     *      on its own signing certificate.  When it changes its signing certificate it may want to
-     *      allow the other parties to retain those capabilities.
+     * 1) proof of rotation - Evidence that other parties can trust an APK's current signing
+     * certificate if they trust an older one in this lineage
+     * 2) self-trust - certain capabilities may have been granted by an APK to other parties based
+     * on its own signing certificate.  When it changes its signing certificate it may want to
+     * allow the other parties to retain those capabilities.
      * {@code SignerCapabilties} provides a representation of the second structure.
      *
      * <p>Use {@link Builder} to obtain configuration instances.
@@ -969,9 +975,9 @@ public class SigningCertificateLineage {
             /**
              * Constructs a new {@code Builder}.
              *
-             * @param privateKey signing key
+             * @param privateKey  signing key
              * @param certificate the X.509 certificate with a subject public key of the
-             * {@code privateKey}.
+             *                    {@code privateKey}.
              */
             public Builder(
                     PrivateKey privateKey,
@@ -1001,12 +1007,13 @@ public class SigningCertificateLineage {
         private SignerCapabilities mOriginalCapabilities;
         private SignerCapabilities mNewCapabilities;
         private int mMinSdkVersion;
+
         /**
          * Constructs a new {@code Builder}.
          *
          * @param originalSignerConfig first signer in this lineage, parent of the next
-         * @param newSignerConfig new signer in the lineage; the new signing key that the APK will
-         *                        use
+         * @param newSignerConfig      new signer in the lineage; the new signing key that the APK will
+         *                             use
          */
         public Builder(
                 SignerConfig originalSignerConfig,

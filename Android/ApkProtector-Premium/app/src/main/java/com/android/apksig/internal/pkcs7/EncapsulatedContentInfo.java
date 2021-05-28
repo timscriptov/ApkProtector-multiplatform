@@ -18,8 +18,9 @@ package com.android.apksig.internal.pkcs7;
 
 import com.android.apksig.internal.asn1.Asn1Class;
 import com.android.apksig.internal.asn1.Asn1Field;
-import com.android.apksig.internal.asn1.Asn1Type;
 import com.android.apksig.internal.asn1.Asn1Tagging;
+import com.android.apksig.internal.asn1.Asn1Type;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -38,7 +39,8 @@ public class EncapsulatedContentInfo {
             optional = true)
     public ByteBuffer content;
 
-    public EncapsulatedContentInfo() {}
+    public EncapsulatedContentInfo() {
+    }
 
     public EncapsulatedContentInfo(String contentTypeOid) {
         contentType = contentTypeOid;

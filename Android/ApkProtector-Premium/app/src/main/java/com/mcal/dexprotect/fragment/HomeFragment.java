@@ -48,33 +48,6 @@ import java.io.File;
 import ru.svolf.melissa.sheet.SweetContentDialog;
 
 public class HomeFragment extends Fragment {
-    private View mView;
-    private AppCompatEditText apkPath;
-    private AppCompatImageView apkIcon;
-    private AppCompatTextView apkName;
-    private AppCompatButton protect;
-    private AppCompatTextView apkPack;
-
-    private MaterialCardView dexProtectFeatures;
-
-    private AppCompatRadioButton dexProtect;
-    private AppCompatRadioButton shrinkResources;
-    private AppCompatRadioButton signApk;
-
-    private AppCompatCheckBox checkluckyPatcher;
-    private AppCompatCheckBox checkSignature;
-    private AppCompatCheckBox checkRoot;
-    private AppCompatCheckBox checkMagisk;
-    private AppCompatCheckBox checkXposed;
-    private AppCompatCheckBox checkVending;
-    private AppCompatCheckBox checkEmulator;
-    private AppCompatCheckBox checkClone;
-    private AppCompatCheckBox checkHook;
-    private AppCompatCheckBox checkIllegalCode;
-    private AppCompatCheckBox checkVpnProxy;
-    private AppCompatCheckBox checkDebug;
-
-
     View.OnClickListener radioButtonClickListener = v -> {
         AppCompatRadioButton rb = (AppCompatRadioButton) v;
         switch (rb.getId()) {
@@ -98,6 +71,28 @@ public class HomeFragment extends Fragment {
                 break;
         }
     };
+    private View mView;
+    private AppCompatEditText apkPath;
+    private AppCompatImageView apkIcon;
+    private AppCompatTextView apkName;
+    private AppCompatButton protect;
+    private AppCompatTextView apkPack;
+    private MaterialCardView dexProtectFeatures;
+    private AppCompatRadioButton dexProtect;
+    private AppCompatRadioButton shrinkResources;
+    private AppCompatRadioButton signApk;
+    private AppCompatCheckBox checkluckyPatcher;
+    private AppCompatCheckBox checkSignature;
+    private AppCompatCheckBox checkRoot;
+    private AppCompatCheckBox checkMagisk;
+    private AppCompatCheckBox checkXposed;
+    private AppCompatCheckBox checkVending;
+    private AppCompatCheckBox checkEmulator;
+    private AppCompatCheckBox checkClone;
+    private AppCompatCheckBox checkHook;
+    private AppCompatCheckBox checkIllegalCode;
+    private AppCompatCheckBox checkVpnProxy;
+    private AppCompatCheckBox checkDebug;
     private ProtectAsyncListener listener = new ProtectAsyncListener() {
 
         @Override
