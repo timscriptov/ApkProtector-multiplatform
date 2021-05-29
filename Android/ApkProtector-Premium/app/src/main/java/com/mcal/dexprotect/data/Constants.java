@@ -16,7 +16,7 @@ public class Constants {
     public final static String UNSIGNED_PATH = ScopedStorage.getWorkPath() + File.separator + "release" + File.separator + "app-unsigned.apk";
     public final static String MANIFEST_PATH = ScopedStorage.getWorkPath() + File.separator + "output" + File.separator + "AndroidManifest.xml";
     public static final String UTF_8 = "UTF-8";
-    public static String PACKAGE_NAME = "com.mcal.dexprotect";
+    public static String PACKAGE_NAME = "com.mcal.apkprotector";
     public static String DEX_PREFIX = "classes-v";
     public static String DEX_SUFFIX = ".bin";
     public static String DEX_DIR = "dex";
