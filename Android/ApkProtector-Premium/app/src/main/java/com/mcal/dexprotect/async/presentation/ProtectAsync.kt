@@ -65,10 +65,10 @@ class ProtectAsync(
     private fun onPostExecute(result: Boolean) {
         dismissProgressDialog()
         System.gc()
-        /*FileUtils.deleteDir(File(Constants.OUTPUT_PATH))
+        FileUtils.deleteDir(File(Constants.OUTPUT_PATH))
         FileUtils.deleteDir(File(Constants.RELEASE_PATH))
         FileUtils.deleteDir(File(Constants.CACHE_PATH))
-        FileUtils.deleteDir(File(Constants.SMALI_PATH))*/
+        FileUtils.deleteDir(File(Constants.SMALI_PATH))
         if (result) {
             listener.onCompleted()
         } else {
@@ -239,10 +239,13 @@ class ProtectAsync(
         }
         if (Preferences.getEncryptResourcesBoolean()) {
             doProgress("Copying apk…")
-            if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
+            val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
+            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
+
+            if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 doProgress("Encrypting Resources…")
                 AndResGuard.proguard2(
-                    File("$xpath/output/app.apk"),
+                    File(tmpApk),
                     File(path + "/output/" + MyAppInfo.getPackage() + "/"),
                     File(path),
                     MyAppInfo.getPackage()
@@ -251,11 +254,11 @@ class ProtectAsync(
                 if (Preferences.getZipAlignerBoolean()) {
                     //if (ZipAlign.fnAapt(context, "$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                     doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess("$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
+                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
                         doProgress("Signing Apk…")
                         if (SignatureTool.sign(
                                 context,
-                                File("$xpath/output/aligned.apk"),
+                                File(alignedApk),
                                 File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                             )
                         ) {
@@ -267,7 +270,7 @@ class ProtectAsync(
                     doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
-                            File("$xpath/output/app.apk"),
+                            File(tmpApk),
                             File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                         )
                     ) {
@@ -279,15 +282,18 @@ class ProtectAsync(
         }
         if (Preferences.getSignApkBoolean()) {
             doProgress("Copying apk…")
-            if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
+            val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
+            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
+
+            if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
                     doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess("$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
+                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
                         doProgress("Signing Apk…")
                         if (SignatureTool.sign(
                                 context,
-                                File("$xpath/output/aligned.apk"),
+                                File(alignedApk),
                                 File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                             )
                         ) {
@@ -299,7 +305,7 @@ class ProtectAsync(
                     doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
-                            File("$xpath/output/app.apk"),
+                            File(tmpApk),
                             File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                         )
                     ) {

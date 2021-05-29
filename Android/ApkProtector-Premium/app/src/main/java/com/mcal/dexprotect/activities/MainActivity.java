@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (LuckyPatcherCheck.isLucky(this)/* || BuildConfig.DEBUG*/) {
-                Utils.showDialogWarn(this, "ApkProtector Security", getString(R.string.vending_message));
+                Utils.showDialogWarn(this, "ApkProtector Security", "Please delete Lucky Patcher");
             }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
