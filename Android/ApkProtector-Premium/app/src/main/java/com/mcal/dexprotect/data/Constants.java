@@ -1,12 +1,12 @@
 package com.mcal.dexprotect.data;
 
 import com.mcal.dexprotect.BuildConfig;
-import com.mcal.dexprotect.utils.ScopedStorage;
+import com.mcal.dexprotect.utils.file.ScopedStorage;
 
 import java.io.File;
 
 public class Constants {
-    public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz123456789";
+    public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
     public final static String CACHE_PATH = ScopedStorage.getWorkPath() + File.separator + "cache";
     public final static String SMALI_PATH = ScopedStorage.getWorkPath() + File.separator + "smali";
     public final static String RELEASE_PATH = ScopedStorage.getWorkPath() + File.separator + "release";

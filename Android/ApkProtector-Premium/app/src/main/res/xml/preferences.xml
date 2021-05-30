@@ -4,15 +4,25 @@
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
         android:title="Dexer">
-        <!-- androidx.preference.SwitchPreference
+        <androidx.preference.SwitchPreference
             android:title="@string/pref_title_hide_apkprotector"
             android:key="randomNameBoolean"
             android:summary="@string/pref_msg_random_name"
-            android:defaultValue="false"/ -->
+            android:defaultValue="false"/>
         <androidx.preference.EditTextPreference
             android:title="@string/protect_key_title"
             android:key="protectKeyString"
             android:summary="@string/protect_key_msg" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="Resources">
+        <androidx.preference.SwitchPreference
+            android:title="@string/pref_title_protect_manifest"
+            android:key="protectManifest"
+            android:summary="@string/pref_msg_protect_manifest"
+            android:defaultValue="false"/>
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory

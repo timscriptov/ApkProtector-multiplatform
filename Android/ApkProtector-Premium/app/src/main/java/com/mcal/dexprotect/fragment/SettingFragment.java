@@ -9,8 +9,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.mcal.dexprotect.App;
 import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.data.Preferences;
-import com.mcal.dexprotect.utils.SecurePreferences;
 import com.mcal.dexprotect.utils.Utils;
+import com.mcal.dexprotect.utils.preference.SecurePreferences;
 
 public class SettingFragment extends PreferenceFragmentCompat implements SecurePreferences.OnSharedPreferenceChangeListener {
     @Override

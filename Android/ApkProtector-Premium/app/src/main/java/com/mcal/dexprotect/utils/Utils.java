@@ -11,9 +11,7 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,45 +106,6 @@ public class Utils {
             }
         }
         folder.delete();
-    }
-
-    public static void deleteFolderContent(@NotNull String folder) {
-        File[] files = new File(folder).listFiles();
-        if (files != null) { //some JVMs return null for empty dirs
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    deleteFolder(f);
-                } else {
-                    f.delete();
-                }
-            }
-        }
-    }
-
-    public static void delete(String file) {
-        delete(new File(file));
-    }
-
-    public static void delete(File file) {
-        if (file != null && file.exists()) {
-            if (file.isDirectory()) {
-                for (File f : file.listFiles()) {
-                    delete(f);
-                }
-                file.delete();
-            } else {
-                file.delete();
-            }
-        }
-    }
-
-    @Contract("null -> false")
-    public static boolean exists(File file) {
-        return file != null && file.exists();
-    }
-
-    public static void toast(Context context, String str) {
-        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("ObsoleteSdkInt")

@@ -4,16 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.Html;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.text.HtmlCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.mcal.dexprotect.R;
+import com.mcal.dexprotect.utils.text.HtmlUtils;
 
 import ru.svolf.melissa.sheet.SweetContentDialog;
 import ru.svolf.melissa.sheet.SweetViewDialog;
@@ -50,15 +49,11 @@ public class Dialogs {
         ll.setPadding(40, 0, 40, 0);
         ll.setLayoutParams(layoutParams);
         AppCompatTextView msg1 = new AppCompatTextView(context);
-        msg1.setText(Html.fromHtml(context.getString(R.string.about_msg1), HtmlCompat.FROM_HTML_MODE_LEGACY));
-
-        AppCompatTextView msg2 = new AppCompatTextView(context);
-        msg2.setText(Html.fromHtml(context.getString(R.string.about_msg2), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        msg1.setText(HtmlUtils.fromHtml(context.getString(R.string.about_msg1)));
 
         AppCompatTextView copyright = new AppCompatTextView(context);
-        copyright.setText(Html.fromHtml(context.getString(R.string.about_copyright), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        copyright.setText(HtmlUtils.fromHtml(context.getString(R.string.about_copyright)));
         ll.addView(msg1);
-        ll.addView(msg2);
         ll.addView(copyright);
 
         SweetViewDialog dialog = new SweetViewDialog(context);

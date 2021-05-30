@@ -4,7 +4,7 @@ import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.patchers.DexPatcher;
 import com.mcal.dexprotect.utils.LoggerUtils;
-import com.mcal.dexprotect.utils.ScopedStorage;
+import com.mcal.dexprotect.utils.file.ScopedStorage;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,7 +23,7 @@ public class FastZip {
         extractDir.mkdirs();
         ZipFile apk = new ZipFile(zip);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) apk.entries();
-        LoggerUtils.writeLog("----------Apk Extracting----------------");
+        LoggerUtils.writeLog("\n************ APK EXTRACTING ***********");
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             LoggerUtils.writeLog("Entry: " + entry.getName());
@@ -56,7 +56,7 @@ public class FastZip {
         ZipFile zipFile = new ZipFile(inZip);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zipFile.entries();
         FastZipOutputStream fzos = new FastZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZip)));
-        LoggerUtils.writeLog("----------Apk Repacking----------------");
+        LoggerUtils.writeLog("\n************ APK REPACKING ***********");
 
         //pack other patched files
         String[] files = new File(Constants.OUTPUT_PATH).list();

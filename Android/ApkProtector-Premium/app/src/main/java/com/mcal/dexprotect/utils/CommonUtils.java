@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.mcal.dexprotect.data.Constants;
+import com.mcal.dexprotect.utils.security.SignCheck;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

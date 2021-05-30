@@ -31,10 +31,10 @@ import com.mcal.dexprotect.fragment.HomeFragment;
 import com.mcal.dexprotect.module.Dialogs;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.ExceptionHandler;
-import com.mcal.dexprotect.utils.LuckyPatcherCheck;
-import com.mcal.dexprotect.utils.SecurityUtils;
-import com.mcal.dexprotect.utils.SignatureCheck;
 import com.mcal.dexprotect.utils.Utils;
+import com.mcal.dexprotect.utils.security.LuckyPatcherCheck;
+import com.mcal.dexprotect.utils.security.SecurityUtils;
+import com.mcal.dexprotect.utils.security.SignatureCheck;
 import com.mcal.dexprotect.view.CenteredToolBar;
 import com.mcal.dexprotect.view.CreateSignDialog;
 
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (LuckyPatcherCheck.isLucky(this)/* || BuildConfig.DEBUG*/) {
-                Utils.showDialogWarn(this, "ApkProtector Security", "Please delete Lucky Patcher");
-            }
+            Utils.showDialogWarn(this, "ApkProtector Security", "Please delete Lucky Patcher");
+        }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();

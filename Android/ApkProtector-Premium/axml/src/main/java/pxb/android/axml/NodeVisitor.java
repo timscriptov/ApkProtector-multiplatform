@@ -6,7 +6,7 @@ public abstract class NodeVisitor {
     public static final int TYPE_INT_HEX = 0x11;
     static final int TYPE_INT_BOOLEAN = 0x12;
     static final int TYPE_REFERENCE = 0x01;
-    static final int TYPE_STRING = 0x03;
+    public static final int TYPE_STRING = 0x03;
     NodeVisitor nv;
 
     NodeVisitor() {

@@ -1,5 +1,7 @@
 package com.mcal.dexprotect.utils;
 
+import com.mcal.dexprotect.utils.file.FileUtils;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

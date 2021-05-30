@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.jf.dexlib2">
+    package="org.jfclone.dexlib2">
 
     <application
         android:supportsRtl="true">

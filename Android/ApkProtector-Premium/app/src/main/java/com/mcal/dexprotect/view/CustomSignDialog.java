@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mcal.dexprotect.App;
 import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.data.Preferences;
-import com.mcal.dexprotect.utils.ScopedStorage;
+import com.mcal.dexprotect.utils.file.ScopedStorage;
 
 import org.jetbrains.annotations.Contract;
 

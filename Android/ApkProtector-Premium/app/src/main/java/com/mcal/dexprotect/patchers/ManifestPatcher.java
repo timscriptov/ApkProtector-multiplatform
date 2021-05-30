@@ -3,11 +3,17 @@ package com.mcal.dexprotect.patchers;
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.utils.LoggerUtils;
+import com.mcal.dexprotect.utils.ManifestModify;
+import com.mcal.dexprotect.utils.file.FileUtils;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import bin.xml.decode.AXmlDecoder;
@@ -15,11 +21,25 @@ import bin.xml.decode.AXmlResourceParser;
 import bin.xml.decode.XmlPullParser;
 
 public class ManifestPatcher {
-    public static boolean customApplication = false;
-    public static String customApplicationName = "";
-    public static String packageName = "";
 
-    public static byte[] parseManifest() throws IOException {
+    public static boolean manifestPatch(String manifestPath) {
+        try {
+            parseManifest(manifestPath, new BufferedInputStream(new FileInputStream(manifestPath)));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void parseManifest(String manifestPath, InputStream is) throws IOException {
+        byte[] data = FileUtils.toByteArray(is);
+        ManifestModify mm = new ManifestModify(Preferences.getApplicationName());
+        FileUtils.writeByteArrayToFile(new File(manifestPath), mm.modifyAxml(data));
+    }
+
+
+
+    /*public static byte[] parseManifest() throws IOException {
         FileInputStream fis = new FileInputStream(Constants.MANIFEST_PATH);
         AXmlDecoder axml = AXmlDecoder.decode(fis);
         AXmlResourceParser parser = new AXmlResourceParser();
@@ -47,9 +67,9 @@ public class ManifestPatcher {
                         byte[] data = axml.getData();
                         int off = parser.currentAttributeStart + 20 * i;
                         off += 8;
-                        writeInt(data, off, index);
+                        FileUtils.writeInt(data, off, index);
                         off += 8;
-                        writeInt(data, off, index);
+                        FileUtils.writeInt(data, off, index);
                     }
                 }
                 if (!customApplication) {
@@ -60,10 +80,10 @@ public class ManifestPatcher {
                     System.arraycopy(data, off, newData, off + 20, data.length - off);
 
                     // chunkSize
-                    int chunkSize = readInt(newData, off - 32);
-                    writeInt(newData, off - 32, chunkSize + 20);
+                    int chunkSize = FileUtils.readInt(newData, off - 32);
+                    FileUtils.writeInt(newData, off - 32, chunkSize + 20);
                     // attributeCount
-                    writeInt(newData, off - 8, size + 1);
+                    FileUtils.writeInt(newData, off - 8, size + 1);
 
                     int idIndex = parser.findResourceID(0x01010003);
                     if (idIndex == -1)
@@ -86,11 +106,11 @@ public class ManifestPatcher {
                         off += 20 * size;
                     }
 
-                    writeInt(newData, off, axml.mTableStrings.find("http://schemas.android.com/apk/res/android"));
-                    writeInt(newData, off + 4, idIndex);
-                    writeInt(newData, off + 8, axml.mTableStrings.getSize());
-                    writeInt(newData, off + 12, 0x03000008);
-                    writeInt(newData, off + 16, axml.mTableStrings.getSize());
+                    FileUtils.writeInt(newData, off, axml.mTableStrings.find("http://schemas.android.com/apk/res/android"));
+                    FileUtils.writeInt(newData, off + 4, idIndex);
+                    FileUtils.writeInt(newData, off + 8, axml.mTableStrings.getSize());
+                    FileUtils.writeInt(newData, off + 12, 0x03000008);
+                    FileUtils.writeInt(newData, off + 16, axml.mTableStrings.getSize());
                     axml.setData(newData);
                 }
                 success = true;
@@ -108,17 +128,5 @@ public class ManifestPatcher {
         axml.write(list, baos);
         fis.close();
         return baos.toByteArray();
-    }
-
-    private static void writeInt(byte[] data, int off, int value) {
-        data[off++] = (byte) (value & 0xFF);
-        data[off++] = (byte) ((value >>> 8) & 0xFF);
-        data[off++] = (byte) ((value >>> 16) & 0xFF);
-        data[off] = (byte) ((value >>> 24) & 0xFF);
-    }
-
-    private static int readInt(byte[] data, int off) {
-        return data[off + 3] << 24 | (data[off + 2] & 0xFF) << 16 | (data[off + 1] & 0xFF) << 8
-                | data[off] & 0xFF;
-    }
+    }*/
 }

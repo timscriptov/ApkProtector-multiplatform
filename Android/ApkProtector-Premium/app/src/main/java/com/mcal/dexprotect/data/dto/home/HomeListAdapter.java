@@ -22,10 +22,10 @@ import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.async.presentation.GetIcon;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.InstallProvider;
-import com.mcal.dexprotect.utils.ScopedStorage;
 import com.mcal.dexprotect.utils.SourceInfo;
 import com.mcal.dexprotect.utils.StringUtils;
 import com.mcal.dexprotect.utils.Utils;
+import com.mcal.dexprotect.utils.file.ScopedStorage;
 
 import org.jetbrains.annotations.NotNull;
 

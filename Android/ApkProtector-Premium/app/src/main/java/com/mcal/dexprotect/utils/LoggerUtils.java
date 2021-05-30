@@ -1,5 +1,7 @@
 package com.mcal.dexprotect.utils;
 
+import com.mcal.dexprotect.utils.file.ScopedStorage;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

@@ -16,7 +16,7 @@ import android.widget.ImageView
 import com.mcal.dexprotect.App.Companion.dpToPx
 import com.mcal.dexprotect.App.Companion.getContext
 import com.mcal.dexprotect.R
-import com.mcal.dexprotect.utils.PathF
+import com.mcal.dexprotect.utils.file.PathF
 import kotlinx.coroutines.*
 import org.jetbrains.annotations.Contract
 import java.io.File

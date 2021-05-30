@@ -2,7 +2,7 @@ package com.mcal.dexprotect.task;
 
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.utils.MyAppInfo;
-import com.mcal.dexprotect.utils.SignCheck;
+import com.mcal.dexprotect.utils.security.SignCheck;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import com.mcal.dexprotect.App;
-import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.Utils;
 
 import org.jetbrains.annotations.Contract;
@@ -15,6 +14,18 @@ public final class Preferences {
 
     public Preferences() {
         preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+    }
+
+    public static boolean getProtectManifest() {
+        return preferences.getBoolean("protectManifest", false);
+    }
+
+    public static String getTempAxml() {
+        return preferences.getString("tempAxml", "");
+    }
+
+    public static void setTempAxml(String flag) {
+        preferences.edit().putString("tempAxml", flag).apply();
     }
 
     @Contract(pure = true)
@@ -329,34 +340,50 @@ public final class Preferences {
 
     public static String getDexDir() {
         if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.DEX_DIR);
+            return preferences.getString("randomDexDir", "");
         } else {
             return Constants.DEX_DIR;
         }
     }
 
+    public static void setDexDir(String flag) {
+        preferences.edit().putString("randomDexDir", flag).apply();
+    }
+
     public static String getPackageName() {
         if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.PACKAGE_NAME);
+            return preferences.getString("randomPackageName", "");
         } else {
             return Constants.PACKAGE_NAME;
         }
     }
 
+    public static void setPackageName(String flag) {
+        preferences.edit().putString("randomPackageName", flag).apply();
+    }
+
     public static String getDexPrefix() {
         if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.DEX_PREFIX);
+            return preferences.getString("randomDexPreffix", "");
         } else {
             return Constants.DEX_PREFIX;
         }
     }
 
+    public static void setDexPrefix(String flag) {
+        preferences.edit().putString("randomDexPreffix", flag).apply();
+    }
+
     public static String getDexSuffix() {
         if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
+            return preferences.getString("randomDexSuffix", "");
         } else {
             return Constants.DEX_SUFFIX;
         }
+    }
+
+    public static void setDexSuffix(String flag) {
+        preferences.edit().putString("randomDexSuffix", flag).apply();
     }
 
     public static String getApplicationName() {

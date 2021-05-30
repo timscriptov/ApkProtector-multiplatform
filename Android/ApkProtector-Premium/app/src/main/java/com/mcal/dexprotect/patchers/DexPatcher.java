@@ -6,9 +6,9 @@ import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.task.Security;
 import com.mcal.dexprotect.utils.CommonUtils;
-import com.mcal.dexprotect.utils.FileCustomUtils;
 import com.mcal.dexprotect.utils.LoggerUtils;
-import com.mcal.dexprotect.utils.SecurityUtils;
+import com.mcal.dexprotect.utils.file.FileUtils;
+import com.mcal.dexprotect.utils.security.SecurityUtils;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedClassDef;
@@ -28,15 +28,22 @@ import java.util.Arrays;
 
 import bin.util.StreamUtil;
 
-import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplication;
-import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplicationName;
-import static com.mcal.dexprotect.patchers.ManifestPatcher.packageName;
-
 public class DexPatcher {
+    public static boolean customApplication = false;
+    public static String customApplicationName = "";
+    public static String packageName = "";
 
     public static byte[] processDex() throws Exception {
-        String dexPath = Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
-        FileCustomUtils.inputStreamAssets(App.getContext(), "dexloader.dex", dexPath);
+        String dexPath;
+
+        FileUtils.inputStreamAssets(App.getContext(), "dexloader.dex", Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
+
+        if (Preferences.isRandomPackageName()) {
+            DexCloner.dexPatching(Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
+            dexPath = Constants.OUTPUT_PATH + File.separator + "dexloader2.dex";
+        } else {
+            dexPath = Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
+        }
 
         DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(dexPath)));
         DexBuilder dexBuilder = new DexBuilder(Opcodes.getDefault());
