@@ -76,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) header.findViewById(R.id.version)).setText(CommonUtils.versionName(this));
 
         try {
-            String[] files = new String[] {"Arm_Epic", "App_dex/classes.dex", "App_dex/Modex.txt",
+            String[] files = new String[] {"hook.apk", "Arm_Epic", "App_dex/classes.dex", "App_dex/Modex.txt",
                     "Hook_so/arm64-v8a/libIOHook.so", "Hook_so/arm64-v8a/libmocls.so",
                     "Hook_so/arm64-v8a/libsandhook.so", "Hook_so/armeabi-v7a/libmocls.so",
                     "Hook_so/armeabi-v7a/libsandhook.so", "Hook_so/armeabi-v7a/libIOHook.so",
                     "package$Info"};
             for (String s : files) {
                 if (SecurityUtils.assetsCheck(this, s)/* || BuildConfig.DEBUG*/) {
-                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected Modex 3.0 or ARM");
+                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected Modex 3.0 or ARM or Kill++1");
                 }
             }
         } catch (IOException e) {
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             File xpath = this.getDir("libs", Context.MODE_PRIVATE);
 
-            Toast.makeText(this, xpath.toString(), Toast.LENGTH_SHORT).show();
-
             String[] files = new String[] {xpath + "/App_dex/classes.dex",
                     xpath + "/App_dex/Modex.txt", xpath + "/arm64-v8a/libIOHook.so",
                     xpath + "/arm64-v8a/libmock.so", xpath + "/arm64-v8a/libsandhook.so",
@@ -103,6 +101,19 @@ public class MainActivity extends AppCompatActivity {
             for (String s : files) {
                 if (new File(s).exists()) {
                     Utils.showDialogWarn(this, "ApkProtector Security", "Detected Modex 3.0");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            File xpath = new File(this.getApplicationInfo().nativeLibraryDir);
+
+            String[] files = new String[] {xpath + "/libfuck.so"};
+            for (String s : files) {
+                if (new File(s).exists()) {
+                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected kill++2");
                 }
             }
         } catch (Exception e) {

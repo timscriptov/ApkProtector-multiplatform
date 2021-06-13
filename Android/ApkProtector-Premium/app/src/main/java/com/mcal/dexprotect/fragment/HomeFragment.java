@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
@@ -36,6 +37,7 @@ import com.mcal.dexprotect.activities.HomeActivity;
 import com.mcal.dexprotect.async.ProtectAsyncListener;
 import com.mcal.dexprotect.async.presentation.ProtectAsync;
 import com.mcal.dexprotect.data.Preferences;
+import com.mcal.dexprotect.module.Dialogs;
 import com.mcal.dexprotect.utils.MyAppInfo;
 import com.mcal.dexprotect.utils.Utils;
 import com.mcal.dexprotect.view.AppListDialog;
