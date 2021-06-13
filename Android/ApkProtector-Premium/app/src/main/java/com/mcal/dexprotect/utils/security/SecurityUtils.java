@@ -34,30 +34,27 @@ public class SecurityUtils {
 
     public static boolean illegalCodeCheck() throws ClassNotFoundException {
         return Class.forName("cc.binmt.signature.PmsHookApplication") != null ||
-                Class.forName("arm.a") == null ||
-                Class.forName("arm.ArmKill") == null ||
-                Class.forName("np.manager.Copyright") == null ||
+                Class.forName("arm.a") != null ||
+                Class.forName("arm.ArmKill") != null ||
+                Class.forName("np.manager.Copyright") != null ||
                 Class.forName("anymy.sign.BinSignatureFix") != null ||
                 Class.forName("apkeditor.patch.signature.Fix") != null ||
                 Class.forName("com.anymy.reflection") != null ||
                 Class.forName("bin.mt.apksignaturekillerplus.HookApplication") == null ||
-                Class.forName("np.App") == null ||
-                Class.forName("np.manager.FuckSign") == null ||
-                Class.forName("np.manager.Copyright") == null ||
+                Class.forName("np.App") != null ||
+                Class.forName("np.manager.FuckSign") != null ||
+                Class.forName("np.manager.Copyright") != null ||
+                Class.forName("cc.binmt.signature.Hook") != null ||
                 Class.forName("cc.binmt.signature.Hook") != null;
     }
 
-    public static boolean armCheck(Context context) throws IOException {
+    public static boolean assetsCheck(Context context, String files) throws IOException {
         InputStream input = context.getResources().getAssets().open("Arm_Epic");
 
         input.mark(1);
         final int bytesRead = input.read(new byte[1]);
         input.reset();
-        if (bytesRead != -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return bytesRead != -1;
     }
 
     /**

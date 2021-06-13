@@ -2,6 +2,7 @@ package com.mcal.dexprotect.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -39,6 +41,7 @@ import com.mcal.dexprotect.view.CreateSignDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
@@ -73,16 +76,41 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) header.findViewById(R.id.version)).setText(CommonUtils.versionName(this));
 
         try {
-            if (SecurityUtils.armCheck(this) || BuildConfig.DEBUG) {
-                Utils.showDialogWarn(this, "ApkProtector Security", getString(R.string.vending_message));
+            String[] files = new String[] {"Arm_Epic", "App_dex/classes.dex", "App_dex/Modex.txt",
+                    "Hook_so/arm64-v8a/libIOHook.so", "Hook_so/arm64-v8a/libmocls.so",
+                    "Hook_so/arm64-v8a/libsandhook.so", "Hook_so/armeabi-v7a/libmocls.so",
+                    "Hook_so/armeabi-v7a/libsandhook.so", "Hook_so/armeabi-v7a/libIOHook.so",
+                    "package$Info"};
+            for (String s : files) {
+                if (SecurityUtils.assetsCheck(this, s)/* || BuildConfig.DEBUG*/) {
+                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected Modex 3.0 or ARM");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        try {
+            File xpath = this.getDir("libs", Context.MODE_PRIVATE);
+
+            Toast.makeText(this, xpath.toString(), Toast.LENGTH_SHORT).show();
+
+            String[] files = new String[] {xpath + "/App_dex/classes.dex",
+                    xpath + "/App_dex/Modex.txt", xpath + "/arm64-v8a/libIOHook.so",
+                    xpath + "/arm64-v8a/libmock.so", xpath + "/arm64-v8a/libsandhook.so",
+                    xpath + "/armeabi-v7a/libIOHook.so", xpath + "/armeabi-v7a/libmock.so",
+                    xpath + "/armeabi-v7a/libsandhook.so"};
+            for (String s : files) {
+                if (new File(s).exists()) {
+                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected Modex 3.0");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (LuckyPatcherCheck.isLucky(this) || BuildConfig.DEBUG) {
             Dialogs.dialog(this, "ApkProtector Security", "Please delete Lucky Patcher");
-            //Utils.showDialogWarn(this, "ApkProtector Security", "Please delete Lucky Patcher");
         }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
