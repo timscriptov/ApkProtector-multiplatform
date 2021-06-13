@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION
+import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
+import android.widget.TextView
 import com.mcal.dexprotect.App
 import com.mcal.dexprotect.App.Companion.getContext
 import com.mcal.dexprotect.BuildConfig
@@ -29,7 +31,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.svolf.melissa.sheet.SweetViewDialog
+import java.io.ByteArrayInputStream
 import java.io.File
+import java.io.FileOutputStream
 import kotlin.coroutines.CoroutineContext
 
 class ProtectAsync(
@@ -59,10 +63,6 @@ class ProtectAsync(
         FileUtils.deleteDir(File(Constants.RELEASE_PATH))
         FileUtils.delete(File(Constants.LOG_PATH))
         FileUtils.delete(File(Constants.CACHE_PATH))
-    }
-
-    private fun onProgressUpdate(vararg values: String?) {
-        protectLoadDialog!!.setTitle(values[0])
     }
 
     private fun onPostExecute(result: Boolean) {
@@ -127,8 +127,9 @@ class ProtectAsync(
                 val smaliPath = Constants.SMALI_PATH + File.separator + "ProtectApplication.smali"
                 FileUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
 
-                generateRandom()
-
+                if(Preferences.getTypeHideApkProtector().equals("2")) {
+                    generateRandom()
+                }
                 doProgress("Decompiling…")
                 FileUtils.copyFileStream(
                     File(p1[0]),
@@ -137,15 +138,15 @@ class ProtectAsync(
                 FastZip.extract(p1[0], Constants.OUTPUT_PATH)
                 LoggerUtils.writeLog("Success unpack: " + p1[0])
                 doProgress("Patching manifest…")
-                ManifestPatcher.manifestPatch(Constants.MANIFEST_PATH)
-                /*val bis = ByteArrayInputStream(ManifestPatcher.parseManifest())
+                //ManifestPatcher.manifestPatch(Constants.MANIFEST_PATH)
+                val bis = ByteArrayInputStream(ManifestPatcher.parseManifest())
                 val fos = FileOutputStream(Constants.MANIFEST_PATH)
                 val buffer = ByteArray(2048)
                 var len = 0
                 while (bis.read(buffer).also { len = it } > 0) {
                     fos.write(buffer, 0, len)
                 }
-                fos.close()*/
+                fos.close()
                 LoggerUtils.writeLog("Success patch: " + Constants.MANIFEST_PATH)
                 doProgress("Encrypting dexes…")
                 DexCrypto.encodeDexes()
@@ -190,12 +191,21 @@ class ProtectAsync(
         }
         if (Preferences.getEncryptResourcesBoolean()) {
             doProgress("Copying apk…")
+            val rules = path + File.separator + "proguard-resources.json"
+            if(!File(rules).exists()) {
+                FileUtils.inputStreamAssets(getContext(), "proguard-resources.json", rules)
+            }
             val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
             val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
 
             if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 doProgress("Encrypting Resources…")
-                AndResGuard.proguard2(File(tmpApk), File(path + "/output/" + MyAppInfo.getPackage() + "/"), File(path), MyAppInfo.getPackage())
+                AndResGuard.proguard2(
+                    File(tmpApk),
+                    File(path + "/output/" + MyAppInfo.getPackage() + "/"),
+                    File(path),
+                    MyAppInfo.getPackage()
+                )
                 LoggerUtils.writeLog("Encrypted Resources")
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
@@ -203,7 +213,12 @@ class ProtectAsync(
                     if (ZipAlign.runProcess(tmpApk, alignedApk)) {
                         LoggerUtils.writeLog("Apk Aligned")
                         doProgress("Signing Apk…")
-                        if (SignatureTool.sign(context, File(alignedApk), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
+                        if (SignatureTool.sign(
+                                context,
+                                File(alignedApk),
+                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                            )
+                        ) {
                             LoggerUtils.writeLog("Apk Signed")
                             doProgress("Done")
                             t = true
@@ -212,7 +227,12 @@ class ProtectAsync(
 
                 } else {
                     doProgress("Signing Apk…")
-                    if (SignatureTool.sign(context, File(tmpApk), File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"))) {
+                    if (SignatureTool.sign(
+                            context,
+                            File(tmpApk),
+                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                        )
+                    ) {
                         LoggerUtils.writeLog("Apk Signed")
                         doProgress("Done")
                         t = true
@@ -276,13 +296,17 @@ class ProtectAsync(
 
     private fun generateRandom() {
         Preferences.setPackageName(CommonUtils.generateRandomString(Constants.PACKAGE_NAME));
-        Preferences.setDexDir(CommonUtils.generateRandomString(Constants.DEX_DIR))
-        Preferences.setDexPrefix(CommonUtils.generateRandomString(Constants.DEX_PREFIX));
-        Preferences.setDexSuffix(CommonUtils.generateRandomString(Constants.DEX_SUFFIX))
+        Preferences.setFolderDexesName(CommonUtils.generateRandomString(Constants.DEX_DIR))
+        Preferences.setPrefixDexesName(CommonUtils.generateRandomString(Constants.DEX_PREFIX));
+        Preferences.setSuffixDexesName(CommonUtils.generateRandomString(Constants.DEX_SUFFIX))
     }
 
     private suspend fun doProgress(value: String?) = withContext(coroutineContext) {
         onProgressUpdate(value)
+    }
+
+    private fun onProgressUpdate(vararg values: String?) {
+        protectLoadDialog!!.setTitle(values[0])
     }
 
     private fun showProgressDialog() {
@@ -305,8 +329,14 @@ class ProtectAsync(
     }
 
     private fun makeView(ctx: Context): View {
-        return RelativeLayout(ctx).apply {
+        return LinearLayout(ctx).apply {
             gravity = Gravity.CENTER_HORIZONTAL
+            orientation = LinearLayout.VERTICAL
+            /*addView(TextView(ctx).apply {
+                layoutParams = ViewGroup.LayoutParams(dp96, dp96)
+                text = Preferences.getTempAxml()
+                setPadding(dp16, dp16, dp16, dp16)
+            })*/
             addView(ProgressBar(ctx).apply {
                 layoutParams = ViewGroup.LayoutParams(dp96, dp96)
                 isIndeterminate = false

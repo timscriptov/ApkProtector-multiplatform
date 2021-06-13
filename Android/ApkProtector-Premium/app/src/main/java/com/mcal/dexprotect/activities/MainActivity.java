@@ -2,7 +2,6 @@ package com.mcal.dexprotect.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -44,20 +43,16 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 public class MainActivity extends AppCompatActivity {
-    //private static final String QQ = "http://qm.qq.com/cgi-bin/qm/qr?k=EFPj3_Anijd8CSPQmJD3LvE8JyNXam1t&authKey=0hwm0svzbbowsbNExQsbT%2F%2BundQZ3BW%2F7rQP58Ztq9ukjWBSqnKrlQ%3D%3D&group_code=770267696";//mqqwpa://im/chat?chat_type=wpa&uin=2723299592";//770267696
     private CenteredToolBar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
-    private ProgressDialog admobProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         setContentView(R.layout.main);
-        admobProgress = new ProgressDialog(this);
-        admobProgress.setMessage("Preparing video ads...");
 
         // Проверка хеша сертификата
         SignatureCheck.start(this);
@@ -85,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if (LuckyPatcherCheck.isLucky(this)/* || BuildConfig.DEBUG*/) {
-            Utils.showDialogWarn(this, "ApkProtector Security", "Please delete Lucky Patcher");
+        if (LuckyPatcherCheck.isLucky(this) || BuildConfig.DEBUG) {
+            Dialogs.dialog(this, "ApkProtector Security", "Please delete Lucky Patcher");
+            //Utils.showDialogWarn(this, "ApkProtector Security", "Please delete Lucky Patcher");
         }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {

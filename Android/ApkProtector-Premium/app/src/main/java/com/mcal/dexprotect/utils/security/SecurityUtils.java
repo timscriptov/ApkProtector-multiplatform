@@ -3,11 +3,13 @@ package com.mcal.dexprotect.utils.security;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.mcal.dexprotect.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 public class SecurityUtils {

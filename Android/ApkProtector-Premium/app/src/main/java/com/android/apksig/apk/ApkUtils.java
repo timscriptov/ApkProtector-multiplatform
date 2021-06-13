@@ -60,6 +60,7 @@ public abstract class ApkUtils {
      * Android resource ID of the {@code android:debuggable} attribute in AndroidManifest.xml.
      */
     private static final int DEBUGGABLE_ATTR_ID = 0x0101000f;
+
     private ApkUtils() {
     }
 

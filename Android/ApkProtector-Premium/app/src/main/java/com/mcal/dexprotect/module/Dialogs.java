@@ -42,6 +42,25 @@ public class Dialogs {
     }
 
     @SuppressLint("WrongConstant")
+    public static void dialog(Context context, String title, String mesage) {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout ll = new LinearLayout(context);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setPadding(40, 0, 40, 0);
+        ll.setLayoutParams(layoutParams);
+
+        AppCompatTextView msg = new AppCompatTextView(context);
+        msg.setText(mesage);
+        ll.addView(msg);
+
+        SweetViewDialog dialog = new SweetViewDialog(context);
+        dialog.setTitle(title);
+        dialog.setView(ll);
+        dialog.setPositive(android.R.string.ok, null);
+        dialog.show();
+    }
+
+    @SuppressLint("WrongConstant")
     public static void about(Context context) {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout ll = new LinearLayout(context);

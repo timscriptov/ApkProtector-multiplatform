@@ -1,6 +1,5 @@
 package com.mcal.dexprotect.activities;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
@@ -17,7 +16,6 @@ import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.async.presentation.HistoryPresenter;
 import com.mcal.dexprotect.data.dto.home.HomeListAdapter;
 import com.mcal.dexprotect.utils.ExceptionHandler;
-import com.mcal.dexprotect.utils.InstallProvider;
 import com.mcal.dexprotect.utils.SourceInfo;
 import com.mcal.dexprotect.view.CenteredToolBar;
 
@@ -60,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
         };
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -78,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
                 recreate();
                 break;
         }
-    }
+    }*/
 
     @SuppressWarnings("ConstantConditions")
     private void setupToolbar(String title) {

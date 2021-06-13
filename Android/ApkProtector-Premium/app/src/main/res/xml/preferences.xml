@@ -3,12 +3,48 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
-        android:title="Dexer">
-        <androidx.preference.SwitchPreference
-            android:title="@string/pref_title_hide_apkprotector"
+        android:title="@string/pref_title_hide_apkprotector">
+        <androidx.preference.ListPreference
+            android:defaultValue="ru"
+            android:dialogTitle="Select type"
+            android:entries="@array/hide_apkprotector"
+            android:entryValues="@array/hide_apkprotector_values"
+            android:key="typeHideApkProtector"
+            android:title="Type"
+            android:summary="Select type hide apkprotector"/>
+        <!-- androidx.preference.SwitchPreference
+            android:title="Custom Names"
             android:key="randomNameBoolean"
-            android:summary="@string/pref_msg_random_name"
+            android:summary="Custom name of encrypted dexs"
             android:defaultValue="false"/>
+
+        <androidx.preference.SwitchPreference
+            android:title="Random Names"
+            android:key="randomNames"
+            android:summary="@string/pref_msg_random_name"
+            android:defaultValue="false"/ -->
+
+        <androidx.preference.EditTextPreference
+            android:title="Package Name"
+            android:key="customPackageName"
+            android:summary="Enter custom package name"/>
+        <androidx.preference.EditTextPreference
+            android:title="Dexes Folder Name"
+            android:key="customFolderDexesName"
+            android:summary="Enter custom folder dexes name in assets"/>
+        <androidx.preference.EditTextPreference
+            android:title="Prefix Dexes Name"
+            android:key="customPrefixDexesName"
+            android:summary="Enter custom prefix dexes name"/>
+        <androidx.preference.EditTextPreference
+            android:title="Suffix Dexes Name"
+            android:key="customSuffixDexesName"
+            android:summary="Enter custom suffix dexes name"/>
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="Dexer">
         <androidx.preference.EditTextPreference
             android:title="@string/protect_key_title"
             android:key="protectKeyString"

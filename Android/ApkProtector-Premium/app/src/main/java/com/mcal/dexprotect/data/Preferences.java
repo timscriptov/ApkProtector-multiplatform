@@ -1,13 +1,19 @@
 package com.mcal.dexprotect.data;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
 import com.mcal.dexprotect.App;
+import com.mcal.dexprotect.patchers.DexCloner;
+import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.Utils;
 
 import org.jetbrains.annotations.Contract;
+
+import java.io.File;
 
 public final class Preferences {
     private static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
@@ -338,68 +344,89 @@ public final class Preferences {
         return preferences.getString("protectKeyString", Utils.sealing(Utils.buildID()));
     }
 
-    public static String getDexDir() {
-        if (Preferences.isRandomPackageName()) {
-            return preferences.getString("randomDexDir", "");
-        } else {
-            return Constants.DEX_DIR;
+    // Имя папки с дексами
+    public static String getDexLoader() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case "0":
+                return Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
+            case "1":
+            case "2":
+                DexCloner.dexPatching(Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
+                return Constants.OUTPUT_PATH + File.separator + "dexloader2.dex";
         }
+        return null;
     }
 
-    public static void setDexDir(String flag) {
-        preferences.edit().putString("randomDexDir", flag).apply();
+    // Имя папки с дексами
+    public static String getFolderDexesName() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case "0":
+                return Constants.DEX_DIR;
+            case "1":
+            case "2":
+                return preferences.getString("customFolderDexesName", Constants.DEX_DIR);
+        }
+        return null;
     }
 
+    public static void setFolderDexesName(String flag) {
+        preferences.edit().putString("customFolderDexesName", flag).apply();
+    }
+
+    // Имя пакета
     public static String getPackageName() {
-        if (Preferences.isRandomPackageName()) {
-            return preferences.getString("randomPackageName", "");
-        } else {
-            return Constants.PACKAGE_NAME;
+        switch (Preferences.getTypeHideApkProtector()) {
+            case "0":
+                return Constants.PACKAGE_NAME;
+            case "1":
+            case "2":
+                return preferences.getString("customPackageName", Constants.PACKAGE_NAME);
         }
+        return null;
     }
 
     public static void setPackageName(String flag) {
-        preferences.edit().putString("randomPackageName", flag).apply();
+        preferences.edit().putString("customPackageName", flag).apply();
     }
 
-    public static String getDexPrefix() {
-        if (Preferences.isRandomPackageName()) {
-            return preferences.getString("randomDexPreffix", "");
-        } else {
-            return Constants.DEX_PREFIX;
+
+    // Имя дексов
+    public static String getPrefixDexesName() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case "0":
+                return Constants.DEX_PREFIX;
+            case "1":
+            case "2":
+                return preferences.getString("customPrefixDexesName", Constants.DEX_PREFIX);
         }
+        return null;
     }
 
-    public static void setDexPrefix(String flag) {
-        preferences.edit().putString("randomDexPreffix", flag).apply();
+    public static void setPrefixDexesName(String flag) {
+        preferences.edit().putString("customPrefixDexesName", flag).apply();
     }
 
-    public static String getDexSuffix() {
-        if (Preferences.isRandomPackageName()) {
-            return preferences.getString("randomDexSuffix", "");
-        } else {
-            return Constants.DEX_SUFFIX;
+    // Расширение дексов
+    public static String getSuffixDexesName() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case "0":
+                return Constants.DEX_SUFFIX;
+            case "1":
+            case "2":
+                return preferences.getString("customSuffixDexesName", Constants.DEX_SUFFIX);
         }
+        return null;
     }
 
-    public static void setDexSuffix(String flag) {
-        preferences.edit().putString("randomDexSuffix", flag).apply();
+    public static void setSuffixDexesName(String flag) {
+        preferences.edit().putString("customSuffixDexesName", flag).apply();
+    }
+
+    public static String getTypeHideApkProtector() {
+        return preferences.getString("typeHideApkProtector", "0");
     }
 
     public static String getApplicationName() {
         return getPackageName() + ".ProtectApplication";
-    }
-
-    public static boolean isRandomPackageName() {
-        return preferences.getBoolean("randomNameBoolean", false);
-    }
-
-
-    public static String setJsonSecurityString(String str) {
-        return preferences.getString("jsonSecurityString", str);
-    }
-
-    public static String getJsonSecurityString() {
-        return preferences.getString("jsonSecurityString", Utils.sealing(Utils.buildID()));
     }
 }

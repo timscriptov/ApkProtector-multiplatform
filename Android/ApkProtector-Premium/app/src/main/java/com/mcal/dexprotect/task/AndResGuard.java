@@ -3,6 +3,7 @@ package com.mcal.dexprotect.task;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.JsonUtils;
+import com.mcal.dexprotect.data.Preferences;
 import com.mcal.resguard.resourceproguard.InputParam;
 import com.mcal.resguard.resourceproguard.Main;
 import com.mcal.resguard.util.TypedValue;

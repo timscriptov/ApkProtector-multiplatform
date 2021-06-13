@@ -28,24 +28,15 @@ import java.util.Arrays;
 
 import bin.util.StreamUtil;
 
+import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplication;
+import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplicationName;
+import static com.mcal.dexprotect.patchers.ManifestPatcher.packageName;
+
 public class DexPatcher {
-    public static boolean customApplication = false;
-    public static String customApplicationName = "";
-    public static String packageName = "";
-
     public static byte[] processDex() throws Exception {
-        String dexPath;
-
         FileUtils.inputStreamAssets(App.getContext(), "dexloader.dex", Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
 
-        if (Preferences.isRandomPackageName()) {
-            DexCloner.dexPatching(Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
-            dexPath = Constants.OUTPUT_PATH + File.separator + "dexloader2.dex";
-        } else {
-            dexPath = Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
-        }
-
-        DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(dexPath)));
+        DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Preferences.getDexLoader())));
         DexBuilder dexBuilder = new DexBuilder(Opcodes.getDefault());
         try {
             File smali = new File(Constants.SMALI_PATH + File.separator + "ProtectApplication.smali");
@@ -64,10 +55,10 @@ public class DexPatcher {
             }
             if (SecurityUtils.isVerifyInstaller() || BuildConfig.DEBUG) {
                 src = src.replace("$PROTECT_KEY", CommonUtils.encryptStrings(Preferences.getProtectKey(), 2))
-                        .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getDexDir(), 2))
-                        .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getDexPrefix(), 2))
+                        .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getFolderDexesName(), 2))
+                        .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getPrefixDexesName(), 2))
                         .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
-                        .replace("$DEX_SUFIX", CommonUtils.encryptStrings(Preferences.getDexSuffix(), 2));
+                        .replace("$DEX_SUFIX", CommonUtils.encryptStrings(Preferences.getSuffixDexesName(), 2));
             }
             src = src.replace("com/mcal/apkprotector",
                     Preferences.getPackageName().replace(".", "/"));
@@ -80,31 +71,12 @@ public class DexPatcher {
                 try {
                     dexBuilder.internClassDef(dexBackedClassDef);
                 } catch (org.jf.util.ExceptionWithContext e) {
-                    continue;
+                    LoggerUtils.writeLog("Error: " + e);
                 }
             }
-            //}
         } catch (IOException e) {
-            LoggerUtils.writeLog(" " + e);
+            LoggerUtils.writeLog("Error: " + e);
         }
-        /*try (InputStream fis = new FileInputStream(Constants.TOOLS_PATH + File.separator + "ProtectApplication.smali")) {
-            String src = new String(StreamUtil.readBytes(fis), "utf-8");
-            if (customApplication) {
-                if (customApplicationName.startsWith(".")) {
-                    if (packageName == null)
-                        throw new NullPointerException("Package name is null.");
-                    customApplicationName = packageName + customApplicationName;
-                }
-                src = src.replace("android.app.Application", customApplicationName);
-            }
-            ClassDef classDef = Smali.assembleSmaliFile(src, dexBuilder, new SmaliOptions());
-
-            if (classDef == null)
-                throw new Exception("Parse smali failed");
-            for (DexBackedClassDef dexBackedClassDef : dex.getClasses()) {
-                dexBuilder.internClassDef(dexBackedClassDef);
-            }
-        }*/
         MemoryDataStore store = new MemoryDataStore();
         dexBuilder.writeTo(store);
         return Arrays.copyOf(store.getBufferData(), store.getSize());

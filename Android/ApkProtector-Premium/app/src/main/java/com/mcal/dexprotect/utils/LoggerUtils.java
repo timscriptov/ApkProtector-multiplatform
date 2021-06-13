@@ -1,5 +1,6 @@
 package com.mcal.dexprotect.utils;
 
+import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.utils.file.ScopedStorage;
 
 import java.io.BufferedWriter;
@@ -16,6 +17,7 @@ public class LoggerUtils {
             bw = new BufferedWriter(fw);
             bw.write(info);
             bw.write("\n");
+            Preferences.setTempAxml(info);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

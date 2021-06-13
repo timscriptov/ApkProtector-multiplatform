@@ -31,6 +31,7 @@ public class V4Signature {
     public final int version; // Always 2 for now.
     public final byte[] hashingInfo;
     public final byte[] signingInfo; // Passed as-is to the kernel. Can be retrieved later.
+
     V4Signature(int version, byte[] hashingInfo, byte[] signingInfo) {
         this.version = version;
         this.hashingInfo = hashingInfo;

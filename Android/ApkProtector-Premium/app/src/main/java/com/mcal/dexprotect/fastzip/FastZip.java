@@ -1,5 +1,6 @@
 package com.mcal.dexprotect.fastzip;
 
+import com.mcal.dexprotect.async.presentation.ProtectAsync;
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.patchers.DexPatcher;
@@ -86,8 +87,8 @@ public class FastZip {
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
             file = file.replace(Constants.ASSETS_PATH, "assets/apkprotector_dex")
                     .replace("apkprotector_dex\\", "apkprotector_dex/")
-                    .replace("apkprotector_dex", Preferences.getDexDir())
-                    .replace("classes-v", Preferences.getDexPrefix());
+                    .replace("apkprotector_dex", Preferences.getFolderDexesName())
+                    .replace("classes-v", Preferences.getPrefixDexesName());
             LoggerUtils.writeLog("Entry: " + file);
             byte[] buffer = new byte[2048];
             int len = 0;
