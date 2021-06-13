@@ -5,38 +5,31 @@
         android:layout="@layout/preference_category"
         android:title="@string/pref_title_hide_apkprotector">
         <androidx.preference.ListPreference
-            android:defaultValue="ru"
+            android:icon="@drawable/ic_format_list_bulleted"
+            android:defaultValue="0"
             android:dialogTitle="Select type"
             android:entries="@array/hide_apkprotector"
             android:entryValues="@array/hide_apkprotector_values"
             android:key="typeHideApkProtector"
             android:title="Type"
             android:summary="Select type hide apkprotector"/>
-        <!-- androidx.preference.SwitchPreference
-            android:title="Custom Names"
-            android:key="randomNameBoolean"
-            android:summary="Custom name of encrypted dexs"
-            android:defaultValue="false"/>
-
-        <androidx.preference.SwitchPreference
-            android:title="Random Names"
-            android:key="randomNames"
-            android:summary="@string/pref_msg_random_name"
-            android:defaultValue="false"/ -->
-
         <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_alpha_p_box_outline"
             android:title="Package Name"
             android:key="customPackageName"
             android:summary="Enter custom package name"/>
         <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_folder_outline"
             android:title="Dexes Folder Name"
             android:key="customFolderDexesName"
             android:summary="Enter custom folder dexes name in assets"/>
         <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_file_lock_outline"
             android:title="Prefix Dexes Name"
             android:key="customPrefixDexesName"
             android:summary="Enter custom prefix dexes name"/>
         <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_file_lock_outline"
             android:title="Suffix Dexes Name"
             android:key="customSuffixDexesName"
             android:summary="Enter custom suffix dexes name"/>
@@ -46,6 +39,7 @@
         android:layout="@layout/preference_category"
         android:title="Dexer">
         <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_lock_outline"
             android:title="@string/protect_key_title"
             android:key="protectKeyString"
             android:summary="@string/protect_key_msg" />
@@ -55,6 +49,7 @@
         android:layout="@layout/preference_category"
         android:title="Resources">
         <androidx.preference.SwitchPreference
+            android:icon="@drawable/ic_semantic_web"
             android:title="@string/pref_title_protect_manifest"
             android:key="protectManifest"
             android:summary="@string/pref_msg_protect_manifest"
@@ -65,26 +60,31 @@
         android:layout="@layout/preference_category"
         android:title="@string/title_pref_apk_signing">
         <androidx.preference.SwitchPreference
+            android:icon="@drawable/ic_key_variant"
             android:title="@string/title_pref_custom_keystore"
             android:key="customSignature"
             android:summary="@string/msg_pref_custom_keystore"
             android:defaultValue="false" />
         <androidx.preference.SwitchPreference
+            android:icon="@drawable/ic_numeric_1_box_outline"
             android:title="Signature V1"
             android:key="signatureV1"
             android:summary="V1(Jar Signature)"
             android:defaultValue="true" />
         <androidx.preference.SwitchPreference
+            android:icon="@drawable/ic_numeric_2_box_outline"
             android:title="Signature V2"
             android:key="signatureV2"
             android:summary="V2(Full APK Signature)"
             android:defaultValue="true" />
         <androidx.preference.SwitchPreference
+            android:icon="@drawable/ic_numeric_3_box_outline"
             android:title="Signature V3"
             android:key="signatureV3"
             android:summary="V3(Full APK Signature)"
             android:defaultValue="false" />
         <androidx.preference.SwitchPreference
+            android:icon="@drawable/ic_numeric_4_box_outline"
             android:title="Signature V4"
             android:key="signatureV4"
             android:summary="V4(Full APK Signature)"
@@ -94,6 +94,7 @@
         android:layout="@layout/preference_category"
         android:title="ZipAligner">
         <androidx.preference.SwitchPreference
+            android:icon="@drawable/ic_format_align_center"
             android:title="ZipAligner"
             android:key="zipalignerBoolean"
             android:summary="@string/pref_msg_zipaligner"
