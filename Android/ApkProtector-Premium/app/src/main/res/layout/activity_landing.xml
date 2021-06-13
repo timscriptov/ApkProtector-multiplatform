@@ -35,8 +35,8 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="100dp"
                     android:layout_gravity="center_horizontal"
+                    android:padding="100dp"
                     android:src="@drawable/ic_box"
                     android:text="@null"
                     android:textAppearance="?android:attr/textAppearanceLarge"

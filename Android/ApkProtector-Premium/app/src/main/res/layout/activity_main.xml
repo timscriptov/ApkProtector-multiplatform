@@ -124,8 +124,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/protect"
-                android:textColor="#FFFFFF"
-                android:text="Protect" />
+                android:text="Protect"
+                android:textColor="#FFFFFF" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -145,48 +145,48 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/cardView"
-                        android:paddingEnd="15dp"
+                        android:orientation="vertical"
                         android:paddingStart="15dp"
-                        android:orientation="vertical">
+                        android:paddingEnd="15dp">
 
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/dex_protect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/dex_protect"/>
+                            android:text="@string/dex_protect" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/dex_protect_features"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginRight="10dp"
                             android:animateLayoutChanges="true"
-                            app:cardElevation="0dp"
                             app:cardCornerRadius="6dp"
+                            app:cardElevation="0dp"
                             app:strokeColor="#8E8E8E"
                             app:strokeWidth="0.5dp">
 
                             <com.mcal.expansionpanel.ExpansionHeader
-                                android:background="@color/cardView"
-                                android:layout_height="wrap_content"
-                                android:layout_width="match_parent"
                                 android:id="@+id/sampleHeader"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/cardView"
                                 android:padding="16dp"
                                 app:expansion_headerIndicator="@+id/headerIndicator"
                                 app:expansion_layout="@+id/expansionLayout"
                                 app:expansion_toggleOnClick="true">
 
                                 <RelativeLayout
-                                    android:layout_height="wrap_content"
-                                    android:layout_width="match_parent">
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
                                     <TextView
-                                        android:layout_centerVertical="true"
-                                        android:layout_height="wrap_content"
                                         android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
                                         android:text="Features"
                                         android:textColor="?colorAccent"
                                         android:textStyle="bold" />
@@ -205,113 +205,113 @@
                             </com.mcal.expansionpanel.ExpansionHeader>
 
                             <com.mcal.expansionpanel.ExpansionLayout
-                                android:background="@color/cardView"
                                 android:id="@+id/expansionLayout"
-                                android:layout_marginTop="40dp"
-                                app:expansion_expanded="false"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_width="match_parent">
+                                android:layout_marginTop="40dp"
+                                android:background="@color/cardView"
+                                app:expansion_expanded="false">
 
                                 <LinearLayout
                                     android:id="@+id/container"
-                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:orientation="vertical">
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/lucky_patcher_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Lucky Patcher" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/signature_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Signature" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/root_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Root" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/magisk_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Magisk" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/xposedCheck"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Xposed" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/playstore_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Google Play Install" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/emulator_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                       android:text="Check Emulator" />
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Check Emulator" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/clone_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Clone" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/hook_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Hook" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/illegal_code_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Checking Illegal Code" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/check_vpn"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check VPN Proxy" />
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/debug_check"
-                                        android:layout_marginStart="10dp"
-                                        android:layout_marginEnd="10dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
                                         android:text="Check Debug" />
 
                                 </LinearLayout>
@@ -332,7 +332,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/sign_apk"/>
+                            android:text="@string/sign_apk" />
 
                     </RadioGroup>
 
