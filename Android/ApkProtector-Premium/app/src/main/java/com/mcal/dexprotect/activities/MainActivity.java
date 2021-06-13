@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) header.findViewById(R.id.version)).setText(CommonUtils.versionName(this));
 
         try {
-            String[] files = new String[] {"libjiagu.so", "libjiagu_a64.so", "libjiagu_x64.so",
+            String[] files = new String[] {"Hook_apk", "libjiagu.so", "libjiagu_a64.so", "libjiagu_x64.so",
                     "libjiagu_x86.so", "arm", "hook.apk", "Arm_Epic", "App_dex/classes.dex",
                     "App_dex/Modex.txt", "Hook_so/arm64-v8a/libIOHook.so",
                     "Hook_so/arm64-v8a/libmocls.so", "Hook_so/arm64-v8a/libsandhook.so",
