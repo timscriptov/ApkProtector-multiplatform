@@ -110,10 +110,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             File xpath = new File(this.getApplicationInfo().nativeLibraryDir);
 
-            String[] files = new String[] {xpath + "/libfuck.so"};
+            String[] files = new String[] {xpath + "/libfuck.so", xpath + "/libarm.so",
+                    xpath + "/libarm_signer.so", xpath + "/libsandhook.so",
+                    xpath + "/libsandhook-native.so", xpath + "/libarm_classes.so",
+                    xpath + "/libArmEpic.so", xpath + "/libEpic.so"};
             for (String s : files) {
                 if (new File(s).exists()) {
-                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected kill++2");
+                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected kill++2 or ARM");
                 }
             }
         } catch (Exception e) {
