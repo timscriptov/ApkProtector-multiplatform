@@ -62,7 +62,7 @@
     <string name="settings">Настройки</string>
     <string name="warning">Внимание</string>
     <string name="different_signature">Подписи APK и приложения несовместимы, удалить установленное приложение?</string>
-    <string name="apk_deleted">\" удалён!\"</string>
+    <string name="apk_deleted">&#160;удалён!</string>
     <string name="title_pref_apk_signing">APK подпись</string>
     <string name="msg_pref_custom_keystore">Используйте пользовательский ключ для подписания APK во время сборки</string>
     <string name="title_pref_custom_keystore">Пользовательский ключ</string>
@@ -72,7 +72,7 @@
     <string name="protect_key_title">Ключ шифрования</string>
     <string name="about_msg1">ApkProtector - это защитник и обфускатор для Android приложений. Он поможет защитить ваши приложения и библиотеки от несанкционированного или незаконного использования, декомпилирования и взлома.</string>
     <string name="about_msg2"><![CDATA[<br><i>PS: Приложение из Google Play не поддерживает Андроид 11 и выше! Рекомендуется загрузить приложение из 4PDA или Telegram</i>]]></string>
-    <string name="about_copyright"><![CDATA[<br>© Copyright 2019–2021 Тимашков Иван]]></string>
+    <string name="about_copyright">© Copyright 2019–2021 Тимашков Иван</string>
     <string name="dex_protect">Зашифровать дексы</string>
     <string name="encrypt_resources">Зашифровать ресурсы</string>
     <string name="sign_apk">Подписать приложение</string>
@@ -99,5 +99,7 @@
     <string name="pref_msg_application_name">Базовый класс для поддержания глобального состояния приложения</string>
     <string name="pref_title_protect_manifest">Protect Manifest</string>
     <string name="pref_msg_protect_manifest">Защитить манифест от переупаковки</string>
+    <string name="install">Установить</string>
+    <string name="delete">Удалить</string>
 
 </resources>

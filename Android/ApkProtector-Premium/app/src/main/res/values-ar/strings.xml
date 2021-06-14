@@ -61,7 +61,7 @@
     <string name="settings">الإعدادات</string>
     <string name="warning">تحذير</string>
     <string name="different_signature">هذا التطبيق و التطبيق المثبّت معلومات توقيع مختلفه ، يرجى  ازالة التطبيق أولاً؟</string>
-    <string name="apk_deleted">\" كشف!\"</string>
+    <string name="apk_deleted"> كشف!&#160;</string>
     <string name="title_pref_apk_signing">توقيع التطبيق</string>
     <string name="msg_pref_custom_keystore">استخدم ملف توقيع المخصص لتوقيع التطبيق أثناء البناء</string>
     <string name="title_pref_custom_keystore">توقيع مخصص</string>
@@ -98,5 +98,7 @@
     <string name="pref_msg_application_name">Base class for maintaining global application state</string>
     <string name="pref_title_protect_manifest">Protect Manifest</string>
     <string name="pref_msg_protect_manifest">Protect manifest from repackaging</string>
+    <string name="install">Install</string>
+    <string name="delete">Delete</string>
 
 </resources>

@@ -61,7 +61,7 @@
     <string name="settings">Ayarlar</string>
     <string name="warning">Uyarı</string>
     <string name="different_signature">Apk ve yüklü uygulama imza bilgileri tutarsızdır. Uygulamayı önce kaldırmak ister misiniz?</string>
-    <string name="apk_deleted">\"silindi! \"</string>
+    <string name="apk_deleted">&#160;silindi!</string>
     <string name="title_pref_apk_signing">APK imzalayan</string>
     <string name="msg_pref_custom_keystore">Derleme sırasında APK\'ları imzalamak için özel bir anahtar deposu dosyası kullanın</string>
     <string name="title_pref_custom_keystore">Özel anahtar deposu</string>
@@ -71,7 +71,7 @@
     <string name="protect_key_title">Protect Key</string>
     <string name="about_msg1">ApkProtector, Android platformları için koruyucu ve gizleyicidir. Uygulamalarınızı ve kitaplıklarınızı yetkisiz veya yasa dışı kullanıma, tersine mühendislik ve kırılmaya karşı korumanıza yardımcı olur.</string>
     <string name="about_msg2"><![CDATA[<br> <i> Not: Google Play\'deki uygulama Android 11 ve üstünü desteklemez! Uygulamayı 4PDA veya Telegram\'dan indirmeniz önerilir </i>]]></string>
-    <string name="about_copyright"><![CDATA[<br> © Copyright 2019–2021 Тимашков Иван]]></string>
+    <string name="about_copyright">© Copyright 2019–2021 Тимашков Иван</string>
     <string name="dex_protect">Dex Protect</string>
     <string name="encrypt_resources">Resources Şifrele</string>
     <string name="sign_apk">Apk İmzala</string>
@@ -98,5 +98,7 @@
     <string name="pref_msg_application_name">Global uygulama durumunu korumak için temel sınıf</string>
     <string name="pref_title_protect_manifest">Protect Manifest</string>
     <string name="pref_msg_protect_manifest">Protect manifest from repackaging</string>
+    <string name="install">Install</string>
+    <string name="delete">Delete</string>
 
 </resources>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,10 +19,13 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.async.presentation.GetIcon;
+import com.mcal.dexprotect.databinding.ApkInfoBinding;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.InstallProvider;
+import com.mcal.dexprotect.utils.MyAppInfo;
 import com.mcal.dexprotect.utils.SourceInfo;
 import com.mcal.dexprotect.utils.StringUtils;
 import com.mcal.dexprotect.utils.Utils;
@@ -32,6 +36,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
+
+import ru.svolf.melissa.sheet.SweetContentDialog;
+import ru.svolf.melissa.sheet.SweetViewDialog;
 
 public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
     private static final String TAG = "HomeListAdapter";
@@ -100,66 +107,57 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
         }
         View finalConvertView = convertView;
         holder.cardlayout.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(getContext(), holder.cardlayout);
-            popup.getMenuInflater().inflate(R.menu.menu_history, popup.getMenu());
+            apk = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
 
-            //popup.getMenu().add("Install");
-            //popup.getMenu().add("Delete");
-            Object menuHelper;
-            Class[] argTypes;
-            try {
-                Field fMenuHelper = PopupMenu.class.getDeclaredField("mPopup");
-                fMenuHelper.setAccessible(true);
-                menuHelper = fMenuHelper.get(popup);
-                argTypes = new Class[]{boolean.class};
-                menuHelper.getClass().getDeclaredMethod("setForceShowIcon", argTypes).invoke(menuHelper, true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            View apk_info = LayoutInflater.from(getContext()).inflate(R.layout.apk_info, null);
 
-            popup.show();
-            popup.setOnMenuItemClickListener(item -> {
-                //apk = new File(pkg.getPackagePath() + "/" + pkg.getPackageLabel() + ".apk");
-                apk = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
-                switch (item.getItemId()) {
-                    case R.id.install:
-                        try {
-                            if (apk.exists()) {
-                                if (CommonUtils.isSameSign(getContext(), apk.getAbsolutePath(), pkg.getPackageName())) {
-                                    InstallProvider.install(getContext(), apk);
-                                } else {
-                                    new AlertDialog.Builder(finalConvertView.getContext())
-                                            .setCancelable(false)
-                                            .setTitle(R.string.warning)
-                                            .setMessage(R.string.different_signature)
-                                            .setPositiveButton(android.R.string.ok, (p1, p2) -> InstallProvider.uninstall((AppCompatActivity) getContext(), pkg.getPackageName()))
-                                            .setNegativeButton(android.R.string.cancel, null)
-                                            .create().show();
-                                }
-                            } else {
-                                Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName()));
-                                // FIXME СУКА
-                                notifyDataSetChanged();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            AppCompatImageView icon = apk_info.findViewById(R.id.icon);
+            AppCompatTextView app_path = apk_info.findViewById(R.id.app_path);
+            AppCompatTextView app_name = apk_info.findViewById(R.id.app_name);
+            AppCompatTextView package_name = apk_info.findViewById(R.id.package_name);
+            icon.setImageDrawable(new MyAppInfo(getContext(), apk.getAbsolutePath()).getIcon());
+            app_name.setText(pkg.getPackageLabel());
+            package_name.setText(pkg.getPackageName());
+            app_path.setText(pkg.getPackagePath().replace("info.mz", "").replace("/storage/emulated/0/", ""));
+            final SweetContentDialog dialog = new SweetContentDialog(getContext());
+            dialog.setTitle(R.string.about);
+            dialog.setView(apk_info);
+            dialog.setPositive(R.drawable.ic_play, getContext().getString(R.string.install), v1 -> {
+                try {
+                    if (apk.exists()) {
+                        if (CommonUtils.isSameSign(getContext(), apk.getAbsolutePath(), pkg.getPackageName())) {
+                            InstallProvider.install(getContext(), apk);
+                        } else {
+                            new AlertDialog.Builder(finalConvertView.getContext())
+                                    .setCancelable(false)
+                                    .setTitle(R.string.warning)
+                                    .setMessage(R.string.different_signature)
+                                    .setPositiveButton(android.R.string.ok, (p1, p2) -> InstallProvider.uninstall((AppCompatActivity) getContext(), pkg.getPackageName()))
+                                    .setNegativeButton(android.R.string.cancel, null)
+                                    .create().show();
                         }
-                        break;
-                    case R.id.delete:
-                        try {
-                            Utils.deleteFolder(new File(pkg.getPackagePath()));
-                            //FIXME СУКА
-                            notifyDataSetChanged();
-                            Toast.makeText(getContext(), pkg.getPackageLabel() + getContext().getString(R.string.apk_deleted), Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    default:
-                        break;
+                    } else {
+                        Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName()));
+                        // FIXME СУКА
+                        notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                return true;
+                dialog.cancel();
             });
+            dialog.setNegative(R.drawable.ic_delete, getContext().getString(R.string.delete), v1 -> {
+                try {
+                    Utils.deleteFolder(new File(pkg.getPackagePath()));
+                    //FIXME СУКА
+                    notifyDataSetChanged();
+                    Toast.makeText(getContext(), pkg.getPackageLabel() + getContext().getString(R.string.apk_deleted), Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dialog.cancel();
+            });
+            dialog.show();
         });
         return convertView;
     }
