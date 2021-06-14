@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION
-import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import com.mcal.dexprotect.App
 import com.mcal.dexprotect.App.Companion.getContext
 import com.mcal.dexprotect.BuildConfig

@@ -40,6 +40,7 @@ import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.module.Dialogs;
 import com.mcal.dexprotect.utils.MyAppInfo;
 import com.mcal.dexprotect.utils.Utils;
+import com.mcal.dexprotect.utils.file.ScopedStorage;
 import com.mcal.dexprotect.view.AppListDialog;
 import com.mcal.dexprotect.view.CustomSignDialog;
 
@@ -362,7 +363,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void start(File apk) {
-        final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ApkProtect/output/" + MyAppInfo.getPackage() + "");
+        final File sourceDir = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + MyAppInfo.getPackage() + "");
         if (sourceDir.exists()) {
             showAlreadyExistsDialog(apk.getAbsolutePath(), sourceDir);
         } else {
@@ -375,7 +376,7 @@ public class HomeFragment extends Fragment {
         DialogProperties properties = new DialogProperties();
         properties.selection_mode = DialogConfigs.SINGLE_MODE;
         properties.selection_type = DialogConfigs.FILE_SELECT;
-        properties.root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        properties.root = new File(ScopedStorage.getRootDirectory().getAbsolutePath());
         properties.extensions = new String[]{".apk", ".APK"};
         //Instantiate FilePickerDialog with Context and DialogProperties.
         FilePickerDialog dialog = new FilePickerDialog(getActivity(), properties, R.style.AlertDialogTheme);
@@ -424,7 +425,7 @@ public class HomeFragment extends Fragment {
         String fold = "ApkProtect/";
         String[] folder = {fold + "key", fold + "output"};
         for (String s : folder) {
-            File f = new File(Environment.getExternalStorageDirectory() + "/" + s);
+            File f = new File(ScopedStorage.getStorageDirectory() + "/" + s);
             if (!f.exists()) {
                 f.mkdirs();
             }

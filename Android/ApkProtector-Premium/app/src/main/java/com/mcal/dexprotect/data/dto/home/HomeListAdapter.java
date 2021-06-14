@@ -120,7 +120,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
             popup.show();
             popup.setOnMenuItemClickListener(item -> {
                 //apk = new File(pkg.getPackagePath() + "/" + pkg.getPackageLabel() + ".apk");
-                apk = new File(Environment.getExternalStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
+                apk = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
                 switch (item.getItemId()) {
                     case R.id.install:
                         try {
@@ -137,7 +137,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
                                             .create().show();
                                 }
                             } else {
-                                Utils.deleteFolder(new File(Environment.getExternalStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName()));
+                                Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName()));
                                 // FIXME СУКА
                                 notifyDataSetChanged();
                             }

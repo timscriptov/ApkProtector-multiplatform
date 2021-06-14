@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.mcal.dexprotect.R;
+import com.mcal.dexprotect.utils.file.ScopedStorage;
 import com.mcal.dexprotect.utils.widget.ToastUtils;
 
 import org.jetbrains.annotations.Contract;
@@ -82,7 +83,7 @@ public class CreateSignDialog {
     }
 
     private void save(String keyAlias, String keyPass, String commonName, String organization, String organizationUnit, String country, String locality) {
-        File folder = new File(Environment.getExternalStorageDirectory() + "/ApkProtect/key");
+        File folder = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/key");
         if (!folder.exists()) {
             folder.mkdir();
         }

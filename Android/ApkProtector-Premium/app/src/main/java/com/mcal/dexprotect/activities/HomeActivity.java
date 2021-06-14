@@ -17,6 +17,7 @@ import com.mcal.dexprotect.async.presentation.HistoryPresenter;
 import com.mcal.dexprotect.data.dto.home.HomeListAdapter;
 import com.mcal.dexprotect.utils.ExceptionHandler;
 import com.mcal.dexprotect.utils.SourceInfo;
+import com.mcal.dexprotect.utils.file.ScopedStorage;
 import com.mcal.dexprotect.view.CenteredToolBar;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        xpath = Environment.getExternalStorageDirectory() + "/ApkProtect";
+        xpath = ScopedStorage.getStorageDirectory() + "/ApkProtect";
 
         setContentView(R.layout.activity_landing);
         setupToolbar(getString(R.string.protected_apps));
