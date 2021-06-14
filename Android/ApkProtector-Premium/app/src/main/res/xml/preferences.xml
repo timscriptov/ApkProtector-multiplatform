@@ -10,33 +10,33 @@
             android:entryValues="@array/hide_apkprotector_values"
             android:icon="@drawable/ic_format_list_bulleted"
             android:key="typeHideApkProtector"
-            android:summary="Select type hide apkprotector"
-            android:title="Type" />
+            android:summary="@string/pref_msg_type"
+            android:title="@string/pref_title_type" />
         <androidx.preference.EditTextPreference
             android:icon="@drawable/ic_alpha_p_box_outline"
             android:key="customPackageName"
-            android:summary="Enter custom package name"
-            android:title="Package Name" />
+            android:summary="@string/pref_msg_pkg"
+            android:title="@string/pref_title_pkg" />
         <androidx.preference.EditTextPreference
             android:icon="@drawable/ic_folder_outline"
             android:key="customFolderDexesName"
-            android:summary="Enter custom folder dexes name in assets"
-            android:title="Dexes Folder Name" />
+            android:summary="@string/pref_msg_dexes_folder_names"
+            android:title="@string/pref_title_dexes_folder_names" />
         <androidx.preference.EditTextPreference
             android:icon="@drawable/ic_file_lock_outline"
             android:key="customPrefixDexesName"
-            android:summary="Enter custom prefix dexes name"
-            android:title="Prefix Dexes Name" />
+            android:summary="@string/pref_msg_prefix_dexes"
+            android:title="@string/pref_title_prefix_dexes" />
         <androidx.preference.EditTextPreference
             android:icon="@drawable/ic_file_lock_outline"
             android:key="customSuffixDexesName"
-            android:summary="Enter custom suffix dexes name"
-            android:title="Suffix Dexes Name" />
+            android:summary="@string/pref_msg_suffix_dexes"
+            android:title="@string/pref_title_suffix_dexes" />
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
-        android:title="Dexer">
+        android:title="@string/pref_title_category_dexer">
         <androidx.preference.EditTextPreference
             android:icon="@drawable/ic_lock_outline"
             android:key="protectKeyString"
@@ -46,7 +46,7 @@
 
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
-        android:title="Resources">
+        android:title="@string/pref_title_category_resources">
         <androidx.preference.SwitchPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_semantic_web"
@@ -91,7 +91,7 @@
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
-        android:title="ZipAligner">
+        android:title="@string/pref_title_category_zipaligner">
         <androidx.preference.SwitchPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_format_align_center"

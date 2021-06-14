@@ -100,5 +100,18 @@
     <string name="pref_msg_protect_manifest">Protect manifest from repackaging</string>
     <string name="install">Install</string>
     <string name="delete">Delete</string>
+    <string name="pref_title_type">Type</string>
+    <string name="pref_msg_type">Select type hide apkprotector</string>
+    <string name="pref_title_pkg">Package Name</string>
+    <string name="pref_msg_pkg">Enter custom package name</string>
+    <string name="pref_title_dexes_folder_names">Dexes Folder Name</string>
+    <string name="pref_msg_dexes_folder_names">Enter custom folder dexes name in assets</string>
+    <string name="pref_title_prefix_dexes">Prefix Dexes Name</string>
+    <string name="pref_msg_prefix_dexes">Enter custom prefix dexes name</string>
+    <string name="pref_title_suffix_dexes">Suffix Dexes Name</string>
+    <string name="pref_msg_suffix_dexes">Enter custom suffix dexes name</string>
+    <string name="pref_title_category_resources">Resources</string>
+    <string name="pref_title_category_dexer">Dexer</string>
+    <string name="pref_title_category_zipaligner">ZipAligner</string>
 
 </resources>
