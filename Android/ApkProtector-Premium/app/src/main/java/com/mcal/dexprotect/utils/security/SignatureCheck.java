@@ -3,6 +3,8 @@ package com.mcal.dexprotect.utils.security;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 import com.mcal.dexprotect.BuildConfig;
 import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.data.Constants;
@@ -23,6 +25,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class SignatureCheck {
+    @Keep
+    private static final String OBF = "KEEP-TEST";
     @SuppressLint("StaticFieldLeak")
     public static Context context;
     private static String sign = "c9f118716f9c23da05096efe5d9a83d3";

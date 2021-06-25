@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.annotation.Keep;
 import androidx.annotation.RequiresApi;
 
 import com.mcal.dexprotect.BuildConfig;
@@ -13,6 +14,8 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 
 public class SecurityUtils {
+    @Keep
+    private static final String OBF = "KEEP-TEST";
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     public static boolean isEmulator() {
         return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))

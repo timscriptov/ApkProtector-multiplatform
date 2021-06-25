@@ -12,6 +12,8 @@ import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.Keep;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,10 +22,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Utils {
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID = "AppCloner";
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID_HIGH_IMPORTANCE = "AppClonerHighImportance";
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_NAME = "App Cloner";
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_NAME_HIGH_IMPORTANCE = "App Cloner High Importance";
+    @Keep
+    private static final String OBF = "KEEP-TEST";
+    private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID = "ApkProtector";
+    private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID_HIGH_IMPORTANCE = "ApkProtectorHighImportance";
+    private static final String APP_CLONER_NOTIFICATION_CHANNEL_NAME = "ApkProtector";
+    private static final String APP_CLONER_NOTIFICATION_CHANNEL_NAME_HIGH_IMPORTANCE = "ApkProtector High Importance";
     private static final String TAG = Utils.class.getSimpleName();
     private static Application sApplication;
     private static boolean sNotificationChannelCreated;
@@ -75,9 +79,7 @@ public class Utils {
             File infoFile = new File(sourceDir + "/info.mz");
             if (infoFile.exists() && infoFile.isFile()) {
                 SourceInfo sourceInfo = SourceInfo.getSourceInfo(infoFile);
-                if (sourceInfo != null) {
-                    return true;
-                }
+                return sourceInfo != null;
             }
         }
         return false;

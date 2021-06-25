@@ -2,12 +2,21 @@
 -renamesourcefileattribute
 -allowaccessmodification
 
+#-keep class android.sun.** { *; }
+#-keep class bin.** { *; }
+#-keep class com.android.multidex.** { *; }
+-keep class com.android.apksigner.** { *; }
+-keep class com.android.apksig.** { *; }
+#-keep class com.android.dex.** { *; }
+#-keep class com.android.dx.** { *; }
+#-keep class pxb.android.** { *; }
+#-keep class org.jfclone.** { *; }
+#-keep class com.mcal.resguard.** { *; }
+#-keep class org.jf.** { *; }
+
 # zipsigner
 -keep class org.spongycastle.** { *; }
-#-keep class org.spongycastle.jcajce.provider.** { *; }
--keep class kellinwood.security.zipsigner.** { *; }
--keep class com.android.apksig.** { *; }
--keep class com.android.apksigner.** { *; }
+-keep class kellinwood.** { *; }
 
 # dexlib2
 -keep class com.google.common.collect.** { *; }
