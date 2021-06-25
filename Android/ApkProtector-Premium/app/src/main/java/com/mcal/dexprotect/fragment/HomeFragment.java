@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatCheckBox;
@@ -170,9 +171,9 @@ public class HomeFragment extends Fragment {
         (mView.findViewById(R.id.browseapk)).setOnClickListener(p1 -> {
             // Since android R, we need to ask the user to grant special scoped-storage permission first,
             // instead of showing files fragment directly
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
+            /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
                 showScopedStorageDialog();
-            } else {
+            } else {*/
                 AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                 adb.setTitle(R.string.choose_method_title);
                 adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
@@ -186,7 +187,7 @@ public class HomeFragment extends Fragment {
                     }
                 });
                 adb.create().show();
-            }
+            //}
         });
 
         protect = mView.findViewById(R.id.protect);
@@ -478,6 +479,7 @@ public class HomeFragment extends Fragment {
         completeDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private void showScopedStorageDialog() {
         SweetContentDialog permissionDialog = new SweetContentDialog(getContext());
         permissionDialog.setTitle(getString(R.string.scoped_storage_title));

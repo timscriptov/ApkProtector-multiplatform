@@ -23,7 +23,8 @@
         android:resizeableActivity="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q"
-        tools:ignore="HardcodedDebugMode">
+        android:fullBackupContent="false"
+        android:allowBackup="false">
 
         <activity
             android:name=".activities.MainActivity"

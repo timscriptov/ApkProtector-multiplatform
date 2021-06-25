@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF448aff</color>
     <color name="colorPrimary">#FF448aff</color>
     <color name="colorPrimaryDark">#FF448aff</color>
-    <color name="colorBackground">@android:color/primary_text_dark</color>
+    <color name="colorBackground">#FFFFFFFF</color>
 
     <color name="dialog_style">#FFF8F8F8</color>
 
