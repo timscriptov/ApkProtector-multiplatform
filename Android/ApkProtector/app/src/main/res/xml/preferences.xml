@@ -1,76 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
-        android:title="Dexer">
-        <!-- androidx.preference.SwitchPreference
-            android:title="@string/pref_title_hide_apkprotector"
-            android:key="randomNameBoolean"
-            android:summary="@string/pref_msg_random_name"
-            android:defaultValue="false"/ -->
+        android:title="@string/pref_title_hide_apkprotector">
+        <androidx.preference.ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Select type"
+            android:entries="@array/hide_apkprotector"
+            android:entryValues="@array/hide_apkprotector_values"
+            android:icon="@drawable/ic_format_list_bulleted"
+            android:key="typeHideApkProtector"
+            android:summary="@string/pref_msg_type"
+            android:title="@string/pref_title_type" />
         <androidx.preference.EditTextPreference
-            android:title="@string/protect_key_title"
+            android:icon="@drawable/ic_alpha_p_box_outline"
+            android:key="customPackageName"
+            android:summary="@string/pref_msg_pkg"
+            android:title="@string/pref_title_pkg" />
+        <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_folder_outline"
+            android:key="customFolderDexesName"
+            android:summary="@string/pref_msg_dexes_folder_names"
+            android:title="@string/pref_title_dexes_folder_names" />
+        <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_file_lock_outline"
+            android:key="customPrefixDexesName"
+            android:summary="@string/pref_msg_prefix_dexes"
+            android:title="@string/pref_title_prefix_dexes" />
+        <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_file_lock_outline"
+            android:key="customSuffixDexesName"
+            android:summary="@string/pref_msg_suffix_dexes"
+            android:title="@string/pref_title_suffix_dexes" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_title_category_dexer">
+        <androidx.preference.EditTextPreference
+            android:icon="@drawable/ic_lock_outline"
             android:key="protectKeyString"
-            android:summary="@string/protect_key_msg" />
+            android:summary="@string/protect_key_msg"
+            android:title="@string/protect_key_title" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category"
+        android:title="@string/pref_title_category_resources">
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_semantic_web"
+            android:key="protectManifest"
+            android:summary="@string/pref_msg_protect_manifest"
+            android:title="@string/pref_title_protect_manifest" />
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
         android:title="@string/title_pref_apk_signing">
         <androidx.preference.SwitchPreference
-            android:title="@string/title_pref_custom_keystore"
+            android:defaultValue="false"
+            android:icon="@drawable/ic_key_variant"
             android:key="customSignature"
             android:summary="@string/msg_pref_custom_keystore"
-            android:defaultValue="false" />
+            android:title="@string/title_pref_custom_keystore" />
         <androidx.preference.SwitchPreference
-            android:title="Signature V1"
+            android:defaultValue="true"
+            android:icon="@drawable/ic_numeric_1_box_outline"
             android:key="signatureV1"
             android:summary="V1(Jar Signature)"
-            android:defaultValue="true" />
+            android:title="Signature V1" />
         <androidx.preference.SwitchPreference
-            android:title="Signature V2"
+            android:defaultValue="true"
+            android:icon="@drawable/ic_numeric_2_box_outline"
             android:key="signatureV2"
             android:summary="V2(Full APK Signature)"
-            android:defaultValue="true" />
+            android:title="Signature V2" />
         <androidx.preference.SwitchPreference
-            android:title="Signature V3"
+            android:defaultValue="false"
+            android:icon="@drawable/ic_numeric_3_box_outline"
             android:key="signatureV3"
             android:summary="V3(Full APK Signature)"
-            android:defaultValue="false" />
+            android:title="Signature V3" />
         <androidx.preference.SwitchPreference
-            android:title="Signature V4"
+            android:defaultValue="false"
+            android:icon="@drawable/ic_numeric_4_box_outline"
             android:key="signatureV4"
             android:summary="V4(Full APK Signature)"
-            android:defaultValue="false" />
+            android:title="Signature V4" />
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
-        android:title="ZipAligner">
+        android:title="@string/pref_title_category_zipaligner">
         <androidx.preference.SwitchPreference
-            android:title="ZipAligner"
+            android:defaultValue="false"
+            android:icon="@drawable/ic_format_align_center"
             android:key="zipalignerBoolean"
             android:summary="@string/pref_msg_zipaligner"
-            android:defaultValue="false" />
+            android:title="ZipAligner" />
         <androidx.preference.EditTextPreference
-            android:title="@string/pref_title_alignment"
+            android:defaultValue="4"
             android:key="alignmentString"
             android:summary="@string/pref_msg_alignment"
-            android:defaultValue="4"/>
+            android:title="@string/pref_title_alignment" />
         <androidx.preference.SwitchPreference
-            android:title="Force"
+            android:defaultValue="false"
             android:key="forceBoolean"
             android:summary="@string/pref_msg_force"
-            android:defaultValue="false" />
+            android:title="Force" />
         <androidx.preference.SwitchPreference
-            android:title="Zopfli"
+            android:defaultValue="false"
             android:key="zopfliBoolean"
             android:summary="@string/pref_msg_zopfli"
-            android:defaultValue="false" />
+            android:title="Zopfli" />
         <androidx.preference.SwitchPreference
-            android:title="Page Align Shared Libs"
+            android:defaultValue="false"
             android:key="pageAlignSharedLibsBoolean"
             android:summary="@string/pref_msg_page_align_shared_libs"
-            android:defaultValue="false" />
+            android:title="Page Align Shared Libs" />
     </androidx.preference.PreferenceCategory>
 </androidx.preference.PreferenceScreen>

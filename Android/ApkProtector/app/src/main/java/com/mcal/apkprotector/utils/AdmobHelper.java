@@ -27,6 +27,10 @@ public class AdmobHelper {
     public RewardedVideoAd mRewardedVideoAd;
     public boolean mShowInterAdsAuto = false;
     public RewardedListener rewardlistener;
+    private final AdRequest.Builder adRequest;
+    private final Context context;
+    private boolean timerads = false;
+
     AdListener al = new AdListener() {
 
         @Override
@@ -119,9 +123,6 @@ public class AdmobHelper {
 
         }
     };
-    private AdRequest.Builder adRequest;
-    private Context context;
-    private boolean timerads = false;
 
     public AdmobHelper(Context context2) {
         context = context2;

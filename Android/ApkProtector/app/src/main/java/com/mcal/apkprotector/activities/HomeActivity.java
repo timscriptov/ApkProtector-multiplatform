@@ -1,11 +1,9 @@
 package com.mcal.apkprotector.activities;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,8 +15,8 @@ import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.async.presentation.HistoryPresenter;
 import com.mcal.apkprotector.data.dto.home.HomeListAdapter;
 import com.mcal.apkprotector.utils.ExceptionHandler;
-import com.mcal.apkprotector.utils.InstallProvider;
 import com.mcal.apkprotector.utils.SourceInfo;
+import com.mcal.apkprotector.utils.file.ScopedStorage;
 import com.mcal.apkprotector.view.CenteredToolBar;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        xpath = Environment.getExternalStorageDirectory() + "/ApkProtect";
+        xpath = ScopedStorage.getStorageDirectory() + "/ApkProtect";
 
         setContentView(R.layout.activity_landing);
         setupToolbar(getString(R.string.protected_apps));
@@ -60,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
         };
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -78,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
                 recreate();
                 break;
         }
-    }
+    }*/
 
     @SuppressWarnings("ConstantConditions")
     private void setupToolbar(String title) {

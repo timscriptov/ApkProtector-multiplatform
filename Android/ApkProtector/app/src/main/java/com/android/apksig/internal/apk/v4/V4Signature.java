@@ -28,86 +28,6 @@ public class V4Signature {
 
     public static final int HASHING_ALGORITHM_SHA256 = 1;
     public static final byte LOG2_BLOCK_SIZE_4096_BYTES = 12;
-
-    public static class HashingInfo {
-        public final int hashAlgorithm; // only 1 == SHA256 supported
-        public final byte log2BlockSize; // only 12 (block size 4096) supported now
-        public final byte[] salt; // used exactly as in fs-verity, 32 bytes max
-        public final byte[] rawRootHash; // salted digest of the first Merkle tree page
-
-        HashingInfo(int hashAlgorithm, byte log2BlockSize, byte[] salt, byte[] rawRootHash) {
-            this.hashAlgorithm = hashAlgorithm;
-            this.log2BlockSize = log2BlockSize;
-            this.salt = salt;
-            this.rawRootHash = rawRootHash;
-        }
-
-        static HashingInfo fromByteArray(byte[] bytes) throws IOException {
-            ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
-            final int hashAlgorithm = buffer.getInt();
-            final byte log2BlockSize = buffer.get();
-            byte[] salt = readBytes(buffer);
-            byte[] rawRootHash = readBytes(buffer);
-            return new HashingInfo(hashAlgorithm, log2BlockSize, salt, rawRootHash);
-        }
-
-        byte[] toByteArray() {
-            final int size = 4/*hashAlgorithm*/ + 1/*log2BlockSize*/ + bytesSize(this.salt)
-                    + bytesSize(this.rawRootHash);
-            ByteBuffer buffer = ByteBuffer.allocate(size).order(ByteOrder.LITTLE_ENDIAN);
-            buffer.putInt(this.hashAlgorithm);
-            buffer.put(this.log2BlockSize);
-            writeBytes(buffer, this.salt);
-            writeBytes(buffer, this.rawRootHash);
-            return buffer.array();
-        }
-    }
-
-    public static class SigningInfo {
-        public final byte[] apkDigest;  // used to match with the corresponding APK
-        public final byte[] certificate; // ASN.1 DER form
-        public final byte[] additionalData; // a free-form binary data blob
-        public final byte[] publicKey; // ASN.1 DER, must match the certificate
-        public final int signatureAlgorithmId; // see the APK v2 doc for the list
-        public final byte[] signature;
-
-        SigningInfo(byte[] apkDigest, byte[] certificate, byte[] additionalData,
-                byte[] publicKey, int signatureAlgorithmId, byte[] signature) {
-            this.apkDigest = apkDigest;
-            this.certificate = certificate;
-            this.additionalData = additionalData;
-            this.publicKey = publicKey;
-            this.signatureAlgorithmId = signatureAlgorithmId;
-            this.signature = signature;
-        }
-
-        static SigningInfo fromByteArray(byte[] bytes) throws IOException {
-            ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
-            byte[] apkDigest = readBytes(buffer);
-            byte[] certificate = readBytes(buffer);
-            byte[] additionalData = readBytes(buffer);
-            byte[] publicKey = readBytes(buffer);
-            int signatureAlgorithmId = buffer.getInt();
-            byte[] signature = readBytes(buffer);
-            return new SigningInfo(apkDigest, certificate, additionalData, publicKey,
-                    signatureAlgorithmId, signature);
-        }
-
-        byte[] toByteArray() {
-            final int size = bytesSize(this.apkDigest) + bytesSize(this.certificate) + bytesSize(
-                    this.additionalData) + bytesSize(this.publicKey) + 4/*signatureAlgorithmId*/
-                    + bytesSize(this.signature);
-            ByteBuffer buffer = ByteBuffer.allocate(size).order(ByteOrder.LITTLE_ENDIAN);
-            writeBytes(buffer, this.apkDigest);
-            writeBytes(buffer, this.certificate);
-            writeBytes(buffer, this.additionalData);
-            writeBytes(buffer, this.publicKey);
-            buffer.putInt(this.signatureAlgorithmId);
-            writeBytes(buffer, this.signature);
-            return buffer.array();
-        }
-    }
-
     public final int version; // Always 2 for now.
     public final byte[] hashingInfo;
     public final byte[] signingInfo; // Passed as-is to the kernel. Can be retrieved later.
@@ -126,12 +46,6 @@ public class V4Signature {
         final byte[] hashingInfo = readBytes(stream);
         final byte[] signingInfo = readBytes(stream);
         return new V4Signature(version, hashingInfo, signingInfo);
-    }
-
-    public void writeTo(OutputStream stream) throws IOException {
-        writeIntLE(stream, this.version);
-        writeBytes(stream, this.hashingInfo);
-        writeBytes(stream, this.signingInfo);
     }
 
     static byte[] getSigningData(long fileSize, HashingInfo hashingInfo, SigningInfo signingInfo) {
@@ -221,5 +135,90 @@ public class V4Signature {
         }
         buffer.putInt(bytes.length);
         buffer.put(bytes);
+    }
+
+    public void writeTo(OutputStream stream) throws IOException {
+        writeIntLE(stream, this.version);
+        writeBytes(stream, this.hashingInfo);
+        writeBytes(stream, this.signingInfo);
+    }
+
+    public static class HashingInfo {
+        public final int hashAlgorithm; // only 1 == SHA256 supported
+        public final byte log2BlockSize; // only 12 (block size 4096) supported now
+        public final byte[] salt; // used exactly as in fs-verity, 32 bytes max
+        public final byte[] rawRootHash; // salted digest of the first Merkle tree page
+
+        HashingInfo(int hashAlgorithm, byte log2BlockSize, byte[] salt, byte[] rawRootHash) {
+            this.hashAlgorithm = hashAlgorithm;
+            this.log2BlockSize = log2BlockSize;
+            this.salt = salt;
+            this.rawRootHash = rawRootHash;
+        }
+
+        static HashingInfo fromByteArray(byte[] bytes) throws IOException {
+            ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
+            final int hashAlgorithm = buffer.getInt();
+            final byte log2BlockSize = buffer.get();
+            byte[] salt = readBytes(buffer);
+            byte[] rawRootHash = readBytes(buffer);
+            return new HashingInfo(hashAlgorithm, log2BlockSize, salt, rawRootHash);
+        }
+
+        byte[] toByteArray() {
+            final int size = 4/*hashAlgorithm*/ + 1/*log2BlockSize*/ + bytesSize(this.salt)
+                    + bytesSize(this.rawRootHash);
+            ByteBuffer buffer = ByteBuffer.allocate(size).order(ByteOrder.LITTLE_ENDIAN);
+            buffer.putInt(this.hashAlgorithm);
+            buffer.put(this.log2BlockSize);
+            writeBytes(buffer, this.salt);
+            writeBytes(buffer, this.rawRootHash);
+            return buffer.array();
+        }
+    }
+
+    public static class SigningInfo {
+        public final byte[] apkDigest;  // used to match with the corresponding APK
+        public final byte[] certificate; // ASN.1 DER form
+        public final byte[] additionalData; // a free-form binary data blob
+        public final byte[] publicKey; // ASN.1 DER, must match the certificate
+        public final int signatureAlgorithmId; // see the APK v2 doc for the list
+        public final byte[] signature;
+
+        SigningInfo(byte[] apkDigest, byte[] certificate, byte[] additionalData,
+                    byte[] publicKey, int signatureAlgorithmId, byte[] signature) {
+            this.apkDigest = apkDigest;
+            this.certificate = certificate;
+            this.additionalData = additionalData;
+            this.publicKey = publicKey;
+            this.signatureAlgorithmId = signatureAlgorithmId;
+            this.signature = signature;
+        }
+
+        static SigningInfo fromByteArray(byte[] bytes) throws IOException {
+            ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
+            byte[] apkDigest = readBytes(buffer);
+            byte[] certificate = readBytes(buffer);
+            byte[] additionalData = readBytes(buffer);
+            byte[] publicKey = readBytes(buffer);
+            int signatureAlgorithmId = buffer.getInt();
+            byte[] signature = readBytes(buffer);
+            return new SigningInfo(apkDigest, certificate, additionalData, publicKey,
+                    signatureAlgorithmId, signature);
+        }
+
+        byte[] toByteArray() {
+            final int size = bytesSize(this.apkDigest) + bytesSize(this.certificate) + bytesSize(
+                    this.additionalData) + bytesSize(this.publicKey) + 4/*signatureAlgorithmId*/
+                    + bytesSize(this.signature);
+            ByteBuffer buffer = ByteBuffer.allocate(size).order(ByteOrder.LITTLE_ENDIAN);
+            writeBytes(buffer, this.apkDigest);
+            writeBytes(buffer, this.certificate);
+            writeBytes(buffer, this.additionalData);
+            writeBytes(buffer, this.publicKey);
+            buffer.putInt(this.signatureAlgorithmId);
+            writeBytes(buffer, this.signature);
+            return buffer.array();
+        }
     }
 }

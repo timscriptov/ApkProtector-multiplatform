@@ -1,11 +1,12 @@
 package com.mcal.apkprotector.fragment;
 
+import android.animation.LayoutTransition;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -22,6 +24,7 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
+import com.blankj.utilcode.BuildConfig;
 import com.developer.filepicker.model.DialogConfigs;
 import com.developer.filepicker.model.DialogProperties;
 import com.developer.filepicker.view.FilePickerDialog;
@@ -31,9 +34,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mcal.apkprotector.App;
-import com.mcal.apkprotector.BuildConfig;
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.activities.HomeActivity;
 import com.mcal.apkprotector.async.ProtectAsyncListener;
@@ -41,8 +44,10 @@ import com.mcal.apkprotector.async.presentation.ProtectAsync;
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.AdmobHelper;
+import com.mcal.apkprotector.utils.AdsAdmob;
 import com.mcal.apkprotector.utils.MyAppInfo;
 import com.mcal.apkprotector.utils.Utils;
+import com.mcal.apkprotector.utils.file.ScopedStorage;
 import com.mcal.apkprotector.view.AppListDialog;
 import com.mcal.apkprotector.view.CustomSignDialog;
 
@@ -50,49 +55,51 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import ru.svolf.melissa.sheet.SweetContentDialog;
 
 public class HomeFragment extends Fragment implements RewardedVideoAdListener {
-    private static final String TAG = "HomeFragment";
-    private View mView;
+    private static final String TAG = "";
     private AppCompatEditText apkPath;
     private AppCompatImageView apkIcon;
     private AppCompatTextView apkName;
     private AppCompatButton protect;
     private AppCompatTextView apkPack;
+    private AppCompatRadioButton dexProtect;
+    private AppCompatRadioButton shrinkResources;
+    private AppCompatRadioButton signApk;
     private AdmobHelper admobHelper;
+    private RewardedVideoAd mAd;
 
-    View.OnClickListener radioButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AppCompatRadioButton rb = (AppCompatRadioButton) v;
-            switch (rb.getId()) {
-                case R.id.dex_protect:
-                    Preferences.setDexProtectBoolean(true);
-                    Preferences.setEncryptResourcesBoolean(false);
-                    Preferences.setSignApkBoolean(false);
-                    admobHelper.showIntertitialAds();
-                    break;
-                case R.id.encrypt_resources:
-                    Preferences.setDexProtectBoolean(false);
-                    Preferences.setEncryptResourcesBoolean(true);
-                    Preferences.setSignApkBoolean(false);
-                    admobHelper.showIntertitialAds();
-                    break;
-                case R.id.sign_apk:
-                    Preferences.setDexProtectBoolean(false);
-                    Preferences.setEncryptResourcesBoolean(false);
-                    Preferences.setSignApkBoolean(true);
-                    admobHelper.showIntertitialAds();
-                    break;
+    View.OnClickListener radioButtonClickListener = v -> {
+        AppCompatRadioButton rb = (AppCompatRadioButton) v;
+        switch (rb.getId()) {
+            case R.id.dex_protect:
+                Preferences.setDexProtectBoolean(true);
+                Preferences.setEncryptResourcesBoolean(false);
+                Preferences.setSignApkBoolean(false);
+                admobHelper.showIntertitialAds();
+                break;
+            case R.id.encrypt_resources:
+                Preferences.setDexProtectBoolean(false);
+                Preferences.setEncryptResourcesBoolean(true);
+                Preferences.setSignApkBoolean(false);
+                admobHelper.showIntertitialAds();
+                break;
+            case R.id.sign_apk:
+                Preferences.setDexProtectBoolean(false);
+                Preferences.setEncryptResourcesBoolean(false);
+                Preferences.setSignApkBoolean(true);
+                admobHelper.showIntertitialAds();
+                break;
 
-                default:
-                    break;
-            }
+            default:
+                break;
         }
     };
-    private RewardedVideoAd mAd;
-    private ProtectAsyncListener listener = new ProtectAsyncListener() {
+
+    private final ProtectAsyncListener listener = new ProtectAsyncListener() {
 
         @Override
         public void onProtected() {
@@ -118,10 +125,16 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         }
     };
 
+    @SuppressLint("CutPasteId")
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.activity_main, container, false);
+        View mView = inflater.inflate(R.layout.activity_main, container, false);
         writeFolder();
+
+        apkIcon = mView.findViewById(R.id.apkIcon);
+        apkName = mView.findViewById(R.id.apkName);
+        apkPack = mView.findViewById(R.id.apkPackage);
+        apkPath = mView.findViewById(R.id.apkpath);
 
         admobHelper = new AdmobHelper(getActivity());
         admobHelper.setMobileAdsId(Constants.mobileAdsId);
@@ -131,11 +144,6 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         admobHelper.setIntertitialId(Constants.intertialId);
         admobHelper.buildAdsRequest();
         admobHelper.loadAdsRequest();
-
-        apkIcon = mView.findViewById(R.id.apkIcon);
-        apkName = mView.findViewById(R.id.apkName);
-        apkPack = mView.findViewById(R.id.apkPackage);
-        apkPath = mView.findViewById(R.id.apkpath);
 
         AppCompatRadioButton redRadioButton = mView.findViewById(R.id.dex_protect);
         redRadioButton.setOnClickListener(radioButtonClickListener);
@@ -176,9 +184,9 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         (mView.findViewById(R.id.browseapk)).setOnClickListener(p1 -> {
             // Since android R, we need to ask the user to grant special scoped-storage permission first,
             // instead of showing files fragment directly
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
+            /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
                 showScopedStorageDialog();
-            } else {
+            } else {*/
                 AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                 adb.setTitle(R.string.choose_method_title);
                 adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
@@ -192,7 +200,7 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
                     }
                 });
                 adb.create().show();
-            }
+            //}
         });
 
         protect = mView.findViewById(R.id.protect);
@@ -211,33 +219,54 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
                 Snackbar.make(protect, R.string.invalid_apk_file, Snackbar.LENGTH_SHORT).show();
             }
         });
+
+        dexProtect = mView.findViewById(R.id.dex_protect);
+        dexProtect.setChecked(Preferences.getDexProtectBoolean());
+        dexProtect.setOnCheckedChangeListener((p1, p2) -> {
+            Preferences.setDexProtectBoolean(p2);
+        });
+
+        shrinkResources = mView.findViewById(R.id.encrypt_resources);
+        shrinkResources.setChecked(Preferences.getEncryptResourcesBoolean());
+        shrinkResources.setOnCheckedChangeListener((p1, p2) -> {
+            Preferences.setEncryptResourcesBoolean(p2);
+        });
+
+        signApk = mView.findViewById(R.id.sign_apk);
+        signApk.setChecked(Preferences.getSignApkBoolean());
+        signApk.setOnCheckedChangeListener((p1, p2) -> {
+            Preferences.setSignApkBoolean(p2);
+        });
         initVideoAds();
         return mView;
     }
 
     private void runProcess(final File apk) {
         if (Preferences.isCustomSignature()) {
-            new CustomSignDialog((p1, p2) -> start(apk)).show(getContext());
+            new CustomSignDialog((p1, p2) -> {
+                start(apk);
+            }).show(getContext());
         } else {
             start(apk);
         }
     }
 
-    private void start(File apk) {
-        final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ApkProtect/output/" + MyAppInfo.getPackage() + "");
+    private Function0<Unit> start(File apk) {
+        final File sourceDir = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + MyAppInfo.getPackage() + "");
         if (sourceDir.exists()) {
             showAlreadyExistsDialog(apk.getAbsolutePath(), sourceDir);
         } else {
             ProtectAsync async = new ProtectAsync(listener, getActivity());
             async.execute(apk.getAbsolutePath());
         }
+        return null;
     }
 
     private void selectApkFromSdcard() {
         DialogProperties properties = new DialogProperties();
         properties.selection_mode = DialogConfigs.SINGLE_MODE;
         properties.selection_type = DialogConfigs.FILE_SELECT;
-        properties.root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        properties.root = new File(ScopedStorage.getRootDirectory().getAbsolutePath());
         properties.extensions = new String[]{".apk", ".APK"};
         //Instantiate FilePickerDialog with Context and DialogProperties.
         FilePickerDialog dialog = new FilePickerDialog(getActivity(), properties, R.style.AlertDialogTheme);
@@ -257,15 +286,12 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         dialog.show();
     }
 
+    @Override
     public void onActivityResult(int request, int result, Intent data) {
-        switch (request) {
-            case 1:
-                String uri = data.getStringExtra("apkPath");
-                apkPath.setText(uri);
-                break;
-            default:
-                super.onActivityResult(request, result, data);
-                break;
+        super.onActivityResult(request, result, data);
+        if (request == 1) {
+            String uri = data.getStringExtra("apkPath");
+            apkPath.setText(uri);
         }
     }
 
@@ -273,7 +299,7 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         String fold = "ApkProtect/";
         String[] folder = {fold + "key", fold + "output"};
         for (String s : folder) {
-            File f = new File(Environment.getExternalStorageDirectory() + "/" + s);
+            File f = new File(ScopedStorage.getStorageDirectory() + "/" + s);
             if (!f.exists()) {
                 f.mkdirs();
             }
@@ -326,6 +352,7 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         completeDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private void showScopedStorageDialog() {
         SweetContentDialog permissionDialog = new SweetContentDialog(getContext());
         permissionDialog.setTitle(getString(R.string.scoped_storage_title));
@@ -392,20 +419,19 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
 
     @Override
     public void onResume() {
-        admobHelper.reloadAds();
-        mAd.resume(getContext());
         super.onResume();
+        admobHelper.reloadAds();
     }
 
     @Override
     public void onPause() {
-        mAd.resume(getContext());
         super.onPause();
+        mAd.resume(getContext());
     }
 
     @Override
     public void onDestroy() {
-        mAd.resume(getContext());
         super.onDestroy();
+        mAd.resume(getContext());
     }
 }

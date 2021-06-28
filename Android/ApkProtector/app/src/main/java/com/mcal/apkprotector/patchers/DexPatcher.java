@@ -1,11 +1,13 @@
 package com.mcal.apkprotector.patchers;
 
 import com.mcal.apkprotector.App;
+import com.mcal.apkprotector.BuildConfig;
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.CommonUtils;
-import com.mcal.apkprotector.utils.FileCustomUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
+import com.mcal.apkprotector.utils.file.FileUtils;
+import com.mcal.apkprotector.utils.security.SecurityUtils;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedClassDef;
@@ -30,26 +32,14 @@ import static com.mcal.apkprotector.patchers.ManifestPatcher.customApplicationNa
 import static com.mcal.apkprotector.patchers.ManifestPatcher.packageName;
 
 public class DexPatcher {
-
     public static byte[] processDex() throws Exception {
-        String dexPath = Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
-        FileCustomUtils.inputStreamAssets(App.getContext(), "dexloader.dex", dexPath);
+        FileUtils.inputStreamAssets(App.getContext(), "dexloader.dex", Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
 
-        DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(dexPath)));
+        DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Preferences.getDexLoader())));
         DexBuilder dexBuilder = new DexBuilder(Opcodes.getDefault());
         try {
-            /*File[] smaliFiles = new File(Constants.SMALI_PATH).listFiles(new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    return !pathname.isDirectory() && pathname.getAbsolutePath().endsWith(".smali");
-                }
-            });*/
-            //File[] smaliFiles = new File(Constants.SMALI_PATH).listFiles();
             File smali = new File(Constants.SMALI_PATH + File.separator + "ProtectApplication.smali");
-            //for (File smali : smaliFiles) {
             String src = new String(StreamUtil.readBytes(new FileInputStream(smali)), StandardCharsets.UTF_8);
-            //    switch (smali.getName()) {
-            //case "ProtectApplication.smali":
             if (customApplication) {
                 LoggerUtils.writeLog("Custom application detected");
                 if (customApplicationName.startsWith(".")) {
@@ -63,11 +53,10 @@ public class DexPatcher {
                 src = src.replace("android.app.Application", customApplicationName);
             }
             src = src.replace("$PROTECT_KEY", CommonUtils.encryptStrings(Preferences.getProtectKey(), 2))
-                    .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getDexDir(), 2))
-                    .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getDexPrefix(), 2))
-                    .replace("$DEX_SUFIX", CommonUtils.encryptStrings(Preferences.getDexSuffix(), 2));
-            //break;
-            //}
+                        .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getFolderDexesName(), 2))
+                        .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getPrefixDexesName(), 2))
+                        .replace("$DATA", "")
+                        .replace("$DEX_SUFIX", CommonUtils.encryptStrings(Preferences.getSuffixDexesName(), 2));
             src = src.replace("com/mcal/apkprotector",
                     Preferences.getPackageName().replace(".", "/"));
             ClassDef classDef = Smali.assembleSmaliFile(src, dexBuilder, new SmaliOptions());
@@ -79,31 +68,12 @@ public class DexPatcher {
                 try {
                     dexBuilder.internClassDef(dexBackedClassDef);
                 } catch (org.jf.util.ExceptionWithContext e) {
-                    continue;
+                    LoggerUtils.writeLog("Error: " + e);
                 }
             }
-            //}
         } catch (IOException e) {
-            LoggerUtils.writeLog(" " + e);
+            LoggerUtils.writeLog("Error: " + e);
         }
-        /*try (InputStream fis = new FileInputStream(Constants.TOOLS_PATH + File.separator + "ProtectApplication.smali")) {
-            String src = new String(StreamUtil.readBytes(fis), "utf-8");
-            if (customApplication) {
-                if (customApplicationName.startsWith(".")) {
-                    if (packageName == null)
-                        throw new NullPointerException("Package name is null.");
-                    customApplicationName = packageName + customApplicationName;
-                }
-                src = src.replace("android.app.Application", customApplicationName);
-            }
-            ClassDef classDef = Smali.assembleSmaliFile(src, dexBuilder, new SmaliOptions());
-
-            if (classDef == null)
-                throw new Exception("Parse smali failed");
-            for (DexBackedClassDef dexBackedClassDef : dex.getClasses()) {
-                dexBuilder.internClassDef(dexBackedClassDef);
-            }
-        }*/
         MemoryDataStore store = new MemoryDataStore();
         dexBuilder.writeTo(store);
         return Arrays.copyOf(store.getBufferData(), store.getSize());

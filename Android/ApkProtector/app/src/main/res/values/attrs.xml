@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="hide_apkprotector" formatted="false">
+        <item>Disabled</item>
+        <item>Custom name of encrypted dexs</item>
+        <item>Random name of encrypted dexs</item>
+    </string-array>
+
+    <string-array name="hide_apkprotector_values" formatted="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

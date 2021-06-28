@@ -38,9 +38,9 @@ public class DexCrypto {
     private static void encodeSingleDex(String name) {
         String outPath = Constants.ASSETS_PATH + File.separator;
         if (name.matches("classes\\.dex")) {
-            outPath += "classes-v" + "1" + Preferences.getDexSuffix();
+            outPath += "classes-v" + "1" + Preferences.getSuffixDexesName();
         } else {
-            outPath += "classes-v" + name.replaceFirst(".+(\\d+).+", "$1") + Preferences.getDexSuffix();
+            outPath += "classes-v" + name.replaceFirst(".+(\\d+).+", "$1") + Preferences.getSuffixDexesName();
         }
         try {
             DexCrypto.encrypt(Preferences.getProtectKey(), new FileInputStream(new File(Constants.OUTPUT_PATH, name)), new FileOutputStream(outPath));

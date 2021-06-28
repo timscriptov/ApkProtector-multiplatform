@@ -17,6 +17,7 @@
 package com.android.apksig.internal.zip;
 
 import com.android.apksig.zip.ZipFormatException;
+
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -77,50 +78,6 @@ public class CentralDirectoryRecord {
         mLocalFileHeaderOffset = localFileHeaderOffset;
         mName = name;
         mNameSizeBytes = nameSizeBytes;
-    }
-
-    public int getSize() {
-        return mData.remaining();
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public int getNameSizeBytes() {
-        return mNameSizeBytes;
-    }
-
-    public short getGpFlags() {
-        return mGpFlags;
-    }
-
-    public short getCompressionMethod() {
-        return mCompressionMethod;
-    }
-
-    public int getLastModificationTime() {
-        return mLastModificationTime;
-    }
-
-    public int getLastModificationDate() {
-        return mLastModificationDate;
-    }
-
-    public long getCrc32() {
-        return mCrc32;
-    }
-
-    public long getCompressedSize() {
-        return mCompressedSize;
-    }
-
-    public long getUncompressedSize() {
-        return mUncompressedSize;
-    }
-
-    public long getLocalFileHeaderOffset() {
-        return mLocalFileHeaderOffset;
     }
 
     /**
@@ -188,31 +145,6 @@ public class CentralDirectoryRecord {
                 localFileHeaderOffset,
                 name,
                 nameSize);
-    }
-
-    public void copyTo(ByteBuffer output) {
-        output.put(mData.slice());
-    }
-
-    public CentralDirectoryRecord createWithModifiedLocalFileHeaderOffset(
-            long localFileHeaderOffset) {
-        ByteBuffer result = ByteBuffer.allocate(mData.remaining());
-        result.put(mData.slice());
-        result.flip();
-        result.order(ByteOrder.LITTLE_ENDIAN);
-        ZipUtils.setUnsignedInt32(result, LOCAL_FILE_HEADER_OFFSET_OFFSET, localFileHeaderOffset);
-        return new CentralDirectoryRecord(
-                result,
-                mGpFlags,
-                mCompressionMethod,
-                mLastModificationTime,
-                mLastModificationDate,
-                mCrc32,
-                mCompressedSize,
-                mUncompressedSize,
-                localFileHeaderOffset,
-                mName,
-                mNameSizeBytes);
     }
 
     public static CentralDirectoryRecord createWithDeflateCompressedData(
@@ -284,6 +216,75 @@ public class CentralDirectoryRecord {
             }
         }
         return new String(nameBytes, nameBytesOffset, nameLengthBytes, StandardCharsets.UTF_8);
+    }
+
+    public int getSize() {
+        return mData.remaining();
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public int getNameSizeBytes() {
+        return mNameSizeBytes;
+    }
+
+    public short getGpFlags() {
+        return mGpFlags;
+    }
+
+    public short getCompressionMethod() {
+        return mCompressionMethod;
+    }
+
+    public int getLastModificationTime() {
+        return mLastModificationTime;
+    }
+
+    public int getLastModificationDate() {
+        return mLastModificationDate;
+    }
+
+    public long getCrc32() {
+        return mCrc32;
+    }
+
+    public long getCompressedSize() {
+        return mCompressedSize;
+    }
+
+    public long getUncompressedSize() {
+        return mUncompressedSize;
+    }
+
+    public long getLocalFileHeaderOffset() {
+        return mLocalFileHeaderOffset;
+    }
+
+    public void copyTo(ByteBuffer output) {
+        output.put(mData.slice());
+    }
+
+    public CentralDirectoryRecord createWithModifiedLocalFileHeaderOffset(
+            long localFileHeaderOffset) {
+        ByteBuffer result = ByteBuffer.allocate(mData.remaining());
+        result.put(mData.slice());
+        result.flip();
+        result.order(ByteOrder.LITTLE_ENDIAN);
+        ZipUtils.setUnsignedInt32(result, LOCAL_FILE_HEADER_OFFSET_OFFSET, localFileHeaderOffset);
+        return new CentralDirectoryRecord(
+                result,
+                mGpFlags,
+                mCompressionMethod,
+                mLastModificationTime,
+                mLastModificationDate,
+                mCrc32,
+                mCompressedSize,
+                mUncompressedSize,
+                localFileHeaderOffset,
+                mName,
+                mNameSizeBytes);
     }
 
     private static class ByLocalFileHeaderOffsetComparator

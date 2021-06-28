@@ -1,5 +1,8 @@
 package com.mcal.apkprotector.utils;
 
+import com.mcal.apkprotector.data.Preferences;
+import com.mcal.apkprotector.utils.file.ScopedStorage;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -14,6 +17,7 @@ public class LoggerUtils {
             bw = new BufferedWriter(fw);
             bw.write(info);
             bw.write("\n");
+            Preferences.setTempAxml(info);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

@@ -54,8 +54,11 @@ public abstract class V2SourceStampSigner {
 
     public static final int V2_SOURCE_STAMP_BLOCK_ID = 0x6dff800d;
 
-    /** Hidden constructor to prevent instantiation. */
-    private V2SourceStampSigner() {}
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private V2SourceStampSigner() {
+    }
 
     public static Pair<byte[], Integer> generateSourceStampBlock(
             SignerConfig sourceStampSignerConfig,
@@ -103,10 +106,10 @@ public abstract class V2SourceStampSigner {
         //   * length-prefixed bytes: signed digests for the respective signature scheme
         byte[] sourceStampSignerBlock =
                 encodeAsSequenceOfLengthPrefixedElements(
-                        new byte[][] {
-                            sourceStampBlock.stampCertificate,
-                            encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
-                                    sourceStampBlock.signedDigests),
+                        new byte[][]{
+                                sourceStampBlock.stampCertificate,
+                                encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
+                                        sourceStampBlock.signedDigests),
                         });
 
         // FORMAT:

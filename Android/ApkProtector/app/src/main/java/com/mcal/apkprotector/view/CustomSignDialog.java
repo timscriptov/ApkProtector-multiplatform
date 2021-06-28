@@ -3,8 +3,6 @@ package com.mcal.apkprotector.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mcal.apkprotector.App;
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
-import com.mcal.apkprotector.utils.ScopedStorage;
+import com.mcal.apkprotector.utils.file.ScopedStorage;
 
 import org.jetbrains.annotations.Contract;
 

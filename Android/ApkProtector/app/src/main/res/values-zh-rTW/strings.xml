@@ -60,7 +60,7 @@
     <string name="settings">Settings</string>
     <string name="warning">Warning</string>
     <string name="different_signature">The apk and the installed application\'s signature information is inconsistent, whether to uninstall the application first?</string>
-    <string name="apk_deleted">\" deleted!\"</string>
+    <string name="apk_deleted">&#160;deleted!</string>
     <string name="title_pref_apk_signing">APK signer</string>
     <string name="msg_pref_custom_keystore">Use a custom keystore file for signing APKs during build</string>
     <string name="title_pref_custom_keystore">Custom keystore</string>
@@ -69,7 +69,7 @@
     <string name="protect_key_title">Protect Key</string>
     <string name="about_msg1">ApkProtector is the protector and obfuscator for Android platforms. It helps you secure your applications and libraries against unauthorized or illegal use, reverse engineering, and cracking.</string>
     <string name="about_msg2"><![CDATA[<br><i>PS: The application from Google Play does not support Android 11 and higher! It is recommended to download the application from 4PDA or Telegram</i>]]></string>
-    <string name="about_copyright"><![CDATA[<br>© Copyright 2019-2021 Тимашков Иван]]></string>
+    <string name="about_copyright">© Copyright 2019–2021 Тимашков Иван</string>
     <string name="dex_protect">Dex Protect</string>
     <string name="encrypt_resources">Encrypt Resources</string>
     <string name="sign_apk">Sign Apk</string>
@@ -93,5 +93,23 @@
     <string name="pref_msg_dex_suffix">Encrypted dex file extension</string>
     <string name="pref_title_application_name">Application name</string>
     <string name="pref_msg_application_name">Base class for maintaining global application state</string>
+    <string name="pref_title_protect_manifest">Protect Manifest</string>
+    <string name="pref_msg_protect_manifest">Protect manifest from repackaging</string>
+    <string name="install">Install</string>
+    <string name="delete">Delete</string>
+    <string name="pref_title_type">Type</string>
+    <string name="pref_msg_type">Select type hide apkprotector</string>
+    <string name="pref_title_pkg">Package Name</string>
+    <string name="pref_msg_pkg">Enter custom package name</string>
+    <string name="pref_title_dexes_folder_names">Dexes Folder Name</string>
+    <string name="pref_msg_dexes_folder_names">Enter custom folder dexes name in assets</string>
+    <string name="pref_title_prefix_dexes">Prefix Dexes Name</string>
+    <string name="pref_msg_prefix_dexes">Enter custom prefix dexes name</string>
+    <string name="pref_title_suffix_dexes">Suffix Dexes Name</string>
+    <string name="pref_msg_suffix_dexes">Enter custom suffix dexes name</string>
+    <string name="pref_title_category_resources">Resources</string>
+    <string name="pref_title_category_dexer">Dexer</string>
+    <string name="pref_title_category_zipaligner">ZipAligner</string>
+    <string name="licenses">Licenses</string>
 
 </resources>

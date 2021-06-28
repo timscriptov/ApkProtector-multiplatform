@@ -4,7 +4,7 @@ import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.patchers.DexPatcher;
 import com.mcal.apkprotector.utils.LoggerUtils;
-import com.mcal.apkprotector.utils.ScopedStorage;
+import com.mcal.apkprotector.utils.file.ScopedStorage;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,7 +23,7 @@ public class FastZip {
         extractDir.mkdirs();
         ZipFile apk = new ZipFile(zip);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) apk.entries();
-        LoggerUtils.writeLog("----------Apk Extracting----------------");
+        LoggerUtils.writeLog("\n************ APK EXTRACTING ***********");
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             LoggerUtils.writeLog("Entry: " + entry.getName());
@@ -56,7 +56,7 @@ public class FastZip {
         ZipFile zipFile = new ZipFile(inZip);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zipFile.entries();
         FastZipOutputStream fzos = new FastZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZip)));
-        LoggerUtils.writeLog("----------Apk Repacking----------------");
+        LoggerUtils.writeLog("\n************ APK REPACKING ***********");
 
         //pack other patched files
         String[] files = new File(Constants.OUTPUT_PATH).list();
@@ -86,8 +86,8 @@ public class FastZip {
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
             file = file.replace(Constants.ASSETS_PATH, "assets/apkprotector_dex")
                     .replace("apkprotector_dex\\", "apkprotector_dex/")
-                    .replace("apkprotector_dex", Preferences.getDexDir())
-                    .replace("classes-v", Preferences.getDexPrefix());
+                    .replace("apkprotector_dex", Preferences.getFolderDexesName())
+                    .replace("classes-v", Preferences.getPrefixDexesName());
             LoggerUtils.writeLog("Entry: " + file);
             byte[] buffer = new byte[2048];
             int len = 0;

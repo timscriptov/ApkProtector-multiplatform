@@ -16,7 +16,7 @@ import android.widget.ImageView
 import com.mcal.apkprotector.App.Companion.dpToPx
 import com.mcal.apkprotector.App.Companion.getContext
 import com.mcal.apkprotector.R
-import com.mcal.apkprotector.utils.PathF
+import com.mcal.apkprotector.utils.file.PathF
 import kotlinx.coroutines.*
 import org.jetbrains.annotations.Contract
 import java.io.File

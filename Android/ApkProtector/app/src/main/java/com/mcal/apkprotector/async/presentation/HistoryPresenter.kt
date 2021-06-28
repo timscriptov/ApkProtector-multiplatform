@@ -1,9 +1,9 @@
 package com.mcal.apkprotector.async.presentation
 
 import com.mcal.apkprotector.activities.HomeActivity
-import com.mcal.apkprotector.utils.FileUtils
 import com.mcal.apkprotector.utils.SourceInfo
 import com.mcal.apkprotector.utils.Utils
+import com.mcal.apkprotector.utils.file.FileUtils
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException

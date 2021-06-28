@@ -2,7 +2,6 @@ package com.mcal.apkprotector.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -10,7 +9,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.mcal.apkprotector.R;
-import com.mcal.apkprotector.utils.Utils;
+import com.mcal.apkprotector.utils.file.ScopedStorage;
+import com.mcal.apkprotector.utils.widget.ToastUtils;
 
 import org.jetbrains.annotations.Contract;
 
@@ -50,19 +50,19 @@ public class CreateSignDialog {
         dialog.setView(view);
         dialog.setPositiveButton(R.string.create, (dialog1, which) -> {
             if (keystoreAlias.getText().toString().isEmpty()) {
-                Utils.toast(context, context.getString(R.string.invalid_or_empty_info));
+                ToastUtils.toast(context, context.getString(R.string.invalid_or_empty_info));
             } else if (keystorePassword.getText().toString().isEmpty()) {
-                Utils.toast(context, context.getString(R.string.invalid_or_empty_info));
+                ToastUtils.toast(context, context.getString(R.string.invalid_or_empty_info));
             } else if (keystoreCommonName.getText().toString().isEmpty()) {
-                Utils.toast(context, context.getString(R.string.invalid_or_empty_info));
+                ToastUtils.toast(context, context.getString(R.string.invalid_or_empty_info));
             } else if (keystoreOrganization.getText().toString().isEmpty()) {
-                Utils.toast(context, context.getString(R.string.invalid_or_empty_info));
+                ToastUtils.toast(context, context.getString(R.string.invalid_or_empty_info));
             } else if (keystoreOrganizationUnit.getText().toString().isEmpty()) {
-                Utils.toast(context, context.getString(R.string.invalid_or_empty_info));
+                ToastUtils.toast(context, context.getString(R.string.invalid_or_empty_info));
             } else if (keystoreCountry.getText().toString().isEmpty()) {
-                Utils.toast(context, context.getString(R.string.invalid_or_empty_info));
+                ToastUtils.toast(context, context.getString(R.string.invalid_or_empty_info));
             } else if (keystoreLocality.getText().toString().isEmpty()) {
-                Utils.toast(context, context.getString(R.string.invalid_or_empty_info));
+                ToastUtils.toast(context, context.getString(R.string.invalid_or_empty_info));
             } else {
                 save(keystoreAlias.getText().toString(),
                         keystorePassword.getText().toString(),
@@ -82,13 +82,13 @@ public class CreateSignDialog {
     }
 
     private void save(String keyAlias, String keyPass, String commonName, String organization, String organizationUnit, String country, String locality) {
-        File folder = new File(Environment.getExternalStorageDirectory() + "/ApkProtect/key");
+        File folder = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/key");
         if (!folder.exists()) {
             folder.mkdir();
         }
         File keystoreFile = new File(folder + "/" + commonName.replace(" ", "_") + ".jks");
         if (keystoreFile.exists()) {
-            Utils.toast(context, context.getString(R.string.keystore_already_exist));
+            ToastUtils.toast(context, context.getString(R.string.keystore_already_exist));
         } else {
             DistinguishedNameValues cd = new DistinguishedNameValues();
             cd.setCommonName(commonName);
@@ -97,7 +97,7 @@ public class CreateSignDialog {
             cd.setCountry(country);
             cd.setLocality(locality);
             CertCreator.createKeystoreAndKey(keystoreFile.getAbsolutePath(), keyPass.toCharArray(), "RSA", 2048, keyAlias, keyPass.toCharArray(), "SHA256withRSA", 100, cd);
-            Utils.toast(context, context.getString(R.string.creating_keystore_complete));
+            ToastUtils.toast(context, context.getString(R.string.creating_keystore_complete));
         }
     }
 }

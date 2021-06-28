@@ -121,4 +121,18 @@ public class ManifestPatcher {
         return data[off + 3] << 24 | (data[off + 2] & 0xFF) << 16 | (data[off + 1] & 0xFF) << 8
                 | data[off] & 0xFF;
     }
+    /*public static boolean manifestPatch(String manifestPath) {
+        try {
+            parseManifest(manifestPath, new BufferedInputStream(new FileInputStream(manifestPath)));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void parseManifest(String manifestPath, InputStream is) throws IOException {
+        byte[] data = FileUtils.toByteArray(is);
+        ManifestModify mm = new ManifestModify(Preferences.getApplicationName());
+        FileUtils.writeByteArrayToFile(new File(manifestPath), mm.modifyAxml(data));
+    }*/
 }

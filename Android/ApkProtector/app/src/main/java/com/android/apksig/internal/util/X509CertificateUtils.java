@@ -42,8 +42,6 @@ import java.util.Collection;
  */
 public class X509CertificateUtils {
 
-    private static CertificateFactory sCertFactory = null;
-
     // The PEM certificate header and footer as specified in RFC 7468:
     //   There is exactly one space character (SP) separating the "BEGIN" or
     //   "END" from the label.  There are exactly five hyphen-minus (also
@@ -51,6 +49,7 @@ public class X509CertificateUtils {
     //   boundaries, no more, no less.
     public static final byte[] BEGIN_CERT_HEADER = "-----BEGIN CERTIFICATE-----".getBytes();
     public static final byte[] END_CERT_FOOTER = "-----END CERTIFICATE-----".getBytes();
+    private static CertificateFactory sCertFactory = null;
 
     private static void buildCertFactory() {
         if (sCertFactory != null) {
@@ -99,7 +98,7 @@ public class X509CertificateUtils {
      * @throws CertificateException if the encodedForm cannot be decoded to a valid certificate.
      */
     public static X509Certificate generateCertificate(byte[] encodedForm,
-            CertificateFactory certFactory) throws CertificateException {
+                                                      CertificateFactory certFactory) throws CertificateException {
         X509Certificate certificate;
         try {
             certificate = (X509Certificate) certFactory.generateCertificate(
@@ -212,7 +211,7 @@ public class X509CertificateUtils {
      * it is already DER encoded. If the buffer does begin with the PEM certificate header then the
      * certificate data is read from the buffer until the PEM certificate footer is reached; this
      * data is then base64 decoded and returned in a new ByteBuffer.
-     *
+     * <p>
      * If the buffer is in PEM format then the position of the buffer is moved to the end of the
      * current certificate; if the buffer is already DER encoded then the position of the buffer is
      * not modified.

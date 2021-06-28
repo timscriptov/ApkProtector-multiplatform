@@ -61,7 +61,7 @@
     <string name="settings">Настройки</string>
     <string name="warning">Внимание</string>
     <string name="different_signature">Подписи APK и приложения несовместимы, удалить установленное приложение?</string>
-    <string name="apk_deleted">\" удалён!\"</string>
+    <string name="apk_deleted">&#160;удалён!</string>
     <string name="title_pref_apk_signing">APK подпись</string>
     <string name="msg_pref_custom_keystore">Используйте пользовательский ключ для подписания APK во время сборки</string>
     <string name="title_pref_custom_keystore">Пользовательский ключ</string>
@@ -71,7 +71,7 @@
     <string name="protect_key_title">Ключ шифрования</string>
     <string name="about_msg1">ApkProtector - это защитник и обфускатор для Android приложений. Он поможет защитить ваши приложения и библиотеки от несанкционированного или незаконного использования, декомпилирования и взлома.</string>
     <string name="about_msg2"><![CDATA[<br><i>PS: Приложение из Google Play не поддерживает Андроид 11 и выше! Рекомендуется загрузить приложение из 4PDA или Telegram</i>]]></string>
-    <string name="about_copyright"><![CDATA[<br>© Copyright 2019–2021 Тимашков Иван]]></string>
+    <string name="about_copyright">© Copyright 2019–2021 Тимашков Иван</string>
     <string name="dex_protect">Зашифровать дексы</string>
     <string name="encrypt_resources">Зашифровать ресурсы</string>
     <string name="sign_apk">Подписать приложение</string>
@@ -96,5 +96,25 @@
     <string name="pref_msg_dex_suffix">Расширение зашифрованных декс файлов</string>
     <string name="pref_title_application_name">Имя application</string>
     <string name="pref_msg_application_name">Базовый класс для поддержания глобального состояния приложения</string>
+    <string name="pref_title_protect_manifest">Protect Manifest</string>
+    <string name="pref_msg_protect_manifest">Защитить манифест от переупаковки</string>
+
+    <string name="pref_title_type">Метод</string>
+    <string name="pref_msg_type">Выберите метод скрытия apkprotector</string>
+    <string name="pref_title_pkg">Имя пакета</string>
+    <string name="pref_msg_pkg">Введите имя пакета</string>
+    <string name="pref_title_dexes_folder_names">Имя папки</string>
+    <string name="pref_msg_dexes_folder_names">Имя папки с дексами в assets</string>
+    <string name="pref_title_prefix_dexes">Имя дексов</string>
+    <string name="pref_msg_prefix_dexes">Введите имя дексов</string>
+    <string name="pref_title_suffix_dexes">Расширение дексов</string>
+    <string name="pref_msg_suffix_dexes">Введите расширение дексов</string>
+    <string name="pref_title_category_resources">Ресурсы</string>
+    <string name="pref_title_category_dexer">Дексер</string>
+    <string name="pref_title_category_zipaligner">Оптимизация</string>
+
+    <string name="install">Установить</string>
+    <string name="delete">Удалить</string>
+    <string name="licenses">Лицензии</string>
 
 </resources>

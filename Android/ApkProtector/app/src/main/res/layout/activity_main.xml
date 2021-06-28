@@ -2,7 +2,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
     android:fillViewport="true">
 
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -125,7 +124,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/protect"
-                android:text="Protect" />
+                android:text="Protect"
+                android:textColor="#FFFFFF" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -141,38 +141,20 @@
                     android:background="@color/cardView"
                     android:orientation="vertical">
 
-                    <!-- androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/dex_protect"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:text="Dex Protect" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/encrypt_resources"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:text="Encrypt Resources" / -->
-
                     <RadioGroup
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/cardView"
-                        android:paddingEnd="15dp"
+                        android:orientation="vertical"
                         android:paddingStart="15dp"
-                        android:orientation="vertical">
+                        android:paddingEnd="15dp">
 
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/dex_protect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/dex_protect"/>
+                            android:text="@string/dex_protect" />
 
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/encrypt_resources"
@@ -186,7 +168,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/sign_apk"/>
+                            android:text="@string/sign_apk" />
 
                     </RadioGroup>
 

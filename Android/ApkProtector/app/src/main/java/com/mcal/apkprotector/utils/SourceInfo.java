@@ -1,5 +1,7 @@
 package com.mcal.apkprotector.utils;
 
+import com.mcal.apkprotector.utils.file.FileUtils;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,15 +40,15 @@ public class SourceInfo {
 
             BufferedWriter writer = null;
             try {
-                writer = new BufferedWriter( new FileWriter(filePath + "/info.mz"));
+                writer = new BufferedWriter(new FileWriter(filePath + "/info.mz"));
                 writer.write(json.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    if ( writer != null)
-                        writer.close( );
-                } catch ( IOException e) {
+                    if (writer != null)
+                        writer.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

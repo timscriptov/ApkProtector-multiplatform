@@ -2,20 +2,17 @@ buildscript {
     repositories {
         mavenCentral()
         google()
-        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.0"
-        classpath 'com.github.megatronking.stringfog:gradle-plugin:2.2.1'
-        classpath 'com.github.megatronking.stringfog:xor:1.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10"
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
         maven {
             url "https://plugins.gradle.org/m2/"

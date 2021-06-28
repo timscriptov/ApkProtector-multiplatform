@@ -49,7 +49,9 @@ import java.util.Map;
 public class PasswordRetriever implements AutoCloseable {
     public static final String SPEC_STDIN = "stdin";
 
-    /** Character encoding used by the console or {@code null} if not known. */
+    /**
+     * Character encoding used by the console or {@code null} if not known.
+     */
     private final Charset mConsoleEncoding;
 
     private final Map<File, InputStream> mFileInputStreams = new HashMap<>();
@@ -58,6 +60,134 @@ public class PasswordRetriever implements AutoCloseable {
 
     public PasswordRetriever() {
         mConsoleEncoding = getConsoleEncoding();
+    }
+
+    /**
+     * Adds the provided password to the provided list. Does nothing if the password is already in
+     * the list.
+     */
+    private static void addPassword(List<char[]> passwords, char[] password) {
+        for (char[] existingPassword : passwords) {
+            if (Arrays.equals(password, existingPassword)) {
+                return;
+            }
+        }
+        passwords.add(password);
+    }
+
+    private static byte[] encodePassword(char[] pwd, Charset cs) throws IOException {
+        ByteBuffer pwdBytes =
+                cs.newEncoder()
+                        .onMalformedInput(CodingErrorAction.REPLACE)
+                        .onUnmappableCharacter(CodingErrorAction.REPLACE)
+                        .encode(CharBuffer.wrap(pwd));
+        byte[] encoded = new byte[pwdBytes.remaining()];
+        pwdBytes.get(encoded);
+        return encoded;
+    }
+
+    private static char[] decodePassword(byte[] pwdBytes, Charset encoding) throws IOException {
+        CharBuffer pwdChars =
+                encoding.newDecoder()
+                        .onMalformedInput(CodingErrorAction.REPLACE)
+                        .onUnmappableCharacter(CodingErrorAction.REPLACE)
+                        .decode(ByteBuffer.wrap(pwdBytes));
+        char[] result = new char[pwdChars.remaining()];
+        pwdChars.get(result);
+        return result;
+    }
+
+    /**
+     * Upcasts each {@code byte} in the provided array of bytes to a {@code char} and returns the
+     * resulting array of characters.
+     */
+    private static char[] castBytesToChars(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+
+        char[] chars = new char[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            chars[i] = (char) (bytes[i] & 0xff);
+        }
+        return chars;
+    }
+
+    private static boolean isJava9OrHigherErrOnTheSideOfCaution() {
+        // Before Java 9, this string is of major.minor form, such as "1.8" for Java 8.
+        // From Java 9 onwards, this is a single number: major, such as "9" for Java 9.
+        // See JEP 223: New Version-String Scheme.
+
+        String versionString = System.getProperty("java.specification.version");
+        if (versionString == null) {
+            // Better safe than sorry
+            return true;
+        }
+        return !versionString.startsWith("1.");
+    }
+
+    /**
+     * Returns the character encoding used by the console or {@code null} if the encoding is not
+     * known.
+     */
+    private static Charset getConsoleEncoding() {
+        // IMPLEMENTATION NOTE: There is no public API for obtaining the console's character
+        // encoding. We thus cheat by using implementation details of the most popular JVMs.
+        // Unfortunately, this doesn't work on Java 9 JVMs where access to Console.encoding is
+        // restricted by default and leads to spewing to stdout at runtime.
+        if (isJava9OrHigherErrOnTheSideOfCaution()) {
+            return null;
+        }
+        String consoleCharsetName = null;
+        try {
+            Method encodingMethod = Console.class.getDeclaredMethod("encoding");
+            encodingMethod.setAccessible(true);
+            consoleCharsetName = (String) encodingMethod.invoke(null);
+        } catch (ReflectiveOperationException ignored) {
+            return null;
+        }
+
+        if (consoleCharsetName == null) {
+            // Console encoding is the same as this JVM's default encoding
+            return Charset.defaultCharset();
+        }
+
+        try {
+            return getCharsetByName(consoleCharsetName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    public static Charset getCharsetByName(String charsetName) throws IllegalArgumentException {
+        // On Windows 10, cp65001 is the UTF-8 code page. For some reason, popular JVMs don't
+        // have a mapping for cp65001...
+        if ("cp65001".equalsIgnoreCase(charsetName)) {
+            return StandardCharsets.UTF_8;
+        }
+        return Charset.forName(charsetName);
+    }
+
+    private static byte[] readEncodedPassword(InputStream in) throws IOException {
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        int b;
+        while ((b = in.read()) != -1) {
+            if (b == '\n') {
+                break;
+            } else if (b == '\r') {
+                int next = in.read();
+                if ((next == -1) || (next == '\n')) {
+                    break;
+                }
+
+                if (!(in instanceof PushbackInputStream)) {
+                    in = new PushbackInputStream(in);
+                }
+                ((PushbackInputStream) in).unread(next);
+            }
+            result.write(b);
+        }
+        return result.toByteArray();
     }
 
     /**
@@ -80,15 +210,15 @@ public class PasswordRetriever implements AutoCloseable {
      * the passwords are read from the file one line at a time.
      *
      * @param additionalPwdEncodings additional encodings for converting the password into KeyStore
-     *        or PKCS #8 encrypted key password. These encoding are used in addition to using the
-     *        password verbatim or encoded using JVM default character encoding. A useful encoding
-     *        to provide is the console character encoding on Windows machines where the console
-     *        may be different from the JVM default encoding. Unfortunately, there is no public API
-     *        to obtain the console's character encoding.
+     *                               or PKCS #8 encrypted key password. These encoding are used in addition to using the
+     *                               password verbatim or encoded using JVM default character encoding. A useful encoding
+     *                               to provide is the console character encoding on Windows machines where the console
+     *                               may be different from the JVM default encoding. Unfortunately, there is no public API
+     *                               to obtain the console's character encoding.
      */
     public List<char[]> getPasswords(
             String spec, String description, Charset... additionalPwdEncodings)
-                    throws IOException {
+            throws IOException {
         // IMPLEMENTATION NOTE: Java KeyStore and PBEKeySpec APIs take passwords as arrays of
         // Unicode characters (char[]). Unfortunately, it appears that Sun/Oracle keytool and
         // jarsigner in some cases use passwords which are the encoded form obtained using the
@@ -217,7 +347,8 @@ public class PasswordRetriever implements AutoCloseable {
         try {
             char[] pwd = decodePassword(encodedPwd, encodingForDecoding);
             addPasswords(passwords, pwd, additionalEncodings);
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
 
         // Add the original encoded form
         addPassword(passwords, castBytesToChars(encodedPwd));
@@ -237,7 +368,8 @@ public class PasswordRetriever implements AutoCloseable {
                 try {
                     char[] encodedPwd = castBytesToChars(encodePassword(pwd, encoding));
                     addPassword(passwords, encodedPwd);
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
             }
         }
 
@@ -249,142 +381,16 @@ public class PasswordRetriever implements AutoCloseable {
             try {
                 char[] encodedPwd = castBytesToChars(encodePassword(pwd, mConsoleEncoding));
                 addPassword(passwords, encodedPwd);
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
 
         // Password encoded using the JVM default character encoding and upcast into char[]
         try {
             char[] encodedPwd = castBytesToChars(encodePassword(pwd, Charset.defaultCharset()));
             addPassword(passwords, encodedPwd);
-        } catch (IOException ignored) {}
-    }
-
-    /**
-     * Adds the provided password to the provided list. Does nothing if the password is already in
-     * the list.
-     */
-    private static void addPassword(List<char[]> passwords, char[] password) {
-        for (char[] existingPassword : passwords) {
-            if (Arrays.equals(password, existingPassword)) {
-                return;
-            }
+        } catch (IOException ignored) {
         }
-        passwords.add(password);
-    }
-
-    private static byte[] encodePassword(char[] pwd, Charset cs) throws IOException {
-        ByteBuffer pwdBytes =
-                cs.newEncoder()
-                .onMalformedInput(CodingErrorAction.REPLACE)
-                .onUnmappableCharacter(CodingErrorAction.REPLACE)
-                .encode(CharBuffer.wrap(pwd));
-        byte[] encoded = new byte[pwdBytes.remaining()];
-        pwdBytes.get(encoded);
-        return encoded;
-    }
-
-    private static char[] decodePassword(byte[] pwdBytes, Charset encoding) throws IOException {
-        CharBuffer pwdChars =
-                encoding.newDecoder()
-                .onMalformedInput(CodingErrorAction.REPLACE)
-                .onUnmappableCharacter(CodingErrorAction.REPLACE)
-                .decode(ByteBuffer.wrap(pwdBytes));
-        char[] result = new char[pwdChars.remaining()];
-        pwdChars.get(result);
-        return result;
-    }
-
-    /**
-     * Upcasts each {@code byte} in the provided array of bytes to a {@code char} and returns the
-     * resulting array of characters.
-     */
-    private static char[] castBytesToChars(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
-
-        char[] chars = new char[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            chars[i] = (char) (bytes[i] & 0xff);
-        }
-        return chars;
-    }
-
-    private static boolean isJava9OrHigherErrOnTheSideOfCaution() {
-        // Before Java 9, this string is of major.minor form, such as "1.8" for Java 8.
-        // From Java 9 onwards, this is a single number: major, such as "9" for Java 9.
-        // See JEP 223: New Version-String Scheme.
-
-        String versionString = System.getProperty("java.specification.version");
-        if (versionString == null) {
-            // Better safe than sorry
-            return true;
-        }
-        return !versionString.startsWith("1.");
-    }
-
-    /**
-     * Returns the character encoding used by the console or {@code null} if the encoding is not
-     * known.
-     */
-    private static Charset getConsoleEncoding() {
-        // IMPLEMENTATION NOTE: There is no public API for obtaining the console's character
-        // encoding. We thus cheat by using implementation details of the most popular JVMs.
-        // Unfortunately, this doesn't work on Java 9 JVMs where access to Console.encoding is
-        // restricted by default and leads to spewing to stdout at runtime.
-        if (isJava9OrHigherErrOnTheSideOfCaution()) {
-            return null;
-        }
-        String consoleCharsetName = null;
-        try {
-            Method encodingMethod = Console.class.getDeclaredMethod("encoding");
-            encodingMethod.setAccessible(true);
-            consoleCharsetName = (String) encodingMethod.invoke(null);
-        } catch (ReflectiveOperationException ignored) {
-            return null;
-        }
-
-        if (consoleCharsetName == null) {
-            // Console encoding is the same as this JVM's default encoding
-            return Charset.defaultCharset();
-        }
-
-        try {
-            return getCharsetByName(consoleCharsetName);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
-    public static Charset getCharsetByName(String charsetName) throws IllegalArgumentException {
-        // On Windows 10, cp65001 is the UTF-8 code page. For some reason, popular JVMs don't
-        // have a mapping for cp65001...
-        if ("cp65001".equalsIgnoreCase(charsetName)) {
-            return StandardCharsets.UTF_8;
-        }
-        return Charset.forName(charsetName);
-    }
-
-    private static byte[] readEncodedPassword(InputStream in) throws IOException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        int b;
-        while ((b = in.read()) != -1) {
-            if (b == '\n') {
-                break;
-            } else if (b == '\r') {
-                int next = in.read();
-                if ((next == -1) || (next == '\n')) {
-                    break;
-                }
-
-                if (!(in instanceof PushbackInputStream)) {
-                    in = new PushbackInputStream(in);
-                }
-                ((PushbackInputStream) in).unread(next);
-            }
-            result.write(b);
-        }
-        return result.toByteArray();
     }
 
     private void assertNotClosed() {
@@ -398,7 +404,8 @@ public class PasswordRetriever implements AutoCloseable {
         for (InputStream in : mFileInputStreams.values()) {
             try {
                 in.close();
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
         mFileInputStreams.clear();
         mClosed = true;

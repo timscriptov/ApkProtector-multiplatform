@@ -1,0 +1,17 @@
+{
+    "keepRoot" : false,
+    "fixedResName" : "ApkProtector",
+    //"mappingFile" : "name.json",
+    "whiteList" : [
+        "R.color.*"
+    ],
+    "commpressFilePattern" : [
+        "*.png",
+        "*.jpg",
+        "*.jpeg",
+        "*.gif",
+        "*.ogg",
+        "*.mp3",
+        "*.mp4"
+    ]
+}

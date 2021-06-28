@@ -64,18 +64,16 @@ import java.util.List;
  */
 public class ApkSignerTool {
 
+    public static final int ZIP_MAGIC = 0x04034b50;
     private static final String VERSION = "0.9";
     private static final String HELP_PAGE_GENERAL = "help.txt";
     private static final String HELP_PAGE_SIGN = "help_sign.txt";
     private static final String HELP_PAGE_VERIFY = "help_verify.txt";
     private static final String HELP_PAGE_ROTATE = "help_rotate.txt";
     private static final String HELP_PAGE_LINEAGE = "help_lineage.txt";
-
     private static MessageDigest sha256 = null;
     private static MessageDigest sha1 = null;
     private static MessageDigest md5 = null;
-
-    public static final int ZIP_MAGIC = 0x04034b50;
 
     public static void main(String[] params) throws Exception {
         if ((params.length == 0) || ("--help".equals(params[0])) || ("-h".equals(params[0]))) {
@@ -964,10 +962,10 @@ public class ApkSignerTool {
 
     private static void printUsage(String page) {
         try (BufferedReader in =
-                new BufferedReader(
-                        new InputStreamReader(
-                                ApkSignerTool.class.getResourceAsStream(page),
-                                StandardCharsets.UTF_8))) {
+                     new BufferedReader(
+                             new InputStreamReader(
+                                     ApkSignerTool.class.getResourceAsStream(page),
+                                     StandardCharsets.UTF_8))) {
             String line;
             while ((line = in.readLine()) != null) {
                 System.out.println(line);
@@ -984,7 +982,6 @@ public class ApkSignerTool {
      * @param name    the name to be used to identify the certificate.
      * @param verbose boolean indicating whether public key details from the certificate should be
      *                displayed.
-     *
      * @throws NoSuchAlgorithmException     if an instance of MD5, SHA-1, or SHA-256 cannot be
      *                                      obtained.
      * @throws CertificateEncodingException if an error is encountered when encoding the
@@ -1051,6 +1048,41 @@ public class ApkSignerTool {
         System.out.println("Has auth capability          : " + capabilities.hasAuth());
     }
 
+    /**
+     * Loads the private key and certificates from either the specified keystore or files specified
+     * in the signer params using the provided passwordRetriever.
+     *
+     * @throws ParameterException if any errors are encountered when attempting to load
+     *                            the private key and certificates.
+     */
+    private static void loadPrivateKeyAndCerts(SignerParams params,
+                                               PasswordRetriever passwordRetriever) throws ParameterException {
+        try {
+            params.loadPrivateKeyAndCerts(passwordRetriever);
+            if (params.getKeystoreKeyAlias() != null) {
+                params.setName(params.getKeystoreKeyAlias());
+            } else if (params.getKeyFile() != null) {
+                String keyFileName = new File(params.getKeyFile()).getName();
+                int delimiterIndex = keyFileName.indexOf('.');
+                if (delimiterIndex == -1) {
+                    params.setName(keyFileName);
+                } else {
+                    params.setName(keyFileName.substring(0, delimiterIndex));
+                }
+            } else {
+                throw new RuntimeException(
+                        "Neither KeyStore key alias nor private key file available for "
+                                + params.getName());
+            }
+        } catch (ParameterException e) {
+            throw new ParameterException(
+                    "Failed to load signer \"" + params.getName() + "\":" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ParameterException("Failed to load signer \"" + params.getName() + "\"");
+        }
+    }
+
     private static class ProviderInstallSpec {
         String className;
         String constructorParam;
@@ -1088,41 +1120,6 @@ public class ApkSignerTool {
             } else {
                 Security.insertProviderAt(provider, position);
             }
-        }
-    }
-
-    /**
-     * Loads the private key and certificates from either the specified keystore or files specified
-     * in the signer params using the provided passwordRetriever.
-     *
-     * @throws ParameterException if any errors are encountered when attempting to load
-     *                            the private key and certificates.
-     */
-    private static void loadPrivateKeyAndCerts(SignerParams params,
-            PasswordRetriever passwordRetriever) throws ParameterException {
-        try {
-            params.loadPrivateKeyAndCerts(passwordRetriever);
-            if (params.getKeystoreKeyAlias() != null) {
-                params.setName(params.getKeystoreKeyAlias());
-            } else if (params.getKeyFile() != null) {
-                String keyFileName = new File(params.getKeyFile()).getName();
-                int delimiterIndex = keyFileName.indexOf('.');
-                if (delimiterIndex == -1) {
-                    params.setName(keyFileName);
-                } else {
-                    params.setName(keyFileName.substring(0, delimiterIndex));
-                }
-            } else {
-                throw new RuntimeException(
-                        "Neither KeyStore key alias nor private key file available for "
-                                + params.getName());
-            }
-        } catch (ParameterException e) {
-            throw new ParameterException(
-                    "Failed to load signer \"" + params.getName() + "\":" + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ParameterException("Failed to load signer \"" + params.getName() + "\"");
         }
     }
 }

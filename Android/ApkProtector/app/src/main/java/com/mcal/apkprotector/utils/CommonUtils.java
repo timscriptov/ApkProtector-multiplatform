@@ -6,7 +6,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import androidx.annotation.Keep;
+
 import com.mcal.apkprotector.data.Constants;
+import com.mcal.apkprotector.utils.security.SignCheck;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +19,8 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 public class CommonUtils {
-
+    @Keep
+    private static final String OBF = "KEEP-TEST";
     public static String generateRandomString(String str) {
         Random random = new Random();
         char[] arr = str.toCharArray();

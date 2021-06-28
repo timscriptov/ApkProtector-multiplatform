@@ -3,14 +3,15 @@ package com.mcal.apkprotector.async.presentation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.os.Build.VERSION
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
 import com.mcal.apkprotector.App
 import com.mcal.apkprotector.App.Companion.getContext
+import com.mcal.apkprotector.BuildConfig
 import com.mcal.apkprotector.async.ProtectAsyncListener
 import com.mcal.apkprotector.data.Constants
 import com.mcal.apkprotector.data.Preferences
@@ -20,6 +21,8 @@ import com.mcal.apkprotector.signer.SignatureTool
 import com.mcal.apkprotector.task.AndResGuard
 import com.mcal.apkprotector.task.DexCrypto
 import com.mcal.apkprotector.utils.*
+import com.mcal.apkprotector.utils.file.FileUtils
+import com.mcal.apkprotector.utils.file.ScopedStorage
 import com.mcal.apkprotector.zipalign.ZipAlign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,17 +63,16 @@ class ProtectAsync(
         FileUtils.delete(File(Constants.CACHE_PATH))
     }
 
-    private fun onProgressUpdate(vararg values: String?) {
-        protectLoadDialog!!.setTitle(values[0])
-    }
-
     private fun onPostExecute(result: Boolean) {
         dismissProgressDialog()
         System.gc()
-        FileUtils.deleteDir(File(Constants.OUTPUT_PATH))
-        FileUtils.deleteDir(File(Constants.RELEASE_PATH))
-        FileUtils.deleteDir(File(Constants.CACHE_PATH))
-        FileUtils.deleteDir(File(Constants.SMALI_PATH))
+        if (!BuildConfig.DEBUG) {
+            FileUtils.deleteDir(File(Constants.OUTPUT_PATH))
+            FileUtils.deleteDir(File(Constants.RELEASE_PATH))
+            FileUtils.deleteDir(File(Constants.CACHE_PATH))
+            FileUtils.deleteDir(File(Constants.SMALI_PATH))
+        }
+
         if (result) {
             listener.onCompleted()
         } else {
@@ -83,53 +85,58 @@ class ProtectAsync(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun doInBackground(vararg p1: String?): Boolean = withContext(Dispatchers.IO) {
         var t = false
         mi = MyAppInfo(context, p1[0])
         doProgress("Compiling…")
+
+        deviceInformation()
+        LoggerUtils.writeLog("\n************ APKPROTECTOR RUNNING ***********")
+        LoggerUtils.writeLog("Default dir of ApkProtector" + System.getProperty("user.dir"))
+
+        val outputFolder = File(Constants.OUTPUT_PATH)
+        if (!outputFolder.exists()) {
+            outputFolder.mkdir()
+            LoggerUtils.writeLog("Dir created: " + outputFolder.absolutePath)
+        }
+
+        val dexesFolder = File(Constants.ASSETS_PATH + File.separator + "apkprotector_dex")
+        if (!dexesFolder.exists()) {
+            dexesFolder.mkdir()
+            LoggerUtils.writeLog("Dir created: " + dexesFolder.absolutePath)
+        }
+
+        val releaseFolder = File(Constants.RELEASE_PATH)
+        if (!releaseFolder.exists()) {
+            releaseFolder.mkdir()
+            LoggerUtils.writeLog("Dir created: " + releaseFolder.absolutePath)
+        }
+
+        val smaliFolder = File(Constants.SMALI_PATH)
+        if (!smaliFolder.exists()) {
+            smaliFolder.mkdir()
+            LoggerUtils.writeLog("Dir created: " + smaliFolder.absolutePath)
+        }
+
+        val time = System.currentTimeMillis()
+
         if (Preferences.getDexProtectBoolean()) {
-
-            LoggerUtils.writeLog("----------ApkProtector running----------------")
-
-            LoggerUtils.writeLog("Default dir of ApkProtector" + System.getProperty("user.dir"))
-
-            val outputFolder = File(Constants.OUTPUT_PATH)
-            if (!outputFolder.exists()) {
-                outputFolder.mkdir()
-                LoggerUtils.writeLog("Dir created: " + outputFolder.absolutePath)
-            }
-
-            val dexesFolder = File(Constants.ASSETS_PATH + File.separator + "apkprotector_dex")
-            if (!dexesFolder.exists()) {
-                dexesFolder.mkdir()
-                LoggerUtils.writeLog("Dir created: " + dexesFolder.absolutePath)
-            }
-
-            val releaseFolder = File(Constants.RELEASE_PATH)
-            if (!releaseFolder.exists()) {
-                releaseFolder.mkdir()
-                LoggerUtils.writeLog("Dir created: " + releaseFolder.absolutePath)
-            }
-
-            val smaliFolder = File(Constants.SMALI_PATH)
-            if (!smaliFolder.exists()) {
-                smaliFolder.mkdir()
-                LoggerUtils.writeLog("Dir created: " + smaliFolder.absolutePath)
-            }
-
-            val time = System.currentTimeMillis()
-
-            LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time))
-
             try {
                 val smaliPath = Constants.SMALI_PATH + File.separator + "ProtectApplication.smali"
-                FileCustomUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
+                FileUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
 
+                if(Preferences.getTypeHideApkProtector().equals("2")) {
+                    generateRandom()
+                }
                 doProgress("Decompiling…")
+                FileUtils.copyFileStream(
+                    File(p1[0]),
+                    File(Constants.RELEASE_PATH + File.separator + "app-temp.apk")
+                )
                 FastZip.extract(p1[0], Constants.OUTPUT_PATH)
                 LoggerUtils.writeLog("Success unpack: " + p1[0])
                 doProgress("Patching manifest…")
+                //ManifestPatcher.manifestPatch(Constants.MANIFEST_PATH)
                 val bis = ByteArrayInputStream(ManifestPatcher.parseManifest())
                 val fos = FileOutputStream(Constants.MANIFEST_PATH)
                 val buffer = ByteArray(2048)
@@ -179,97 +186,52 @@ class ProtectAsync(
             } catch (e: Exception) {
                 LoggerUtils.writeLog("$e")
             }
-
-            //FileUtils.delete(File(Constants.OUTPUT_PATH))
-            //FileUtils.delete(File(Constants.UNSIGNED_PATH))
-            //FileUtils.delete(File(Constants.CACHE_PATH))
-
-            /*if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
-                if (ZipUtils.unpack("$xpath/output/app.apk", "$xpath/gen/")) {
-                    if (ManifestPatcher.manifestPatch(xpath + "/gen/AndroidManifest.xml")) {
-                        doProgress("DEX - Optimising…")
-                        if (DexEncrypt.enDex(context)) {
-                            //if (DexPatching.renameAppClass(context)) {
-                            doProgress("Dex - Merging…")
-
-                            if (renameAppClass()) {
-                                //DexEncrypt.addMyDex(context)
-                                doProgress("Building APK…")
-                                if (ZipUtils.pack("$xpath/gen", "$xpath/output/unsigned.apk")) {
-                                    SourceInfo.initialise("$path/output", mi!!)
-                                    if (Preferences.getZipAlignerBoolean()) {
-                                        doProgress("Aligning Apk…")
-                                        if (ZipAlign.runProcess(
-                                                "$xpath/output/unsigned.apk",
-                                                "$xpath/output/aligned.apk"
-                                            )
-                                        ) {
-                                            doProgress("Signing Apk…")
-                                            if (SignatureTool.sign(
-                                                    context,
-                                                    File("$xpath/output/aligned.apk"),
-                                                    File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                                                )
-                                            ) {
-                                                doProgress("Done")
-                                                t = true
-                                            }
-                                        }
-                                    } else {
-                                        doProgress("Signing Apk…")
-                                        if (SignatureTool.sign(
-                                                context,
-                                                File("$xpath/output/unsigned.apk"),
-                                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                                            )
-                                        ) {
-                                            doProgress("Done")
-                                            t = true
-                                        }
-                                    }
-                                }
-                            }
-
-                            //}
-                        }
-                    }
-                }
-            }*/
         }
         if (Preferences.getEncryptResourcesBoolean()) {
             doProgress("Copying apk…")
-            if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
+            val rules = path + File.separator + "proguard-resources.json"
+            if(!File(rules).exists()) {
+                FileUtils.inputStreamAssets(getContext(), "proguard-resources.json", rules)
+            }
+            val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
+            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
+
+            if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 doProgress("Encrypting Resources…")
                 AndResGuard.proguard2(
-                    File("$xpath/output/app.apk"),
+                    File(tmpApk),
                     File(path + "/output/" + MyAppInfo.getPackage() + "/"),
                     File(path),
                     MyAppInfo.getPackage()
                 )
+                LoggerUtils.writeLog("Encrypted Resources")
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
-                    //if (ZipAlign.fnAapt(context, "$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
                     doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess("$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
+                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
+                        LoggerUtils.writeLog("Apk Aligned")
                         doProgress("Signing Apk…")
                         if (SignatureTool.sign(
                                 context,
-                                File("$xpath/output/aligned.apk"),
+                                File(alignedApk),
                                 File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                             )
                         ) {
+                            LoggerUtils.writeLog("Apk Signed")
                             doProgress("Done")
                             t = true
                         }
                     }
+
                 } else {
                     doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
-                            File("$xpath/output/app.apk"),
+                            File(tmpApk),
                             File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                         )
                     ) {
+                        LoggerUtils.writeLog("Apk Signed")
                         doProgress("Done")
                         t = true
                     }
@@ -278,18 +240,23 @@ class ProtectAsync(
         }
         if (Preferences.getSignApkBoolean()) {
             doProgress("Copying apk…")
-            if (FileUtils.copyFileStream(File(p1[0]), File("$xpath/output/app.apk"))) {
+            val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
+            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
+
+            if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
                     doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess("$xpath/output/app.apk", "$xpath/output/aligned.apk")) {
+                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
+                        LoggerUtils.writeLog("Apk Aligned")
                         doProgress("Signing Apk…")
                         if (SignatureTool.sign(
                                 context,
-                                File("$xpath/output/aligned.apk"),
+                                File(alignedApk),
                                 File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                             )
                         ) {
+                            LoggerUtils.writeLog("Apk Signed")
                             doProgress("Done")
                             t = true
                         }
@@ -298,21 +265,46 @@ class ProtectAsync(
                     doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
-                            File("$xpath/output/app.apk"),
+                            File(tmpApk),
                             File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                         )
                     ) {
+                        LoggerUtils.writeLog("Apk Signed")
                         doProgress("Done")
                         t = true
                     }
                 }
             }
         }
+        LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time))
         return@withContext t
+    }
+
+    private fun deviceInformation() {
+        LoggerUtils.writeLog("************ DEVICE INFORMATION ***********")
+        LoggerUtils.writeLog("Brand: " + Build.BRAND)
+        LoggerUtils.writeLog("Device: " + Build.DEVICE)
+        LoggerUtils.writeLog("Model: " + Build.MODEL)
+        LoggerUtils.writeLog("Id: " + Build.ID)
+        LoggerUtils.writeLog("\n************ FIRMWARE INFORMATION ***********")
+        LoggerUtils.writeLog("SDK: " + VERSION.SDK_INT)
+        LoggerUtils.writeLog("Release: " + VERSION.RELEASE)
+        LoggerUtils.writeLog("Incremental: " + VERSION.INCREMENTAL)
+    }
+
+    private fun generateRandom() {
+        Preferences.setPackageName(CommonUtils.generateRandomString(Constants.PACKAGE_NAME));
+        Preferences.setFolderDexesName(CommonUtils.generateRandomString(Constants.DEX_DIR))
+        Preferences.setPrefixDexesName(CommonUtils.generateRandomString(Constants.DEX_PREFIX));
+        Preferences.setSuffixDexesName(CommonUtils.generateRandomString(Constants.DEX_SUFFIX))
     }
 
     private suspend fun doProgress(value: String?) = withContext(coroutineContext) {
         onProgressUpdate(value)
+    }
+
+    private fun onProgressUpdate(vararg values: String?) {
+        protectLoadDialog!!.setTitle(values[0])
     }
 
     private fun showProgressDialog() {
@@ -335,8 +327,14 @@ class ProtectAsync(
     }
 
     private fun makeView(ctx: Context): View {
-        return RelativeLayout(ctx).apply {
+        return LinearLayout(ctx).apply {
             gravity = Gravity.CENTER_HORIZONTAL
+            orientation = LinearLayout.VERTICAL
+            /*addView(TextView(ctx).apply {
+                layoutParams = ViewGroup.LayoutParams(dp96, dp96)
+                text = Preferences.getTempAxml()
+                setPadding(dp16, dp16, dp16, dp16)
+            })*/
             addView(ProgressBar(ctx).apply {
                 layoutParams = ViewGroup.LayoutParams(dp96, dp96)
                 isIndeterminate = false

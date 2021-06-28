@@ -52,8 +52,11 @@ import java.util.Map;
  * block.
  */
 class SourceStampVerifier {
-    /** Hidden constructor to prevent instantiation. */
-    private SourceStampVerifier() {}
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private SourceStampVerifier() {
+    }
 
     /**
      * Parses the SourceStamp block and populates the {@code result}.

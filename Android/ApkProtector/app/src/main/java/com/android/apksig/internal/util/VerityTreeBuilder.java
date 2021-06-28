@@ -87,6 +87,61 @@ public class VerityTreeBuilder implements AutoCloseable {
         mMd = getNewMessageDigest();
     }
 
+    /**
+     * Returns an array of summed area table of level size in the verity tree.  In other words, the
+     * returned array is offset of each level in the verity tree file format, plus an additional
+     * offset of the next non-existing level (i.e. end of the last level + 1).  Thus the array size
+     * is level + 1.
+     */
+    private static int[] calculateLevelOffset(long dataSize, int digestSize) {
+        // Compute total size of each level, bottom to top.
+        ArrayList<Long> levelSize = new ArrayList<>();
+        while (true) {
+            long chunkCount = divideRoundup(dataSize, CHUNK_SIZE);
+            long size = CHUNK_SIZE * divideRoundup(chunkCount * digestSize, CHUNK_SIZE);
+            levelSize.add(size);
+            if (chunkCount * digestSize <= CHUNK_SIZE) {
+                break;
+            }
+            dataSize = chunkCount * digestSize;
+        }
+
+        // Reverse and convert to summed area table.
+        int[] levelOffset = new int[levelSize.size() + 1];
+        levelOffset[0] = 0;
+        for (int i = 0; i < levelSize.size(); i++) {
+            // We don't support verity tree if it is larger then Integer.MAX_VALUE.
+            levelOffset[i + 1] = levelOffset[i] + MathCompat.toIntExact(
+                    levelSize.get(levelSize.size() - i - 1));
+        }
+        return levelOffset;
+    }
+
+    /**
+     * Divides a number and round up to the closest integer.
+     */
+    private static long divideRoundup(long dividend, long divisor) {
+        return (dividend + divisor - 1) / divisor;
+    }
+
+    /**
+     * Returns a slice of the buffer with shared the content.
+     */
+    private static ByteBuffer slice(ByteBuffer buffer, int begin, int end) {
+        ByteBuffer b = buffer.duplicate();
+        b.position(0);  // to ensure position <= limit invariant.
+        b.limit(end);
+        b.position(begin);
+        return b.slice();
+    }
+
+    /**
+     * Obtains a new instance of the message digest algorithm.
+     */
+    private static MessageDigest getNewMessageDigest() throws NoSuchAlgorithmException {
+        return MessageDigest.getInstance(JCA_ALGORITHM);
+    }
+
     @Override
     public void close() {
         mExecutor.shutdownNow();
@@ -94,13 +149,13 @@ public class VerityTreeBuilder implements AutoCloseable {
 
     /**
      * Returns the root hash of the APK verity tree built from ZIP blocks.
-     *
+     * <p>
      * Specifically, APK verity tree is built from the APK, but as if the APK Signing Block (which
      * must be page aligned) and the "Central Directory offset" field in End of Central Directory
      * are skipped.
      */
     public byte[] generateVerityTreeRootHash(DataSource beforeApkSigningBlock,
-            DataSource centralDir, DataSource eocd) throws IOException {
+                                             DataSource centralDir, DataSource eocd) throws IOException {
         if (beforeApkSigningBlock.size() % CHUNK_SIZE != 0) {
             throw new IllegalStateException("APK Signing Block size not a multiple of " + CHUNK_SIZE
                     + ": " + beforeApkSigningBlock.size());
@@ -117,7 +172,7 @@ public class VerityTreeBuilder implements AutoCloseable {
         ZipUtils.setZipEocdCentralDirectoryOffset(eocdBuf, centralDirOffsetForDigesting);
 
         return generateVerityTreeRootHash(new ChainedDataSource(beforeApkSigningBlock, centralDir,
-                    DataSources.asDataSource(eocdBuf)));
+                DataSources.asDataSource(eocdBuf)));
     }
 
     /**
@@ -130,14 +185,14 @@ public class VerityTreeBuilder implements AutoCloseable {
 
     /**
      * Returns the byte buffer that contains the whole verity tree.
-     *
+     * <p>
      * The tree is built bottom up. The bottom level has 256-bit digest for each 4 KB block in the
      * input file.  If the total size is larger than 4 KB, take this level as input and repeat the
      * same procedure, until the level is within 4 KB.  If salt is given, it will apply to each
      * digestion before the actual data.
-     *
+     * <p>
      * The returned root hash is calculated from the last level of 4 KB chunk, similarly with salt.
-     *
+     * <p>
      * The tree is currently stored only in memory and is never written out.  Nevertheless, it is
      * the actual verity tree format on disk, and is supposed to be re-generated on device.
      */
@@ -184,36 +239,6 @@ public class VerityTreeBuilder implements AutoCloseable {
     }
 
     /**
-     * Returns an array of summed area table of level size in the verity tree.  In other words, the
-     * returned array is offset of each level in the verity tree file format, plus an additional
-     * offset of the next non-existing level (i.e. end of the last level + 1).  Thus the array size
-     * is level + 1.
-     */
-    private static int[] calculateLevelOffset(long dataSize, int digestSize) {
-        // Compute total size of each level, bottom to top.
-        ArrayList<Long> levelSize = new ArrayList<>();
-        while (true) {
-            long chunkCount = divideRoundup(dataSize, CHUNK_SIZE);
-            long size = CHUNK_SIZE * divideRoundup(chunkCount * digestSize, CHUNK_SIZE);
-            levelSize.add(size);
-            if (chunkCount * digestSize <= CHUNK_SIZE) {
-                break;
-            }
-            dataSize = chunkCount * digestSize;
-        }
-
-        // Reverse and convert to summed area table.
-        int[] levelOffset = new int[levelSize.size() + 1];
-        levelOffset[0] = 0;
-        for (int i = 0; i < levelSize.size(); i++) {
-            // We don't support verity tree if it is larger then Integer.MAX_VALUE.
-            levelOffset[i + 1] = levelOffset[i] + MathCompat.toIntExact(
-                    levelSize.get(levelSize.size() - i - 1));
-        }
-        return levelOffset;
-    }
-
-    /**
      * Digest data source by chunks then feeds them to the sink one by one.  If the last unit is
      * less than the chunk size and padding is desired, feed with extra padding 0 to fill up the
      * chunk before digesting.
@@ -249,7 +274,7 @@ public class VerityTreeBuilder implements AutoCloseable {
             Runnable task = () -> {
                 final MessageDigest md = cloneMessageDigest();
                 for (int offset = 0, finish = buffer.capacity(), chunkIndex = readChunkIndex;
-                        offset < finish; offset += CHUNK_SIZE, ++chunkIndex) {
+                     offset < finish; offset += CHUNK_SIZE, ++chunkIndex) {
                     ByteBuffer chunk = slice(buffer, offset, offset + CHUNK_SIZE);
                     hashes[chunkIndex] = saltedDigest(md, chunk);
                 }
@@ -271,7 +296,9 @@ public class VerityTreeBuilder implements AutoCloseable {
         }
     }
 
-    /** Returns the digest of data with salt prepended. */
+    /**
+     * Returns the digest of data with salt prepended.
+     */
     private byte[] saltedDigest(ByteBuffer data) {
         return saltedDigest(mMd, data);
     }
@@ -283,27 +310,6 @@ public class VerityTreeBuilder implements AutoCloseable {
         }
         md.update(data);
         return md.digest();
-    }
-
-    /** Divides a number and round up to the closest integer. */
-    private static long divideRoundup(long dividend, long divisor) {
-        return (dividend + divisor - 1) / divisor;
-    }
-
-    /** Returns a slice of the buffer with shared the content. */
-    private static ByteBuffer slice(ByteBuffer buffer, int begin, int end) {
-        ByteBuffer b = buffer.duplicate();
-        b.position(0);  // to ensure position <= limit invariant.
-        b.limit(end);
-        b.position(begin);
-        return b.slice();
-    }
-
-    /**
-     * Obtains a new instance of the message digest algorithm.
-     */
-    private static MessageDigest getNewMessageDigest() throws NoSuchAlgorithmException {
-        return MessageDigest.getInstance(JCA_ALGORITHM);
     }
 
     /**

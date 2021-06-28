@@ -9,10 +9,11 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.mcal.apkprotector.App;
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
-import com.mcal.apkprotector.utils.SecurePreferences;
 import com.mcal.apkprotector.utils.Utils;
+import com.mcal.apkprotector.utils.preference.SecurePreferences;
 
 public class SettingFragment extends PreferenceFragmentCompat implements SecurePreferences.OnSharedPreferenceChangeListener {
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     }
@@ -23,6 +24,18 @@ public class SettingFragment extends PreferenceFragmentCompat implements SecureP
 
         EditTextPreference protectKeyString = findPreference("protectKeyString");
         protectKeyString.setText(Preferences.isProtectKeyString(Utils.sealing(Utils.buildID())));
+
+        EditTextPreference customPackageName = findPreference("customPackageName");
+        customPackageName.setText(Preferences.getPackageName());
+
+        EditTextPreference customFolderDexesName = findPreference("customFolderDexesName");
+        customFolderDexesName.setText(Preferences.getFolderDexesName());
+
+        EditTextPreference customPrefixDexesName = findPreference("customPrefixDexesName");
+        customPrefixDexesName.setText(Preferences.getPrefixDexesName());
+
+        EditTextPreference customSuffixDexesName = findPreference("customSuffixDexesName");
+        customSuffixDexesName.setText(Preferences.getSuffixDexesName());
     }
 
     @Override

@@ -5,6 +5,7 @@
     <color name="colorAccent">#64A610</color>
     <color name="colorPrimary">#64A610</color>
     <color name="colorPrimaryDark">#64A610</color>
+    <color name="colorBackground">#FFFFFFFF</color>
 
     <color name="dialog_style">#FFF8F8F8</color>
 

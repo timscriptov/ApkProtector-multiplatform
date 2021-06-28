@@ -19,11 +19,14 @@ package com.android.apksig.internal.util;
 
 import com.android.apksig.util.DataSink;
 import com.android.apksig.util.DataSource;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-/** Pseudo {@link DataSource} that chains the given {@link DataSource} as a continuous one. */
+/**
+ * Pseudo {@link DataSource} that chains the given {@link DataSource} as a continuous one.
+ */
 public class ChainedDataSource implements DataSource {
 
     private final DataSource[] mSources;
@@ -131,6 +134,7 @@ public class ChainedDataSource implements DataSource {
 
     /**
      * Find the index of DataSource that offset is at.
+     *
      * @return Pair of DataSource index and the local offset in the DataSource.
      */
     private Pair<Integer, Long> locateDataSource(long offset) {
