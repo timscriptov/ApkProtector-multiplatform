@@ -1,22 +1,33 @@
 package com.mcal.apkprotector;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mcal.apkprotector.data.Constants;
+import com.mcal.apkprotector.data.gson.ConfigTemp;
 import com.mcal.apkprotector.fastzip.FastZip;
+import com.mcal.apkprotector.patchers.DexCrypto;
 import com.mcal.apkprotector.patchers.ManifestPatcher;
 import com.mcal.apkprotector.signer.SignatureTool;
-import com.mcal.apkprotector.utils.DexCrypto;
+import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Main {
     public static void main(String... args) {
-        FileUtils.deleteDir(new File(Constants.OUTPUT_PATH));
-        FileUtils.deleteDir(new File(Constants.RELEASE_PATH));
-        FileUtils.delete(new File(Constants.LOG_PATH));
+        generateRandom();
+
+        try {
+            FileUtils.deleteDirectory(Constants.OUTPUT_PATH);
+            FileUtils.deleteDirectory(Constants.RELEASE_PATH);
+            FileUtils.delete(new File(Constants.LOG_PATH));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         LoggerUtils.writeLog("----------ApkProtector running----------------");
 
@@ -37,6 +48,12 @@ public class Main {
             LoggerUtils.writeLog("Dir created: " + outputFolder.getAbsolutePath());
         }
 
+        File smaliFolder = new File(Constants.SMALI_PATH);
+        if (!smaliFolder.exists()) {
+            smaliFolder.mkdir();
+            LoggerUtils.writeLog("Dir created: " + smaliFolder.getAbsolutePath());
+        }
+
         File releaseFolder = new File(Constants.RELEASE_PATH);
         if (!releaseFolder.exists()) {
             releaseFolder.mkdir();
@@ -44,8 +61,6 @@ public class Main {
         }
 
         long time = System.currentTimeMillis();
-
-        LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time));
 
         try {
             FastZip.extract(apkPath, Constants.OUTPUT_PATH);
@@ -59,7 +74,6 @@ public class Main {
                 fos.write(buffer, 0, len);
             }
             fos.close();
-            //ManifestPatcher.parseManifest(new BufferedInputStream(new FileInputStream(Constants.MANIFEST_PATH)));
             LoggerUtils.writeLog("Success patch: " + Constants.MANIFEST_PATH);
 
             DexCrypto.encodeDexes();
@@ -70,16 +84,37 @@ public class Main {
 
             if (!SignatureTool.sign(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {
                 LoggerUtils.writeLog("APK signing error");
-                FileUtils.deleteDir(new File(Constants.OUTPUT_PATH));
                 return;
             }
             LoggerUtils.writeLog("APK success signed");
         } catch (Exception e) {
-            LoggerUtils.writeLog(" " + e);
+            LoggerUtils.writeLog("Error: " + e);
         }
+        try {
+            clearTempFiles();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time));
+    }
 
-        FileUtils.delete(new File(Constants.OUTPUT_PATH));
-        FileUtils.delete(new File(Constants.UNSIGNED_PATH));
-        FileUtils.delete(new File(Constants.CACHE_PATH));
+    private static void clearTempFiles() throws IOException {
+        new File(Constants.CONFIG_TEMP_PATH).delete();
+        FileUtils.deleteDirectory(Constants.OUTPUT_PATH);
+        FileUtils.deleteDirectory(Constants.CACHE_PATH);
+        FileUtils.deleteDirectory(Constants.SMALI_PATH);
+    }
+
+    private static void generateRandom() {
+        ConfigTemp config = new ConfigTemp();
+        config.packageName = CommonUtils.generateRandomString(Constants.PACKAGE_NAME);
+        config.dexFolder = CommonUtils.generateRandomString(Constants.DEX_DIR);
+        config.dexPrefix = CommonUtils.generateRandomString(Constants.DEX_PREFIX);
+        config.dexSuffix = CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
+        config.proxyApp = CommonUtils.generateRandomString(Constants.PROXY_APP);
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        FileUtils.writeFile(Constants.CONFIG_TEMP_PATH, gson.toJson(config), false);
     }
 }

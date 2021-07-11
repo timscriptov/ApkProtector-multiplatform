@@ -4,6 +4,7 @@ import bin.xml.decode.AXmlDecoder;
 import bin.xml.decode.AXmlResourceParser;
 import bin.xml.decode.XmlPullParser;
 import com.mcal.apkprotector.data.Constants;
+import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.LoggerUtils;
 
 import java.io.ByteArrayInputStream;
@@ -101,7 +102,7 @@ public class ManifestPatcher {
         }
         ArrayList<String> list = new ArrayList<>(axml.mTableStrings.getSize());
         axml.mTableStrings.getStrings(list);
-        list.add(Constants.PROXY_APP);
+        list.add(Preferences.getPackageName() + "." + Preferences.getProxyAppName());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         axml.write(list, baos);
         fis.close();

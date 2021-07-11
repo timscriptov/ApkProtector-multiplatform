@@ -1,13 +1,56 @@
 package com.mcal.apkprotector.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.Test;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertFalse;
 
 public class FileUtils {
+    public static byte[] readAllBytes(InputStream is) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[2048];
+        int len = 0;
+        while ((len = is.read(buffer)) > 0)
+            bos.write(buffer, 0, len);
+        is.close();
+        return bos.toByteArray();
+    }
+
+    public static void writeString(File file, String str) throws IOException {
+        BufferedWriter out = new BufferedWriter(new FileWriter(file));
+        try {
+            out.write(str);
+        } catch (IOException e) {
+            System.out.println("Exception " + e);
+        } finally {
+            out.close();
+        }
+    }
+
+    public static List<File> getFiles(File[] files) {
+        List<File> list = new ArrayList<>();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                list.addAll(getFiles(file.listFiles()));
+            } else {
+                list.add(file);
+            }
+        }
+        return list;
+    }
+
+
+
     public static void delete(File file) {
         if (file != null && file.exists()) {
             if (file.isDirectory()) {
@@ -18,6 +61,29 @@ public class FileUtils {
             } else {
                 file.delete();
             }
+        }
+    }
+
+    public static void deleteDirectory(String dir) throws IOException {
+
+        Path path = Paths.get(dir);
+
+        // read java doc, Files.walk need close the resources.
+        // try-with-resources to ensure that the stream's open directories are closed
+        try (Stream<Path> walk = Files.walk(path)) {
+            walk
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(FileUtils::deleteDirectoryExtract);
+        }
+
+    }
+
+    // extract method to handle exception in lambda
+    public static void deleteDirectoryExtract(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            System.err.printf("Unable to delete this path : %s%n%s", path, e);
         }
     }
 
@@ -102,6 +168,50 @@ public class FileUtils {
             f.mkdirs();
         }
 
+    }
+
+    public static void copyFolder(File source, File destination) {
+        if (source.isDirectory()) {
+            if (!destination.exists()) {
+                destination.mkdirs();
+            }
+
+            String files[] = source.list();
+
+            for (String file : files) {
+                File srcFile = new File(source, file);
+                File destFile = new File(destination, file);
+
+                copyFolder(srcFile, destFile);
+            }
+        } else {
+            InputStream in = null;
+            OutputStream out = null;
+
+            try {
+                in = new FileInputStream(source);
+                out = new FileOutputStream(destination);
+
+                byte[] buffer = new byte[1024];
+
+                int length;
+                while ((length = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, length);
+                }
+            } catch (Exception e) {
+                try {
+                    in.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+                try {
+                    out.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
     }
 
     public static boolean copy(String srcFile, String destFile) {

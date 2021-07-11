@@ -77,7 +77,7 @@ public class Cmd {
 
     static class LoopInputOrErrorBuffer implements Runnable {
 
-        private InputStream mIOStream;
+        private final InputStream mIOStream;
 
         public LoopInputOrErrorBuffer(InputStream InputStream) {
             this.mIOStream = InputStream;

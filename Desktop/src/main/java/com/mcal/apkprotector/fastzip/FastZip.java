@@ -5,6 +5,8 @@ import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.patchers.DexPatcher;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
+import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -55,7 +57,7 @@ public class FastZip {
         //pack other patched files
         String[] files = new File(Constants.OUTPUT_PATH).list();
 
-        for (String file: files) {
+        for (String file : files) {
             if (file.endsWith("assets") || file.endsWith(".dex")) continue;
             file = file.replace(Constants.OUTPUT_PATH + File.separator, "");
             LoggerUtils.writeLog("Entry: " + file);
@@ -74,13 +76,13 @@ public class FastZip {
 
         //pack dexes
         File[] dexes = new File(Constants.ASSETS_PATH).listFiles();
-        for (File f: dexes) {
+        for (File f : dexes) {
             if (f.isDirectory()) continue;
             String file = f.getAbsolutePath();
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-            file = file.replace(Constants.ASSETS_PATH, "assets/apkprotector_dex")
-                    .replace("apkprotector_dex\\", "apkprotector_dex/")
-                    .replace("apkprotector_dex", Preferences.getDexDir())
+            file = file.replace(Constants.ASSETS_PATH, "assets/protector")
+                    .replace("protector\\", "protector/")
+                    .replace("protector", Preferences.getDexDir())
                     .replace("classes-v", Preferences.getDexPrefix());
             LoggerUtils.writeLog("Entry: " + file);
             byte[] buffer = new byte[2048];
@@ -105,7 +107,7 @@ public class FastZip {
                 continue;
             }
 
-            for (String file1: files) {
+            for (String file1 : files) {
                 file1 = file1.replace(FileUtils.getWorkPath() + File.separator, "");
                 if (file1.equals(name)) continue;
             }
@@ -115,14 +117,14 @@ public class FastZip {
 
         //pack dexloader
         LoggerUtils.writeLog("Entry: classes.dex");
-
-        byte[] dexData = DexPatcher.processDex();
+        DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Constants.DEXLOADER_PATH)));
+        byte[] dexData = DexPatcher.patchDex(dex);
         ByteArrayInputStream bis = new ByteArrayInputStream(dexData);
         byte[] buffer = new byte[2048];
         int len = 0;
         fzos.putNextEntry(new ZipEntry("classes.dex"));
         while ((len = bis.read(buffer)) > 0) {
-             fzos.write(buffer, 0, len);
+            fzos.write(buffer, 0, len);
         }
         fzos.closeEntry();
 

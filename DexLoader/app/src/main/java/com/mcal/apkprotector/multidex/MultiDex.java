@@ -25,7 +25,7 @@ import java.util.zip.ZipFile;
 import dalvik.system.DexFile;
 
 public class MultiDex {
-    static final String TAG = "ApkProtector";
+    static final String TAG = "MultiDex";
     private static final String OLD_SECONDARY_FOLDER_NAME = "secondary-dexes";
     private static final String CODE_CACHE_NAME = "code_cache";
     private static final String CODE_CACHE_SECONDARY_FOLDER_NAME = "secondary-dexes";
@@ -34,7 +34,7 @@ public class MultiDex {
     private static final int VM_WITH_MULTIDEX_VERSION_MAJOR = 2;
     private static final int VM_WITH_MULTIDEX_VERSION_MINOR = 1;
     private static final String NO_KEY_PREFIX = "";
-    private static final Set<File> installedApk = new HashSet<File>();
+    private static final Set<File> installedApk = new HashSet<>();
     private static final boolean IS_VM_MULTIDEX_CAPABLE =
             false;/*isVMMultidexCapable(System.getProperty("java.vm.version"));*/
 

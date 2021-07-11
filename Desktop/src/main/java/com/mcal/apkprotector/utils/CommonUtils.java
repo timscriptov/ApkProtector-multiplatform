@@ -1,9 +1,7 @@
 package com.mcal.apkprotector.utils;
 
-import com.mcal.apkprotector.data.Constants;
+import com.mcal.apkprotector.data.Preferences;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -69,7 +67,7 @@ public class CommonUtils {
         char[] arr = str.toCharArray();
         for (int i = 0; i < str.length(); i++) {
             if (arr[i] != '.') {
-                arr[i] = Constants.ALPHABET.charAt(random.nextInt(Constants.ALPHABET.length()));
+                arr[i] = Preferences.getAlphabet().charAt(random.nextInt(Preferences.getAlphabet().length()));
             }
         }
         return new String(arr);
@@ -82,7 +80,6 @@ public class CommonUtils {
      * @param i   - символы
      * @return
      */
-    @NotNull
     public static String encryptStrings(String str, int i) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
@@ -95,8 +92,6 @@ public class CommonUtils {
         }
     }
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
     private static char[] a(int i) {
         switch (i) {
             case 0:

@@ -2,7 +2,8 @@ package com.mcal.apkprotector.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mcal.apkprotector.utils.CommonUtils;
+import com.mcal.apkprotector.data.gson.Config;
+import com.mcal.apkprotector.data.gson.ConfigTemp;
 import com.mcal.apkprotector.utils.FileUtils;
 
 import java.io.File;
@@ -10,6 +11,18 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class Preferences {
+    public static ConfigTemp configTemp() {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        try {
+            String content = FileUtils.readFile(Constants.CONFIG_TEMP_PATH, StandardCharsets.UTF_8);
+            return gson.fromJson(content, ConfigTemp.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static Config config() {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -18,35 +31,8 @@ public class Preferences {
             return gson.fromJson(content, Config.class);
         } catch (IOException e) {
             e.printStackTrace();
-            // Если файл конфигурации не найден, используем настройки по умолчанию
-            String jsonScript = "{\n" +
-                    "    \"keystore\":{\n" +
-                    "        \"keystoreCustom\":true,\n" +
-                    "        \n" +
-                    "        \"keystorePath\":\"debug.jks\",\n" +
-                    "        \"keystorePassword\":\"debug\",\n" +
-                    "        \"keystoreAlias\":\"debug\",\n" +
-                    "        \"certPassword\":\"debug\",\n" +
-                    "        \n" +
-                    "        \"signatureV1Enabled\":true,\n" +
-                    "        \"signatureV2Enabled\":true,\n" +
-                    "        \"signatureV3Enabled\":false,\n" +
-                    "        \"signatureV4Enabled\":false\n" +
-                    "    },\n" +
-                    "\n" +
-                    "    \"secureOptions\": {\n" +
-                    "        \"encryptionKey\": \"12345678911111111111111111111111\",\n" +
-                    "        \"randomPackageName\": false,\n" +
-                    "        \"randomAssetsResName\": false\n" +
-                    "    }\n" +
-                    "\n" +
-                    "}";
-            return gson.fromJson(jsonScript, Config.class);
+            return null;
         }
-    }
-
-    public static boolean isRandomPackageName() {
-        return config().secureConfig.randomPackageName;
     }
 
     public static String isSignaturePath() {
@@ -85,43 +71,80 @@ public class Preferences {
         return config().secureConfig.encryptionKey;
     }
 
+    public static int getTypeHideApkProtector() {
+        return config().hideApkProtector.type;
+    }
+
     public static String getDexDir() {
-        if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.DEX_DIR);
-        } else {
-            return Constants.DEX_DIR;
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.DEX_DIR;
+            case 1: // Custom
+                return config().hideApkProtector.dexFolder;
+            case 2: // Random
+            case 3: // Random
+                return configTemp().dexFolder;
         }
+        return null;
     }
 
     public static String getPackageName() {
-        if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.PACKAGE_NAME);
-        } else {
-            return Constants.PACKAGE_NAME;
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.PACKAGE_NAME;
+            case 1: // Custom
+            case 3: // Custom
+                return config().hideApkProtector.packageName;
+            case 2: // Random
+                return configTemp().packageName;
         }
+        return null;
+    }
+
+    public static String getProxyAppName() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.PROXY_APP;
+            case 1: // Custom
+            case 3: // Custom
+                return config().hideApkProtector.proxyApp;
+            case 2: // Random
+                return configTemp().proxyApp;
+        }
+        return null;
     }
 
     public static String getDexPrefix() {
-        if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.DEX_PREFIX);
-        } else {
-            return Constants.DEX_PREFIX;
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.DEX_PREFIX;
+            case 1: // Custom
+                return config().hideApkProtector.dexPrefix;
+            case 2: // Random
+            case 3: // Random
+                return configTemp().dexPrefix;
         }
+        return null;
     }
 
     public static String getDexSuffix() {
-        if (Preferences.isRandomPackageName()) {
-            return CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
-        } else {
-            return Constants.DEX_SUFFIX;
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.DEX_SUFFIX;
+            case 1: // Custom
+            case 3: // Custom
+                return config().hideApkProtector.dexSuffix;
+            case 2: // Random
+                return configTemp().dexSuffix;
         }
-    }
-
-    public static String getApplicationName() {
-        return getPackageName() + ".ProtectApplication";
+        return null;
     }
 
     public static boolean getZipaligner() {
         return config().keystore.zipaligner;
+    }
+
+    public static String getAlphabet() {
+        return config().hideApkProtector.alphabet;
     }
 }

@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.NetworkInterface;
 import java.security.cert.Certificate;
 import java.util.Collections;
@@ -33,9 +32,9 @@ import java.util.jar.JarFile;
 public class SecurityUtils {
     private static final String TAG = "Package Parser";
 
-    private static String[] metaData = new String[]{"xposedmodule", "xposeddescription"};
-    private static String[] receivers = new String[]{"com.ui.widgets.AppDisablerWidget", "com.ui.widgets.BinderWidget", "com.ui.widgets.AndroidPatchWidget"};
-    private static String[] services = new String[]{"com.chelpus.TransferFilesService", "com.chelpus.RootlessInstallService"};
+    private static final String[] metaData = new String[]{"xposedmodule", "xposeddescription"};
+    private static final String[] receivers = new String[]{"com.ui.widgets.AppDisablerWidget", "com.ui.widgets.BinderWidget", "com.ui.widgets.AndroidPatchWidget"};
+    private static final String[] services = new String[]{"com.chelpus.TransferFilesService", "com.chelpus.RootlessInstallService"};
 
     private static final String XPOSED_HELPERS = "de.robv.android.xposed.XposedHelpers";
     private static final String XPOSED_BRIDGE = "de.robv.android.xposed.XposedBridge";
@@ -134,7 +133,7 @@ public class SecurityUtils {
         try {
             int flags = PackageManager.GET_RECEIVERS | PackageManager.GET_SERVICES;
 
-            List<PackageInfo> packages = context.getPackageManager().getInstalledPackages(flags);
+            @SuppressLint("QueryPermissionsNeeded") List<PackageInfo> packages = context.getPackageManager().getInstalledPackages(flags);
 
             for (PackageInfo packInfo : packages) {
                 Log.d(TAG, "start parsing " + packInfo.packageName);
@@ -162,9 +161,8 @@ public class SecurityUtils {
                 }
             }
         } catch (NullPointerException e) {
-
+            e.printStackTrace();
         }
-
         return false;
     }
 
@@ -181,9 +179,8 @@ public class SecurityUtils {
                 }
             }
         } catch (NullPointerException e) {
-
+            e.printStackTrace();
         }
-
         return false;
     }
 
@@ -201,9 +198,8 @@ public class SecurityUtils {
                 }
             }
         } catch (NullPointerException e) {
-
+            e.printStackTrace();
         }
-
         return false;
     }
 
@@ -334,11 +330,7 @@ public class SecurityUtils {
      * @throws ClassNotFoundException
      */
     public static boolean illegalCodeCheck(String classPath) throws ClassNotFoundException {
-        if (Class.forName(classPath) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return Class.forName(classPath) != null;
     }
 
     /**

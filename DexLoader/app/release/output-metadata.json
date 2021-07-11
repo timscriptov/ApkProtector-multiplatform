@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "ru.vologhat.apkprotector",
+  "applicationId": "com.mcal.apkprotector",
   "variantName": "release",
   "elements": [
     {

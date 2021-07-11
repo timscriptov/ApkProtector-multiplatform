@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 'android-S'
+    compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "ru.vologhat.apkprotector"
+        applicationId "com.mcal.apkprotector"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -28,5 +28,5 @@ android {
 
 dependencies {
     //implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'org.jetbrains:annotations:21.0.1'
 }

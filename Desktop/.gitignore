@@ -4,3 +4,7 @@
 /out/release/release
 /out/release/ApkProtector.jar
 /out/release/Log.txt
+/out/release/smali
+/out/release/tools/config-temp.json
+/.idea
+/.gradle

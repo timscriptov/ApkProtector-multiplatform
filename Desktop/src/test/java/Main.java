@@ -1,4 +1,5 @@
 import com.mcal.apkprotector.data.Constants;
+import com.mcal.apkprotector.data.Preferences;
 
 import java.util.Random;
 
@@ -12,7 +13,7 @@ public class Main {
         char[] arr = str.toCharArray();
         for (int i = 0; i < str.length(); i++) {
             if (arr[i] != '.') {
-                arr[i] = Constants.ALPHABET.charAt(random.nextInt(Constants.ALPHABET.length()));
+                arr[i] = Preferences.getAlphabet().charAt(random.nextInt(Preferences.getAlphabet().length()));
             }
         }
         return new String(arr);

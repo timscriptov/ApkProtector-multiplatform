@@ -1,32 +1,18 @@
 package com.mcal.apkprotector;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 
+import com.mcal.apkprotector.data.Const;
 import com.mcal.apkprotector.multidex.MultiDex;
 import com.mcal.apkprotector.security.Security;
-import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.Reflect;
 
 import java.util.ArrayList;
 
 public class ProtectApplication extends Application {
-    public static final String DEX_SUFFIX = CommonUtils.encryptStrings("$DEX_SUFIX", 2);
-    public static final String DEX_PREFIX = CommonUtils.encryptStrings("$DEX_PREFIX", 2);
-    public static final String DEX_DIR = CommonUtils.encryptStrings("$DEX_DIR", 2);
-    public static final String PROTECT_KEY = CommonUtils.encryptStrings("$PROTECT_KEY", 2);
-    public static final String DATA = CommonUtils.encryptStrings("$DATA", 2);
-    //public static final String PACKAGE_NAME = CommonUtils.encryptStrings("$PACKAGE_NAME", 2);
-    public static final String REAL_APPLICATION = "android.app.Application";
-
-    /*public static final String DEX_SUFFIX = CommonUtils.encryptStrings("思恑恚恝", 2);
-    public static final String DEX_PREFIX = CommonUtils.encryptStrings("恐恟恒恀恀恖恀怞恅", 2);
-    public static final String DEX_DIR = CommonUtils.encryptStrings("恒恃恘恃恁恜恇恖恐恇恜恁恬恗恖恋", 2);
-    public static final String PROTECT_KEY = CommonUtils.encryptStrings("恲恣恸恣恡恼恧恶恰恧恼恡态怃态怂", 2);
-    public static final String REAL_APPLICATION = "com.mcal.apkprotector.App";*/
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -37,8 +23,8 @@ public class ProtectApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        new Security(this, DATA);
-        Application app = changeTopApplication(REAL_APPLICATION);
+        new Security(this, Const.DATA);
+        Application app = changeTopApplication(Const.REAL_APPLICATION);
         if (app != null) {
             app.onCreate();
         }
