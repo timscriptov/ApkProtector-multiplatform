@@ -1,6 +1,5 @@
 package com.mcal.dexprotect.fastzip;
 
-import com.mcal.dexprotect.async.presentation.ProtectAsync;
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.patchers.DexPatcher;
@@ -17,8 +16,10 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class FastZip {
+    private static final String[] n = {".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
 
     public static void extract(File zip, File extractDir) throws IOException {
         extractDir.mkdirs();
@@ -105,6 +106,16 @@ public class FastZip {
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             String name = entry.getName();
+
+            if (name.startsWith("META-INF/")) continue;
+            for (String endsWith : n) {
+                if (name.equals(endsWith) || name.equals("resources.arsc") && !entry.isDirectory()) {
+                    fzos.setLevel(ZipOutputStream.STORED);
+                } else {
+                    fzos.setLevel(ZipOutputStream.DEFLATED);
+                }
+            }
+
             if (name.equals("AndroidManifest.xml")
                     || name.matches("classes\\.dex")
                     || name.matches("classes\\d+\\.dex")
@@ -113,7 +124,7 @@ public class FastZip {
             }
 
             for (String file1 : files) {
-                file1 = file1.replace(ScopedStorage.getWorkPath() + File.separator, "");
+                file1 = file1.replace(ScopedStorage.getFilesDir() + File.separator, "");
                 if (file1.equals(name)) continue;
             }
             LoggerUtils.writeLog("Entry: " + entry.getName());

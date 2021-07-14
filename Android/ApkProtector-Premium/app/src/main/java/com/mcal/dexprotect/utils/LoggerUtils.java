@@ -13,7 +13,7 @@ public class LoggerUtils {
         BufferedWriter bw = null;
         FileWriter fw = null;
         try {
-            fw = new FileWriter(ScopedStorage.getStorageDirectory() + File.separator + "ApkProtect" + File.separator + "Log.txt", true);
+            fw = new FileWriter(ScopedStorage.getStorageDirectory() + File.separator + "Log.txt", true);
             bw = new BufferedWriter(fw);
             bw.write(info);
             bw.write("\n");

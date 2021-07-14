@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -38,7 +36,6 @@ import com.mcal.dexprotect.activities.HomeActivity;
 import com.mcal.dexprotect.async.ProtectAsyncListener;
 import com.mcal.dexprotect.async.presentation.ProtectAsync;
 import com.mcal.dexprotect.data.Preferences;
-import com.mcal.dexprotect.module.Dialogs;
 import com.mcal.dexprotect.utils.MyAppInfo;
 import com.mcal.dexprotect.utils.Utils;
 import com.mcal.dexprotect.utils.file.ScopedStorage;
@@ -174,19 +171,19 @@ public class HomeFragment extends Fragment {
             /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
                 showScopedStorageDialog();
             } else {*/
-                AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                adb.setTitle(R.string.choose_method_title);
-                adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
-                    switch (p2) {
-                        case 0:
-                            selectApkFromSdcard();
-                            break;
-                        case 1:
-                            new AppListDialog(getActivity(), apkPath);
-                            break;
-                    }
-                });
-                adb.create().show();
+            AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+            adb.setTitle(R.string.choose_method_title);
+            adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
+                switch (p2) {
+                    case 0:
+                        selectApkFromSdcard();
+                        break;
+                    case 1:
+                        new AppListDialog(getActivity(), apkPath);
+                        break;
+                }
+            });
+            adb.create().show();
             //}
         });
 
@@ -364,7 +361,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void start(File apk) {
-        final File sourceDir = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + MyAppInfo.getPackage() + "");
+        final File sourceDir = new File(ScopedStorage.getStorageDirectory() + "/output/" + MyAppInfo.getPackage() + "");
         if (sourceDir.exists()) {
             showAlreadyExistsDialog(apk.getAbsolutePath(), sourceDir);
         } else {
@@ -423,8 +420,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void writeFolder() {
-        String fold = "ApkProtect/";
-        String[] folder = {fold + "key", fold + "output"};
+        String[] folder = {"key", "output"};
         for (String s : folder) {
             File f = new File(ScopedStorage.getStorageDirectory() + "/" + s);
             if (!f.exists()) {

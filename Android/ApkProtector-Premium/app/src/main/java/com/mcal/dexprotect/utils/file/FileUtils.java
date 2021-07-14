@@ -1,11 +1,17 @@
 package com.mcal.dexprotect.utils.file;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.mcal.dexprotect.utils.LoggerUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -15,8 +21,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FileUtils {
+    public static String readFile(String path, Charset encoding) throws IOException {
+        byte[] encoded = readAllBytes(new FileInputStream(path));
+        return new String(encoded, encoding);
+    }
+
+    public static byte[] readAllBytes(InputStream is) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[2048];
+        int len = 0;
+        while ((len = is.read(buffer)) > 0)
+            bos.write(buffer, 0, len);
+        is.close();
+        return bos.toByteArray();
+    }
+
     public static void writeInt(byte[] data, int off, int value) {
         data[off++] = (byte) (value & 0xFF);
         data[off++] = (byte) ((value >>> 8) & 0xFF);

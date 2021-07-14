@@ -21,6 +21,7 @@ import java.util.Random;
 public class CommonUtils {
     @Keep
     private static final String OBF = "KEEP-TEST";
+
     public static String generateRandomString(String str) {
         Random random = new Random();
         char[] arr = str.toCharArray();

@@ -2,13 +2,11 @@ package com.mcal.dexprotect.data.dto.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,13 +14,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.mcal.dexprotect.R;
 import com.mcal.dexprotect.async.presentation.GetIcon;
-import com.mcal.dexprotect.databinding.ApkInfoBinding;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.InstallProvider;
 import com.mcal.dexprotect.utils.MyAppInfo;
@@ -34,11 +29,9 @@ import com.mcal.dexprotect.utils.file.ScopedStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.List;
 
 import ru.svolf.melissa.sheet.SweetContentDialog;
-import ru.svolf.melissa.sheet.SweetViewDialog;
 
 public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
     private static final String TAG = "HomeListAdapter";
@@ -77,7 +70,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.history_list_item, null);
         }
         final SourceInfo pkg = getItem(position);
-        String iconPath = ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk";
+        String iconPath = ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk";
         Log.e(TAG, "getView: " + iconPath);
 
         final ViewHolder holder = new ViewHolder();
@@ -107,7 +100,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
         }
         View finalConvertView = convertView;
         holder.cardlayout.setOnClickListener(v -> {
-            apk = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
+            apk = new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
 
             View apk_info = LayoutInflater.from(getContext()).inflate(R.layout.apk_info, null);
 
@@ -137,7 +130,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
                                     .create().show();
                         }
                     } else {
-                        Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName()));
+                        Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName()));
                         // FIXME СУКА
                         notifyDataSetChanged();
                     }

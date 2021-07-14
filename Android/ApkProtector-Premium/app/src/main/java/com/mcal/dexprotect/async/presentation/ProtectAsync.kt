@@ -38,7 +38,7 @@ class ProtectAsync(
     @field:SuppressLint("StaticFieldLeak") private val listener: ProtectAsyncListener,
     @field:SuppressLint("StaticFieldLeak") private val context: Context
 ) : CoroutineScope {
-    private val path: String = ScopedStorage.getStorageDirectory().toString() + "/ApkProtect"
+    private val path: String = ScopedStorage.getStorageDirectory().absolutePath
     private val xpath: String = context.filesDir.absolutePath
     private var mi: MyAppInfo? = null
     private var protectLoadDialog: SweetViewDialog? = null
@@ -77,7 +77,7 @@ class ProtectAsync(
             listener.onCompleted()
         } else {
             val sourceDir =
-                File(ScopedStorage.getStorageDirectory().absolutePath + "/ApkProtect/output/" + MyAppInfo.getPackage() + "")
+                File(ScopedStorage.getStorageDirectory().absolutePath + "/output/" + MyAppInfo.getPackage() + "")
             if (sourceDir.exists()) {
                 FileUtils.deleteDir(sourceDir)
             }
@@ -125,7 +125,7 @@ class ProtectAsync(
                 val smaliPath = Constants.SMALI_PATH + File.separator + "ProtectApplication.smali"
                 FileUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
 
-                if(Preferences.getTypeHideApkProtector().equals("2")) {
+                if (Preferences.getTypeHideApkProtector().equals("2")) {
                     generateRandom()
                 }
                 doProgress("Decompiling…")
@@ -190,16 +190,15 @@ class ProtectAsync(
         if (Preferences.getEncryptResourcesBoolean()) {
             doProgress("Copying apk…")
             val rules = path + File.separator + "proguard-resources.json"
-            if(!File(rules).exists()) {
+            if (!File(rules).exists()) {
                 FileUtils.inputStreamAssets(getContext(), "proguard-resources.json", rules)
             }
-            val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
+            val encryptedApk = Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"
             val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
 
-            if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 doProgress("Encrypting Resources…")
                 AndResGuard.proguard2(
-                    File(tmpApk),
+                    File(p1[0]),
                     File(path + "/output/" + MyAppInfo.getPackage() + "/"),
                     File(path),
                     MyAppInfo.getPackage()
@@ -208,7 +207,7 @@ class ProtectAsync(
                 SourceInfo.initialise("$path/output", mi!!)
                 if (Preferences.getZipAlignerBoolean()) {
                     doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
+                    if (ZipAlign.runProcess(encryptedApk, alignedApk)) {
                         LoggerUtils.writeLog("Apk Aligned")
                         doProgress("Signing Apk…")
                         if (SignatureTool.sign(
@@ -227,7 +226,7 @@ class ProtectAsync(
                     doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
-                            File(tmpApk),
+                            File(encryptedApk),
                             File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                         )
                     ) {
@@ -236,7 +235,7 @@ class ProtectAsync(
                         t = true
                     }
                 }
-            }
+
         }
         if (Preferences.getSignApkBoolean()) {
             doProgress("Copying apk…")

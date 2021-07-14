@@ -1,14 +1,11 @@
 package com.mcal.dexprotect.data;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
 import com.mcal.dexprotect.App;
 import com.mcal.dexprotect.patchers.DexCloner;
-import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.Utils;
 
 import org.jetbrains.annotations.Contract;

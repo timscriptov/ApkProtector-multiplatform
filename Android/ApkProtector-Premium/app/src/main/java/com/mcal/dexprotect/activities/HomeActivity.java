@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -37,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        xpath = ScopedStorage.getStorageDirectory() + "/ApkProtect";
+        xpath = ScopedStorage.getStorageDirectory().getAbsolutePath();
 
         setContentView(R.layout.activity_landing);
         setupToolbar(getString(R.string.protected_apps));

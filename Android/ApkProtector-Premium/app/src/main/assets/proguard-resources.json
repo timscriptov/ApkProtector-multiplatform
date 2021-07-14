@@ -1,7 +1,7 @@
 {
     "keepRoot" : false,
     "fixedResName" : "ApkProtector",
-    //"mappingFile" : "name.json",
+    "mappingFile" : "name.json",
     "whiteList" : [
         "R.color.*"
     ],

@@ -2,7 +2,6 @@ package com.mcal.dexprotect.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -83,7 +82,7 @@ public class CreateSignDialog {
     }
 
     private void save(String keyAlias, String keyPass, String commonName, String organization, String organizationUnit, String country, String locality) {
-        File folder = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/key");
+        File folder = new File(ScopedStorage.getStorageDirectory() + "/key");
         if (!folder.exists()) {
             folder.mkdir();
         }

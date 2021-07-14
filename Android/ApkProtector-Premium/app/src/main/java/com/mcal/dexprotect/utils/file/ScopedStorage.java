@@ -12,7 +12,7 @@ public class ScopedStorage {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
             return App.getContext().getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath());
         } else {
-            return Environment.getExternalStorageDirectory();
+            return new File(Environment.getExternalStorageDirectory() + "/ApkProtect");
         }
     }
 
@@ -20,7 +20,7 @@ public class ScopedStorage {
         return Environment.getExternalStorageDirectory();
     }
 
-    public static String getWorkPath() {
+    public static String getFilesDir() {
         return App.getContext().getFilesDir().getAbsolutePath();
     }
 }

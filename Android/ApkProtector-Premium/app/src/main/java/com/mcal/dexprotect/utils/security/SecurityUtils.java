@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 public class SecurityUtils {
     @Keep
     private static final String OBF = "KEEP-TEST";
+
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     public static boolean isEmulator() {
         return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
