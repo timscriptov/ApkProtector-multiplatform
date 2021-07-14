@@ -12,8 +12,6 @@ import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 
-import androidx.annotation.Keep;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

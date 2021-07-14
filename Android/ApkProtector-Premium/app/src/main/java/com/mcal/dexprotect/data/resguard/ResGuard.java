@@ -1,15 +1,15 @@
 package com.mcal.dexprotect.data.resguard;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mcal.dexprotect.utils.file.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class ResGuard {
     @SerializedName("keepRoot")
@@ -30,13 +30,11 @@ public class ResGuard {
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public ResGuard() {
     }
 
     /**
-     *
      * @param mappingFile
      * @param keepRoot
      * @param whiteList
@@ -50,6 +48,18 @@ public class ResGuard {
         this.mappingFile = mappingFile;
         this.whiteList = whiteList;
         this.commpressFilePattern = commpressFilePattern;
+    }
+
+    public static ResGuard resguardFile(File file) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        try {
+            String content = FileUtils.readFile(file.getAbsolutePath(), StandardCharsets.UTF_8);
+            return gson.fromJson(content, ResGuard.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Boolean getKeepRoot() {
@@ -90,17 +100,5 @@ public class ResGuard {
 
     public void setCommpressFilePattern(List<String> commpressFilePattern) {
         this.commpressFilePattern = commpressFilePattern;
-    }
-
-    public static ResGuard resguardFile(File file) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        try {
-            String content = FileUtils.readFile(file.getAbsolutePath(), StandardCharsets.UTF_8);
-            return gson.fromJson(content, ResGuard.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

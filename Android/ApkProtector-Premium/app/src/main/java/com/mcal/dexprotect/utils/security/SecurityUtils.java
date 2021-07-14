@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import androidx.annotation.Keep;
 import androidx.annotation.RequiresApi;
 
 import com.mcal.dexprotect.BuildConfig;

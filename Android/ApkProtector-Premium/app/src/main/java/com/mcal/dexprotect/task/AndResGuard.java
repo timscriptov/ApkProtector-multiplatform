@@ -60,8 +60,8 @@ public class AndResGuard {
             if (outputApk.exists()) {
                 outputApk.renameTo(new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
             }
-            for(File f : folderMapping.listFiles()) {
-                if(f.getName().endsWith(".txt")) continue;
+            for (File f : folderMapping.listFiles()) {
+                if (f.getName().endsWith(".txt")) continue;
                 FileUtils.delete(f);
             }
         }

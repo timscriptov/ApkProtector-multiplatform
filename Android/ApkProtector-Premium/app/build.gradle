@@ -95,5 +95,4 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
-    implementation 'com.blankj:utilcode:1.29.0'
 }

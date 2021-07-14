@@ -6,8 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import androidx.annotation.Keep;
-
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.utils.security.SignCheck;
 

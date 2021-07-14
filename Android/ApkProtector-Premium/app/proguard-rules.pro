@@ -2,10 +2,10 @@
 -renamesourcefileattribute
 -allowaccessmodification
 
--keep class com.mcal.dexprotect.utils.Utils**
--keep class com.mcal.dexprotect.utils.security.SignatureCheck**
--keep class com.mcal.dexprotect.utils.CommonUtils**
--keep class com.mcal.dexprotect.utils.security.SecurityUtils**
+-keep class com.mcal.dexprotect.utils.Utils
+-keep class com.mcal.dexprotect.utils.security.SignatureCheck
+-keep class com.mcal.dexprotect.utils.CommonUtils
+-keep class com.mcal.dexprotect.utils.security.SecurityUtils
 
 #-keep class android.sun.** { *; }
 #-keep class bin.** { *; }

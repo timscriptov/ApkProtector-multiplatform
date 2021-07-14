@@ -1,17 +1,11 @@
 package com.mcal.dexprotect.utils.file;
 
 import android.content.Context;
-import android.os.Build;
-import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 
 import com.mcal.dexprotect.utils.LoggerUtils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,8 +16,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class FileUtils {
     public static String readFile(String path, Charset encoding) throws IOException {

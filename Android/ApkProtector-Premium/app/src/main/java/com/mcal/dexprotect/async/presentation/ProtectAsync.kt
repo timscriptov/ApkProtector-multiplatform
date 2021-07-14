@@ -196,37 +196,23 @@ class ProtectAsync(
             val encryptedApk = Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"
             val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
 
-                doProgress("Encrypting Resources…")
-                AndResGuard.proguard2(
-                    File(p1[0]),
-                    File(path + "/output/" + MyAppInfo.getPackage() + "/"),
-                    File(path),
-                    MyAppInfo.getPackage()
-                )
-                LoggerUtils.writeLog("Encrypted Resources")
-                SourceInfo.initialise("$path/output", mi!!)
-                if (Preferences.getZipAlignerBoolean()) {
-                    doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess(encryptedApk, alignedApk)) {
-                        LoggerUtils.writeLog("Apk Aligned")
-                        doProgress("Signing Apk…")
-                        if (SignatureTool.sign(
-                                context,
-                                File(alignedApk),
-                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                            )
-                        ) {
-                            LoggerUtils.writeLog("Apk Signed")
-                            doProgress("Done")
-                            t = true
-                        }
-                    }
-
-                } else {
+            doProgress("Encrypting Resources…")
+            AndResGuard.proguard2(
+                File(p1[0]),
+                File(path + "/output/" + MyAppInfo.getPackage() + "/"),
+                File(path),
+                MyAppInfo.getPackage()
+            )
+            LoggerUtils.writeLog("Encrypted Resources")
+            SourceInfo.initialise("$path/output", mi!!)
+            if (Preferences.getZipAlignerBoolean()) {
+                doProgress("Aligning Apk…")
+                if (ZipAlign.runProcess(encryptedApk, alignedApk)) {
+                    LoggerUtils.writeLog("Apk Aligned")
                     doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
-                            File(encryptedApk),
+                            File(alignedApk),
                             File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
                         )
                     ) {
@@ -235,6 +221,20 @@ class ProtectAsync(
                         t = true
                     }
                 }
+
+            } else {
+                doProgress("Signing Apk…")
+                if (SignatureTool.sign(
+                        context,
+                        File(encryptedApk),
+                        File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
+                    )
+                ) {
+                    LoggerUtils.writeLog("Apk Signed")
+                    doProgress("Done")
+                    t = true
+                }
+            }
 
         }
         if (Preferences.getSignApkBoolean()) {
