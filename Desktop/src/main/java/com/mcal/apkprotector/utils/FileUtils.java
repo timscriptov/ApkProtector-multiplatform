@@ -64,27 +64,21 @@ public class FileUtils {
         }
     }
 
-    public static void deleteDirectory(String dir) throws IOException {
+    public static void deleteDirectory(File file) throws IOException {
+        //to end the recursive loop
+        if (!file.exists())
+            return;
 
-        Path path = Paths.get(dir);
-
-        // read java doc, Files.walk need close the resources.
-        // try-with-resources to ensure that the stream's open directories are closed
-        try (Stream<Path> walk = Files.walk(path)) {
-            walk
-                    .sorted(Comparator.reverseOrder())
-                    .forEach(FileUtils::deleteDirectoryExtract);
+        //if directory, go inside and call recursively
+        if (file.isDirectory()) {
+            for (File f : file.listFiles()) {
+                //call recursively
+                deleteDirectory(f);
+            }
         }
-
-    }
-
-    // extract method to handle exception in lambda
-    public static void deleteDirectoryExtract(Path path) {
-        try {
-            Files.delete(path);
-        } catch (IOException e) {
-            System.err.printf("Unable to delete this path : %s%n%s", path, e);
-        }
+        //call delete to delete files and empty directory
+        file.delete();
+        System.out.println("Deleted file/folder: " + file.getAbsolutePath());
     }
 
     public static void deleteDir(File file) {

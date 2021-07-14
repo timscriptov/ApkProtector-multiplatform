@@ -10,10 +10,14 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
 import java.io.*;
 import java.util.Enumeration;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class FastZip {
+
+    private static final String[] n = {".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
 
     public static void extract(File zip, File extractDir) throws IOException {
         extractDir.mkdirs();
@@ -66,6 +70,7 @@ public class FastZip {
             int len = 0;
             ZipEntry newEntry =
                     new ZipEntry(file);
+
             fzos.putNextEntry(newEntry);
 
             while ((len = bis.read(buffer)) > 0) {
@@ -99,7 +104,17 @@ public class FastZip {
         //repack files from original apk
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
+
             String name = entry.getName();
+            if (name.startsWith("META-INF/")) continue;
+            for(String endsWith : n) {
+                if (name.equals(endsWith) || name.equals("resources.arsc") && !entry.isDirectory()) {
+                    fzos.setLevel(ZipOutputStream.STORED);
+                } else {
+                    fzos.setLevel(ZipOutputStream.DEFLATED);
+                }
+            }
+
             if (name.equals("AndroidManifest.xml")
                     || name.matches("classes\\.dex")
                     || name.matches("classes\\d+\\.dex")

@@ -3,6 +3,7 @@ package com.mcal.apkprotector.fastzip;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -17,7 +18,7 @@ public class FastZipOutputStream extends ZipOutputStream {
     public void copyZipEntry(ZipEntry zipEntry, final ZipFile zipFile) {
         try {
             ZipEntry newEntry = new ZipEntry(zipEntry.getName());
-            // newEntry.setMethod(zipEntry.getMethod());
+
             putNextEntry(newEntry);
             BufferedInputStream stream = new BufferedInputStream(zipFile.getInputStream(zipEntry));
             byte[] buffer = new byte[BUFFER_SIZE];

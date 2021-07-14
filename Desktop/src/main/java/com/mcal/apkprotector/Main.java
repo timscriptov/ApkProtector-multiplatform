@@ -19,15 +19,8 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String... args) {
+        clearTempFiles();
         generateRandom();
-
-        try {
-            FileUtils.deleteDirectory(Constants.OUTPUT_PATH);
-            FileUtils.deleteDirectory(Constants.RELEASE_PATH);
-            FileUtils.delete(new File(Constants.LOG_PATH));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         LoggerUtils.writeLog("----------ApkProtector running----------------");
 
@@ -89,20 +82,17 @@ public class Main {
             LoggerUtils.writeLog("APK success signed");
         } catch (Exception e) {
             LoggerUtils.writeLog("Error: " + e);
-        }
-        try {
+        } finally {
             clearTempFiles();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time));
     }
 
-    private static void clearTempFiles() throws IOException {
+    private static void clearTempFiles() {
         new File(Constants.CONFIG_TEMP_PATH).delete();
-        FileUtils.deleteDirectory(Constants.OUTPUT_PATH);
-        FileUtils.deleteDirectory(Constants.CACHE_PATH);
-        FileUtils.deleteDirectory(Constants.SMALI_PATH);
+        FileUtils.deleteDir(new File(Constants.CACHE_PATH));
+        FileUtils.deleteDir(new File(Constants.SMALI_PATH));
+        FileUtils.deleteDir(new File(Constants.OUTPUT_PATH));
     }
 
     private static void generateRandom() {

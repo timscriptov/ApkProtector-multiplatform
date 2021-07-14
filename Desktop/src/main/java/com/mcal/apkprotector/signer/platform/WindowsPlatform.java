@@ -13,7 +13,7 @@ public class WindowsPlatform implements IPlatform {
         final String zipalignPath = FileUtils.getWorkPath() + File.separator + "tools" + File.separator + "zipalign.exe";
         final String tempFilePath = inputPath.replace(".apk", "-aligned.apk");
 
-        String[] cmdarray = new String[]{zipalignPath, "-v", "-f", "4", inputPath, tempFilePath};
+        String[] cmdarray = new String[]{zipalignPath, "-p", "-f", "-v", "4", inputPath, tempFilePath};
 
         boolean zipalignResult = false;
         Process process = null;
