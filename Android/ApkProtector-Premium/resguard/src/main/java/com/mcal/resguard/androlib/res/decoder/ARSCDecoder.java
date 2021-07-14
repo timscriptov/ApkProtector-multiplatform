@@ -1103,15 +1103,15 @@ public class ARSCDecoder {
         }
     }
 
-    private class ResguardStringBuilder {
+    private static class ResguardStringBuilder {
         private final List<String> mReplaceStringBuffer;
         private final Set<Integer> mIsReplaced;
         private final Set<Integer> mIsWhiteList;
-        private String[] mAToZ = {
+        private final String[] mAToZ = {
                 "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
                 "w", "x", "y", "z"
         };
-        private String[] mAToAll = {
+        private final String[] mAToAll = {
                 "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
                 "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
         };
@@ -1121,7 +1121,7 @@ public class ARSCDecoder {
          * COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9
          * LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, and LPT9.
          */
-        private HashSet<String> mFileNameBlackList;
+        private final HashSet<String> mFileNameBlackList;
 
         public ResguardStringBuilder() {
             mFileNameBlackList = new HashSet<>();

@@ -51,7 +51,7 @@ public class RawARSCDecoder {
 
     private final CountingInputStream mCountIn;
 
-    private ExtDataInput mIn;
+    private final ExtDataInput mIn;
     private Header mHeader;
     private StringBlock mTypeNames;
     private StringBlock mSpecNames;

@@ -22,8 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Utils {
-    @Keep
-    private static final String OBF = "KEEP-TEST";
     private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID = "ApkProtector";
     private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID_HIGH_IMPORTANCE = "ApkProtectorHighImportance";
     private static final String APP_CLONER_NOTIFICATION_CHANNEL_NAME = "ApkProtector";
