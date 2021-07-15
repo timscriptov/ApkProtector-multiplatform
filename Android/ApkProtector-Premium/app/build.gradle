@@ -11,8 +11,8 @@ android {
         applicationId "com.mcal.dexprotect"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 142
-        versionName "1.4.2"
+        versionCode 143
+        versionName "1.4.3"
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
@@ -76,16 +76,15 @@ dependencies {
     implementation project(':resguard')
     implementation project(':melissa')
     implementation project(':axml')
-    //implementation project(':stringfog')
     implementation project(':dx')
-    //implementation project(':dexlib2')
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.20"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
     implementation 'org.jetbrains:annotations:21.0.1'
 
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'com.google.guava:guava:29.0-android'
+    implementation 'com.google.guava:guava:30.1.1-android'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.google.code.gson:gson:2.8.7'
 
@@ -96,8 +95,7 @@ dependencies {
 
     implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
 
-    implementation group: 'org.smali', name: 'smali', version: '2.5.2'
-    implementation group: 'org.smali', name: 'dexlib2', version: '2.5.2'
-    implementation group: 'org.smali', name: 'baksmali', version: '2.5.2'
-
+    implementation 'org.smali:smali:2.5.2'
+    implementation 'org.smali:dexlib2:2.5.2'
+    implementation 'org.smali:baksmali:2.5.2'
 }

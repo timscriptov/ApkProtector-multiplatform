@@ -5,5 +5,5 @@ include ':app',
         ':axml',
         //':stringfog',
         ':dx',
-        ':dexlib2',
+        //':dexlib2',
         ':expansionpanel'
