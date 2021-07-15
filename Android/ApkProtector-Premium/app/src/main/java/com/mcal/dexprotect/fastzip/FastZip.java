@@ -1,5 +1,7 @@
 package com.mcal.dexprotect.fastzip;
 
+import android.content.Context;
+
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.patchers.DexPatcher;
@@ -24,7 +26,7 @@ public class FastZip {
     public static void extract(File zip, File extractDir) throws IOException {
         extractDir.mkdirs();
         ZipFile apk = new ZipFile(zip);
-        Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) apk.entries();
+        Enumeration<? extends ZipEntry> entries = apk.entries();
         LoggerUtils.writeLog("\n************ APK EXTRACTING ***********");
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
@@ -54,9 +56,9 @@ public class FastZip {
         extract(new File(zipPath), new File(extractDirPath));
     }
 
-    public static void repack(File inZip, File outZip) throws Exception {
+    public static void repack(Context context, File inZip, File outZip) throws Exception {
         ZipFile zipFile = new ZipFile(inZip);
-        Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zipFile.entries();
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
         FastZipOutputStream fzos = new FastZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZip)));
         LoggerUtils.writeLog("\n************ APK REPACKING ***********");
 
@@ -134,7 +136,7 @@ public class FastZip {
         //pack dexloader
         LoggerUtils.writeLog("Entry: classes.dex");
 
-        byte[] dexData = DexPatcher.processDex();
+        byte[] dexData = DexPatcher.processDex(context);
         ByteArrayInputStream bis = new ByteArrayInputStream(dexData);
         byte[] buffer = new byte[2048];
         int len = 0;
@@ -147,7 +149,7 @@ public class FastZip {
         fzos.close();
     }
 
-    public static void repack(String inZip, String outZip) throws Exception {
-        repack(new File(inZip), new File(outZip));
+    public static void repack(Context context, String inZip, String outZip) throws Exception {
+        repack(context, new File(inZip), new File(outZip));
     }
 }

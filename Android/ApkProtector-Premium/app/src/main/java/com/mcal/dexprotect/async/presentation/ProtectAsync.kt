@@ -147,7 +147,7 @@ class ProtectAsync(
                 DexCrypto.encodeDexes()
                 LoggerUtils.writeLog("Dex files successful encrypted")
                 doProgress("Compiling…")
-                FastZip.repack(p1[0], Constants.UNSIGNED_PATH)
+                FastZip.repack(context, p1[0], Constants.UNSIGNED_PATH)
                 LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH)
                 SourceInfo.initialise("$path/output", mi!!)
                 doProgress("Signing Apk…")
