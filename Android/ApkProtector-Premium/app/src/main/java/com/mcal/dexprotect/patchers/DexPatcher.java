@@ -52,7 +52,6 @@ public class DexPatcher {
                     .replace("$DEX_DIR", enc(Preferences.getFolderDexesName()))
                     .replace("$DEX_PREFIX", enc(Preferences.getPrefixDexesName()))
                     .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
-                    .replace("$DATA", "")
                     .replace("$DEX_SUFIX", enc(Preferences.getSuffixDexesName()));
             if (customApplication) {
                 LoggerUtils.writeLog("Custom application detected");
