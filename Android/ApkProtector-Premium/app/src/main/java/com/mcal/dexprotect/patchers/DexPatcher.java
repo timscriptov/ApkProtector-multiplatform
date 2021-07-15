@@ -3,6 +3,7 @@ package com.mcal.dexprotect.patchers;
 import com.mcal.dexprotect.App;
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
+import com.mcal.dexprotect.task.Security;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.LoggerUtils;
 import com.mcal.dexprotect.utils.file.FileUtils;
@@ -50,7 +51,7 @@ public class DexPatcher {
             smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
                     .replace("$DEX_DIR", enc(Preferences.getFolderDexesName()))
                     .replace("$DEX_PREFIX", enc(Preferences.getPrefixDexesName()))
-                    //.replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
+                    .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
                     .replace("$DATA", "")
                     .replace("$DEX_SUFIX", enc(Preferences.getSuffixDexesName()));
             if (customApplication) {
