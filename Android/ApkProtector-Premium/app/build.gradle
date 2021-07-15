@@ -78,7 +78,7 @@ dependencies {
     implementation project(':axml')
     //implementation project(':stringfog')
     implementation project(':dx')
-    implementation project(':dexlib2')
+    //implementation project(':dexlib2')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.20"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
@@ -95,4 +95,9 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
+
+    implementation group: 'org.smali', name: 'smali', version: '2.5.2'
+    implementation group: 'org.smali', name: 'dexlib2', version: '2.5.2'
+    implementation group: 'org.smali', name: 'baksmali', version: '2.5.2'
+
 }

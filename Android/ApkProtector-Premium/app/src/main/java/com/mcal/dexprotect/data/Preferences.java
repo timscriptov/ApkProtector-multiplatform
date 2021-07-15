@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import com.mcal.dexprotect.App;
-import com.mcal.dexprotect.patchers.DexCloner;
 import com.mcal.dexprotect.utils.Utils;
 
 import org.jetbrains.annotations.Contract;
@@ -348,8 +347,8 @@ public final class Preferences {
                 return Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
             case "1":
             case "2":
-                DexCloner.dexPatching(Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
-                return Constants.OUTPUT_PATH + File.separator + "dexloader2.dex";
+                //DexCloner.dexPatching(Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
+                return Constants.OUTPUT_PATH + File.separator + "dexloader.dex";
         }
         return null;
     }

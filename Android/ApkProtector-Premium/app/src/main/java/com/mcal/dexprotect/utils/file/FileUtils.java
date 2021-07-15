@@ -7,17 +7,44 @@ import com.mcal.dexprotect.utils.LoggerUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtils {
+    public static List<File> getFiles(File[] files) {
+        List<File> list = new ArrayList<>();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                list.addAll(getFiles(file.listFiles()));
+            } else {
+                list.add(file);
+            }
+        }
+        return list;
+    }
+
+    public static void writeString(File file, String str) throws IOException {
+        BufferedWriter out = new BufferedWriter(new FileWriter(file));
+        try {
+            out.write(str);
+        } catch (IOException e) {
+            System.out.println("Exception " + e);
+        } finally {
+            out.close();
+        }
+    }
+
     public static String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = readAllBytes(new FileInputStream(path));
         return new String(encoded, encoding);
