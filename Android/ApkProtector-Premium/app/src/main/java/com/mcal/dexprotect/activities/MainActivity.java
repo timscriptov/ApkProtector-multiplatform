@@ -46,15 +46,17 @@ import java.util.concurrent.Semaphore;
 
 public class MainActivity extends AppCompatActivity {
     private CenteredToolBar toolbar;
-    private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         setContentView(R.layout.main);
+        if(!SecurityUtils.isVerifyInstaller() || BuildConfig.DEBUG) {
+            Dialogs.dialog(this, "ApkProtector Security",
+                    getString(R.string.vending_message));
+        }
 
         // Проверка хеша сертификата
         SignatureCheck.start(this);
@@ -68,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setupToolbar(getString(R.string.app_name));
-        viewPager = findViewById(R.id.viewpager);
+        ViewPager viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-        navigationView = findViewById(R.id.shitstuff);
+        NavigationView navigationView = findViewById(R.id.shitstuff);
         View header = navigationView.getHeaderView(0);
         ((TextView) header.findViewById(R.id.version)).setText(CommonUtils.versionName(this));
 
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     "Hook_so/armeabi-v7a/libmocls.so", "Hook_so/armeabi-v7a/libsandhook.so",
                     "Hook_so/armeabi-v7a/libIOHook.so", "package$Info"};
             for (String s : files) {
-                if (SecurityUtils.assetsCheck(this, s)/* || BuildConfig.DEBUG*/) {
+                if (SecurityUtils.assetsCheck(this, s) || BuildConfig.DEBUG) {
                     Utils.showDialogWarn(this, "ApkProtector Security", "Detected Modex 3.0 or ARM or Kill++1");
                 }
             }
