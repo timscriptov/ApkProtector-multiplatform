@@ -122,9 +122,6 @@ class ProtectAsync(
 
         if (Preferences.getDexProtectBoolean()) {
             try {
-                val smaliPath = Constants.SMALI_PATH + File.separator + "ProtectApplication.smali"
-                FileUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
-
                 if (Preferences.getTypeHideApkProtector().equals("2")) {
                     generateRandom()
                 }
