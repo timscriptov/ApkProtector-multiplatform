@@ -456,8 +456,6 @@ public class HomeFragment extends Fragment {
     private void showDialogFailed(String str) {
         SweetContentDialog failedDialog = new SweetContentDialog(getContext());
         failedDialog.setTitle(str);
-        //failedDialog.setMessage();
-        failedDialog.setCancelable(false);
         failedDialog.setPositive(R.drawable.ic_close, getContext().getString(android.R.string.ok), view1 -> {
             failedDialog.cancel();
         });
@@ -467,8 +465,6 @@ public class HomeFragment extends Fragment {
     private void showDialogComplete(String str) {
         SweetContentDialog completeDialog = new SweetContentDialog(getContext());
         completeDialog.setTitle(str);
-        //completeDialog.setMessage();
-        //completeDialog.setCancelable(false);
         completeDialog.setPositive(R.drawable.ic_complete, getContext().getString(R.string.show), view1 -> {
             getActivity().startActivity(new Intent(App.getContext(), HomeActivity.class));
         });

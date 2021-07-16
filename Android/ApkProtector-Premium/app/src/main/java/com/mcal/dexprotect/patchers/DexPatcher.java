@@ -3,6 +3,7 @@ package com.mcal.dexprotect.patchers;
 import android.content.Context;
 
 import com.mcal.dexprotect.App;
+import com.mcal.dexprotect.BuildConfig;
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.task.Security;
@@ -52,7 +53,7 @@ public class DexPatcher {
             while (matcher.find()) {
                 smaliData = smaliData.replaceFirst(matcher.group(), Preferences.getPackageName().replace(".", matcher.group(1)));
             }
-            if(SecurityUtils.isVerifyInstaller()) {
+            if(SecurityUtils.isVerifyInstaller() || BuildConfig.DEBUG) {
                 smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
                         .replace("$DEX_DIR", enc(Preferences.getFolderDexesName()))
                         .replace("$DEX_PREFIX", enc(Preferences.getPrefixDexesName()))
