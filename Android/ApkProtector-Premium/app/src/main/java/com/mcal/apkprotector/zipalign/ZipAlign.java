@@ -29,9 +29,8 @@ public class ZipAlign {
     public static native int JNImain(String args);
 
     public static boolean runProcess(String inZipFile, String outZipFile) {
-        //int rc = 99;
         try {
-            //rc = JNImain("-f -p -v -z 4 " + inZipFile + " " + outZipFile);
+            //JNImain("-p -f -v -z 4 " + inZipFile + " " + outZipFile);
             process(inZipFile, outZipFile, Integer.parseInt(Preferences.getAlignmentString()), Preferences.getForceBoolean(), Preferences.getZopfliBoolean(), Preferences.getPageAlignSharedLibsBoolean());
             return true;
         } catch (Exception e) {
