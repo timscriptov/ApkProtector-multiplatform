@@ -41,19 +41,19 @@ typedef struct Hashmap Hashmap;
  * @param hash function which hashes keys
  * @param equals function which compares keys for equality
  */
-Hashmap* hashmapCreate(size_t initialCapacity,
-        int (*hash)(void* key), bool (*equals)(void* keyA, void* keyB));
+Hashmap *hashmapCreate(size_t initialCapacity,
+                       int (*hash)(void *key), bool (*equals)(void *keyA, void *keyB));
 
 /**
  * Frees the hash map. Does not free the keys or values themselves.
  */
-void hashmapFree(Hashmap* map);
+void hashmapFree(Hashmap *map);
 
 /**
  * Hashes the memory pointed to by key with the given size. Useful for
  * implementing hash functions.
  */
-int hashmapHash(void* key, size_t keySize);
+int hashmapHash(void *key, size_t keySize);
 
 /**
  * Puts value for the given key in the map. Returns pre-existing value if
@@ -62,26 +62,26 @@ int hashmapHash(void* key, size_t keySize);
  * If memory allocation fails, this function returns NULL, the map's size
  * does not increase, and errno is set to ENOMEM.
  */
-void* hashmapPut(Hashmap* map, void* key, void* value);
+void *hashmapPut(Hashmap *map, void *key, void *value);
 
 /**
  * Gets a value from the map. Returns NULL if no entry for the given key is
  * found or if the value itself is NULL.
  */
-void* hashmapGet(Hashmap* map, void* key);
+void *hashmapGet(Hashmap *map, void *key);
 
 /**
  * Removes an entry from the map. Returns the removed value or NULL if no
  * entry was present.
  */
-void* hashmapRemove(Hashmap* map, void* key);
+void *hashmapRemove(Hashmap *map, void *key);
 
 /**
  * Invokes the given callback on each entry in the map. Stops iterating if
  * the callback returns false.
  */
-void hashmapForEach(Hashmap* map, bool (*callback)(void* key, void* value, void* context),
-                    void* context);
+void hashmapForEach(Hashmap *map, bool (*callback)(void *key, void *value, void *context),
+                    void *context);
 
 /**
  * Concurrency support.
@@ -90,12 +90,12 @@ void hashmapForEach(Hashmap* map, bool (*callback)(void* key, void* value, void*
 /**
  * Locks the hash map so only the current thread can access it.
  */
-void hashmapLock(Hashmap* map);
+void hashmapLock(Hashmap *map);
 
 /**
  * Unlocks the hash map so other threads can access it.
  */
-void hashmapUnlock(Hashmap* map);
+void hashmapUnlock(Hashmap *map);
 
 #ifdef __cplusplus
 }

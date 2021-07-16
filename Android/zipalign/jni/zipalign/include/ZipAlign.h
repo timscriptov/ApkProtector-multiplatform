@@ -17,8 +17,11 @@
 #ifndef ZIPALIGN_H
 #define ZIPALIGN_H
 
+#include <jni.h>
+
 namespace android {
 
+    int main(int argc, char *const argv[]);
 /*
  * Generate a new, aligned, zip "output" from an "input" zip.
  * - alignTo: Alignment (in bytes) for uncompressed entries.
@@ -30,8 +33,8 @@ namespace android {
  *
  * Returns 0 on success.
  */
-int process(const char* input, const char* output, int alignTo, bool force,
-    bool zopfli, bool pageAlignSharedLibs);
+    int process(const char *input, const char *output, int alignTo, bool force,
+                bool zopfli, bool pageAlignSharedLibs);
 
 /*
  * Verify the alignment of a zip archive.
@@ -41,9 +44,9 @@ int process(const char* input, const char* output, int alignTo, bool force,
  *
  * Returns 0 on success.
  */
-int verify(const char* fileName, int alignTo, bool verbose,
-    bool pageAlignSharedLibs);
+    int verify(const char *fileName, int alignTo, bool verbose,
+               bool pageAlignSharedLibs);
 
-} // namespace android
+}
 
 #endif // ZIPALIGN_H

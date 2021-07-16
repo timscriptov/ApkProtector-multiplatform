@@ -108,7 +108,7 @@
       THREAD_ANNOTATION_ATTRIBUTE__(no_thread_safety_analysis)
 
 namespace android {
-namespace base {
+    namespace base {
 
 // A class to help thread safety analysis deal with std::unique_lock and condition_variable.
 //
@@ -134,11 +134,12 @@ namespace base {
 //     vec.pop_back();
 //     return result;
 //   }
-class SCOPED_CAPABILITY ScopedLockAssertion {
- public:
-  ScopedLockAssertion(std::mutex& mutex) ACQUIRE(mutex) {}
-  ~ScopedLockAssertion() RELEASE() {}
-};
+        class SCOPED_CAPABILITY ScopedLockAssertion {
+        public:
+            ScopedLockAssertion(std::mutex &mutex) ACQUIRE(mutex) {}
 
-}  // namespace base
+            ~ScopedLockAssertion() RELEASE() {}
+        };
+
+    }  // namespace base
 }  // namespace android

@@ -44,35 +44,35 @@ namespace android {
 //         static MyClass gInstance(...);
 //         return gInstance;
 //     }
-template <typename TYPE>
-class ANDROID_API Singleton
-{
-public:
-    static TYPE& getInstance() {
-        Mutex::Autolock _l(sLock);
-        TYPE* instance = sInstance;
-        if (instance == nullptr) {
-            instance = new TYPE();
-            sInstance = instance;
-        }
-        return *instance;
-    }
+    template<typename TYPE>
+    class ANDROID_API Singleton
+            {
+                    public:
+                    static TYPE& getInstance() {
+                        Mutex::Autolock _l(sLock);
+                        TYPE *instance = sInstance;
+                        if (instance == nullptr) {
+                            instance = new TYPE();
+                            sInstance = instance;
+                        }
+                        return *instance;
+                    }
 
-    static bool hasInstance() {
-        Mutex::Autolock _l(sLock);
-        return sInstance != nullptr;
-    }
-    
-protected:
-    ~Singleton() { }
-    Singleton() { }
+                    static bool hasInstance() {
+                        Mutex::Autolock _l(sLock);
+                        return sInstance != nullptr;
+                    }
 
-private:
-    Singleton(const Singleton&);
-    Singleton& operator = (const Singleton&);
-    static Mutex sLock;
-    static TYPE* sInstance;
-};
+                    protected:
+                    ~Singleton() {}
+                    Singleton() {}
+
+                    private:
+                    Singleton(const Singleton&);
+                    Singleton& operator= (const Singleton&);
+                    static Mutex sLock;
+                    static TYPE* sInstance;
+            };
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

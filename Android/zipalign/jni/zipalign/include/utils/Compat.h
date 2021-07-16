@@ -20,7 +20,9 @@
 #include <unistd.h>
 
 #if !defined(__MINGW32__)
+
 #include <sys/mman.h>
+
 #endif
 
 #if defined(__APPLE__)

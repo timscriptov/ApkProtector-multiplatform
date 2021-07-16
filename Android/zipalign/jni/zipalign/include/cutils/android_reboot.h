@@ -38,6 +38,6 @@ __BEGIN_DECLS
  * Due to that, process calling this should have proper selinux permission
  * to write to the property or the call will fail.
  */
-int android_reboot(unsigned cmd, int flags, const char* arg);
+int android_reboot(unsigned cmd, int flags, const char *arg);
 
 __END_DECLS

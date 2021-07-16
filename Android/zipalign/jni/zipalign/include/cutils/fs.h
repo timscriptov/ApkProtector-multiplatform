@@ -43,32 +43,32 @@ extern "C" {
  * Ensure that directory exists with given mode and owners.  If it exists
  * with a different mode or owners, they are fixed to match the given values.
  */
-extern int fs_prepare_dir(const char* path, mode_t mode, uid_t uid, gid_t gid);
+extern int fs_prepare_dir(const char *path, mode_t mode, uid_t uid, gid_t gid);
 
 /*
  * Ensure that directory exists with given mode and owners.  If it exists
  * with different owners, they are not fixed and -1 is returned.
  */
-extern int fs_prepare_dir_strict(const char* path, mode_t mode, uid_t uid, gid_t gid);
+extern int fs_prepare_dir_strict(const char *path, mode_t mode, uid_t uid, gid_t gid);
 
 /*
  * Ensure that file exists with given mode and owners.  If it exists
  * with different owners, they are not fixed and -1 is returned.
  */
-extern int fs_prepare_file_strict(const char* path, mode_t mode, uid_t uid, gid_t gid);
+extern int fs_prepare_file_strict(const char *path, mode_t mode, uid_t uid, gid_t gid);
 
 
 /*
  * Read single plaintext integer from given file, correctly handling files
  * partially written with fs_write_atomic_int().
  */
-extern int fs_read_atomic_int(const char* path, int* value);
+extern int fs_read_atomic_int(const char *path, int *value);
 
 /*
  * Write single plaintext integer to given file, creating backup while
  * in progress.
  */
-extern int fs_write_atomic_int(const char* path, int value);
+extern int fs_write_atomic_int(const char *path, int value);
 
 /*
  * Ensure that all directories along given path exist, creating parent
@@ -76,7 +76,7 @@ extern int fs_write_atomic_int(const char* path, int value);
  * it contains no relative "." or ".." paths or symlinks.  Last path segment
  * is treated as filename and ignored, unless the path ends with "/".
  */
-extern int fs_mkdirs(const char* path, mode_t mode);
+extern int fs_mkdirs(const char *path, mode_t mode);
 
 #ifdef __cplusplus
 }

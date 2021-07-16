@@ -1,9 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.jfclone.dexlib2">
-
-    <application
-        android:supportsRtl="true">
-
-    </application>
-
-</manifest>

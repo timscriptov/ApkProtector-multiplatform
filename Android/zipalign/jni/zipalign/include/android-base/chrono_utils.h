@@ -24,30 +24,31 @@ using namespace std::chrono_literals;
 #endif
 
 namespace android {
-namespace base {
+    namespace base {
 
 // A std::chrono clock based on CLOCK_BOOTTIME.
-class boot_clock {
- public:
-  typedef std::chrono::nanoseconds duration;
-  typedef std::chrono::time_point<boot_clock, duration> time_point;
+        class boot_clock {
+        public:
+            typedef std::chrono::nanoseconds duration;
+            typedef std::chrono::time_point <boot_clock, duration> time_point;
 
-  static time_point now();
-};
+            static time_point now();
+        };
 
-class Timer {
- public:
-  Timer() : start_(boot_clock::now()) {}
+        class Timer {
+        public:
+            Timer() : start_(boot_clock::now()) {}
 
-  std::chrono::milliseconds duration() const {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(boot_clock::now() - start_);
-  }
+            std::chrono::milliseconds duration() const {
+                return std::chrono::duration_cast<std::chrono::milliseconds>(
+                        boot_clock::now() - start_);
+            }
 
- private:
-  boot_clock::time_point start_;
-};
+        private:
+            boot_clock::time_point start_;
+        };
 
-std::ostream& operator<<(std::ostream& os, const Timer& t);
+        std::ostream &operator<<(std::ostream &os, const Timer &t);
 
-}  // namespace base
+    }  // namespace base
 }  // namespace android

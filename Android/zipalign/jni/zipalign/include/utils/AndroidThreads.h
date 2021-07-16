@@ -21,7 +21,9 @@
 #include <sys/types.h>
 
 #if !defined(_WIN32)
+
 # include <pthread.h>
+
 #endif
 
 #include <utils/ThreadDefs.h>
@@ -39,7 +41,7 @@ extern int androidCreateThread(android_thread_func_t, void *);
 // Create thread with lots of parameters
 extern int androidCreateThreadEtc(android_thread_func_t entryFunction,
                                   void *userData,
-                                  const char* threadName,
+                                  const char *threadName,
                                   int32_t threadPriority,
                                   size_t threadStackSize,
                                   android_thread_id_t *threadId);
@@ -51,19 +53,19 @@ extern android_thread_id_t androidGetThreadId();
 // interact with the Java VM.
 extern int androidCreateRawThreadEtc(android_thread_func_t entryFunction,
                                      void *userData,
-                                     const char* threadName,
+                                     const char *threadName,
                                      int32_t threadPriority,
                                      size_t threadStackSize,
                                      android_thread_id_t *threadId);
 
 // set the same of the running thread
-extern void androidSetThreadName(const char* name);
+extern void androidSetThreadName(const char *name);
 
 // Used by the Java Runtime to control how threads are created, so that
 // they can be proper and lovely Java threads.
 typedef int (*android_create_thread_fn)(android_thread_func_t entryFunction,
                                         void *userData,
-                                        const char* threadName,
+                                        const char *threadName,
                                         int32_t threadPriority,
                                         size_t threadStackSize,
                                         android_thread_id_t *threadId);

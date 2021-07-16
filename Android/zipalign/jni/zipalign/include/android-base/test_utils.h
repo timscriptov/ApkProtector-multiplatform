@@ -23,34 +23,37 @@
 #include <android-base/macros.h>
 
 class CapturedStdFd {
- public:
-  CapturedStdFd(int std_fd);
-  ~CapturedStdFd();
+public:
+    CapturedStdFd(int std_fd);
 
-  std::string str();
+    ~CapturedStdFd();
 
-  void Start();
-  void Stop();
-  void Reset();
+    std::string str();
 
- private:
-  int fd() const;
+    void Start();
 
-  TemporaryFile temp_file_;
-  int std_fd_;
-  int old_fd_ = -1;
+    void Stop();
 
-  DISALLOW_COPY_AND_ASSIGN(CapturedStdFd);
+    void Reset();
+
+private:
+    int fd() const;
+
+    TemporaryFile temp_file_;
+    int std_fd_;
+    int old_fd_ = -1;
+
+    DISALLOW_COPY_AND_ASSIGN(CapturedStdFd);
 };
 
 class CapturedStderr : public CapturedStdFd {
- public:
-  CapturedStderr() : CapturedStdFd(STDERR_FILENO) {}
+public:
+    CapturedStderr() : CapturedStdFd(STDERR_FILENO) {}
 };
 
 class CapturedStdout : public CapturedStdFd {
- public:
-  CapturedStdout() : CapturedStdFd(STDOUT_FILENO) {}
+public:
+    CapturedStdout() : CapturedStdFd(STDOUT_FILENO) {}
 };
 
 #define ASSERT_MATCH(str, pattern)                                           \

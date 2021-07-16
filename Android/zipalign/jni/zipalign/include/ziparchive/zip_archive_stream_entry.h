@@ -24,23 +24,24 @@
 #include "android-base/off64_t.h"
 
 class ZipArchiveStreamEntry {
- public:
-  virtual ~ZipArchiveStreamEntry() {}
+public:
+    virtual ~ZipArchiveStreamEntry() {}
 
-  virtual const std::vector<uint8_t>* Read() = 0;
+    virtual const std::vector <uint8_t> *Read() = 0;
 
-  virtual bool Verify() = 0;
+    virtual bool Verify() = 0;
 
-  static ZipArchiveStreamEntry* Create(ZipArchiveHandle handle, const ZipEntry& entry);
-  static ZipArchiveStreamEntry* CreateRaw(ZipArchiveHandle handle, const ZipEntry& entry);
+    static ZipArchiveStreamEntry *Create(ZipArchiveHandle handle, const ZipEntry &entry);
 
- protected:
-  ZipArchiveStreamEntry(ZipArchiveHandle handle) : handle_(handle) {}
+    static ZipArchiveStreamEntry *CreateRaw(ZipArchiveHandle handle, const ZipEntry &entry);
 
-  virtual bool Init(const ZipEntry& entry);
+protected:
+    ZipArchiveStreamEntry(ZipArchiveHandle handle) : handle_(handle) {}
 
-  ZipArchiveHandle handle_;
+    virtual bool Init(const ZipEntry &entry);
 
-  off64_t offset_ = 0;
-  uint32_t crc32_ = 0u;
+    ZipArchiveHandle handle_;
+
+    off64_t offset_ = 0;
+    uint32_t crc32_ = 0u;
 };

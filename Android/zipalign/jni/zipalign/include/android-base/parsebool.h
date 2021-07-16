@@ -19,7 +19,7 @@
 #include <string_view>
 
 namespace android {
-namespace base {
+    namespace base {
 
 // Parse the given string as yes or no inactivation of some sort. Return one of the
 // ParseBoolResult enumeration values.
@@ -46,13 +46,13 @@ namespace base {
 // The purpose of this function is to have a single canonical parser for yes-or-no indications
 // throughout the system.
 
-enum class ParseBoolResult {
-  kError,
-  kFalse,
-  kTrue,
-};
+        enum class ParseBoolResult {
+            kError,
+            kFalse,
+            kTrue,
+        };
 
-ParseBoolResult ParseBool(std::string_view s);
+        ParseBoolResult ParseBool(std::string_view s);
 
-}  // namespace base
+    }  // namespace base
 }  // namespace android

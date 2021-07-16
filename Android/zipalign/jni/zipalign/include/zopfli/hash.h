@@ -27,44 +27,44 @@ The hash for ZopfliFindLongestMatch of lz77.c.
 #include "util.h"
 
 typedef struct ZopfliHash {
-  int* head;  /* Hash value to index of its most recent occurance. */
-  unsigned short* prev;  /* Index to index of prev. occurance of same hash. */
-  int* hashval;  /* Index to hash value at this index. */
-  int val;  /* Current hash value. */
+    int *head;  /* Hash value to index of its most recent occurance. */
+    unsigned short *prev;  /* Index to index of prev. occurance of same hash. */
+    int *hashval;  /* Index to hash value at this index. */
+    int val;  /* Current hash value. */
 
 #ifdef ZOPFLI_HASH_SAME_HASH
-  /* Fields with similar purpose as the above hash, but for the second hash with
-  a value that is calculated differently.  */
-  int* head2;  /* Hash value to index of its most recent occurance. */
-  unsigned short* prev2;  /* Index to index of prev. occurance of same hash. */
-  int* hashval2;  /* Index to hash value at this index. */
-  int val2;  /* Current hash value. */
+    /* Fields with similar purpose as the above hash, but for the second hash with
+    a value that is calculated differently.  */
+    int *head2;  /* Hash value to index of its most recent occurance. */
+    unsigned short *prev2;  /* Index to index of prev. occurance of same hash. */
+    int *hashval2;  /* Index to hash value at this index. */
+    int val2;  /* Current hash value. */
 #endif
 
 #ifdef ZOPFLI_HASH_SAME
-  unsigned short* same;  /* Amount of repetitions of same byte after this .*/
+    unsigned short *same;  /* Amount of repetitions of same byte after this .*/
 #endif
 } ZopfliHash;
 
 /* Allocates and initializes all fields of ZopfliHash. */
-void ZopfliInitHash(size_t window_size, ZopfliHash* h);
+void ZopfliInitHash(size_t window_size, ZopfliHash *h);
 
 /* Frees all fields of ZopfliHash. */
-void ZopfliCleanHash(ZopfliHash* h);
+void ZopfliCleanHash(ZopfliHash *h);
 
 /*
 Updates the hash values based on the current position in the array. All calls
 to this must be made for consecutive bytes.
 */
-void ZopfliUpdateHash(const unsigned char* array, size_t pos, size_t end,
-                      ZopfliHash* h);
+void ZopfliUpdateHash(const unsigned char *array, size_t pos, size_t end,
+                      ZopfliHash *h);
 
 /*
 Prepopulates hash:
 Fills in the initial values in the hash, before ZopfliUpdateHash can be used
 correctly.
 */
-void ZopfliWarmupHash(const unsigned char* array, size_t pos, size_t end,
-                      ZopfliHash* h);
+void ZopfliWarmupHash(const unsigned char *array, size_t pos, size_t end,
+                      ZopfliHash *h);
 
 #endif  /* ZOPFLI_HASH_H_ */

@@ -21,16 +21,16 @@
 extern "C" {
 #endif
 
-        /* Load an entire file into a malloc'd chunk of memory
-         * that is length_of_file + 1 (null terminator).  If
-         * sz is non-zero, return the size of the file via sz.
-         * Returns 0 on failure.
-         */
+/* Load an entire file into a malloc'd chunk of memory
+ * that is length_of_file + 1 (null terminator).  If
+ * sz is non-zero, return the size of the file via sz.
+ * Returns 0 on failure.
+ */
 extern void *load_file(const char *fn, unsigned *sz);
 
-        /* This is the range of UIDs (and GIDs) that are reserved
-         * for assigning to applications.
-         */
+/* This is the range of UIDs (and GIDs) that are reserved
+ * for assigning to applications.
+ */
 #define FIRST_APPLICATION_UID 10000
 #define LAST_APPLICATION_UID 99999
 

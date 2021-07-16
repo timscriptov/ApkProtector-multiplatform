@@ -19,7 +19,7 @@
 #include <utility>
 
 namespace android {
-namespace base {
+    namespace base {
 
 // Helpers for converting a variadic template parameter pack to a homogeneous collection.
 // Parameters must be implictly convertible to the contained type (including via move/copy ctors).
@@ -32,29 +32,29 @@ namespace base {
 //     Append(result, std::forward<Args>(args)...);
 //     return result;
 //   }
-template <typename CollectionType, typename T>
-void Append(CollectionType& collection, T&& arg) {
-  collection.push_back(std::forward<T>(arg));
-}
+        template<typename CollectionType, typename T>
+        void Append(CollectionType &collection, T &&arg) {
+            collection.push_back(std::forward<T>(arg));
+        }
 
-template <typename CollectionType, typename T, typename... Args>
-void Append(CollectionType& collection, T&& arg, Args&&... args) {
-  collection.push_back(std::forward<T>(arg));
-  return Append(collection, std::forward<Args>(args)...);
-}
+        template<typename CollectionType, typename T, typename... Args>
+        void Append(CollectionType &collection, T &&arg, Args &&... args) {
+            collection.push_back(std::forward<T>(arg));
+            return Append(collection, std::forward<Args>(args)...);
+        }
 
 // Assert that all of the arguments in a variadic template parameter pack are of a given type
 // after std::decay.
-template <typename T, typename Arg, typename... Args>
-void AssertType(Arg&&) {
-  static_assert(std::is_same<T, typename std::decay<Arg>::type>::value);
-}
+        template<typename T, typename Arg, typename... Args>
+        void AssertType(Arg &&) {
+            static_assert(std::is_same<T, typename std::decay<Arg>::type>::value);
+        }
 
-template <typename T, typename Arg, typename... Args>
-void AssertType(Arg&&, Args&&... args) {
-  static_assert(std::is_same<T, typename std::decay<Arg>::type>::value);
-  AssertType<T>(std::forward<Args>(args)...);
-}
+        template<typename T, typename Arg, typename... Args>
+        void AssertType(Arg &&, Args &&... args) {
+            static_assert(std::is_same<T, typename std::decay<Arg>::type>::value);
+            AssertType<T>(std::forward<Args>(args)...);
+        }
 
-}  // namespace base
+    }  // namespace base
 }  // namespace android

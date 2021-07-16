@@ -34,37 +34,37 @@ namespace android {
 // Helpful wrapper around a ResChunk_header that provides getter methods
 // that handle endianness conversions and provide access to the data portion
 // of the chunk.
-class Chunk {
- public:
-  explicit Chunk(const ResChunk_header* chunk) : device_chunk_(chunk) {}
+    class Chunk {
+    public:
+        explicit Chunk(const ResChunk_header *chunk) : device_chunk_(chunk) {}
 
-  // Returns the type of the chunk. Caller need not worry about endianness.
-  inline int type() const { return dtohs(device_chunk_->type); }
+        // Returns the type of the chunk. Caller need not worry about endianness.
+        inline int type() const { return dtohs(device_chunk_->type); }
 
-  // Returns the size of the entire chunk. This can be useful for skipping
-  // over the entire chunk. Caller need not worry about endianness.
-  inline size_t size() const { return dtohl(device_chunk_->size); }
+        // Returns the size of the entire chunk. This can be useful for skipping
+        // over the entire chunk. Caller need not worry about endianness.
+        inline size_t size() const { return dtohl(device_chunk_->size); }
 
-  // Returns the size of the header. Caller need not worry about endianness.
-  inline size_t header_size() const { return dtohs(device_chunk_->headerSize); }
+        // Returns the size of the header. Caller need not worry about endianness.
+        inline size_t header_size() const { return dtohs(device_chunk_->headerSize); }
 
-  template <typename T, size_t MinSize = sizeof(T)>
-  inline const T* header() const {
-    if (header_size() >= MinSize) {
-      return reinterpret_cast<const T*>(device_chunk_);
-    }
-    return nullptr;
-  }
+        template<typename T, size_t MinSize = sizeof(T)>
+        inline const T *header() const {
+            if (header_size() >= MinSize) {
+                return reinterpret_cast<const T *>(device_chunk_);
+            }
+            return nullptr;
+        }
 
-  inline const void* data_ptr() const {
-    return reinterpret_cast<const uint8_t*>(device_chunk_) + header_size();
-  }
+        inline const void *data_ptr() const {
+            return reinterpret_cast<const uint8_t *>(device_chunk_) + header_size();
+        }
 
-  inline size_t data_size() const { return size() - header_size(); }
+        inline size_t data_size() const { return size() - header_size(); }
 
- private:
-  const ResChunk_header* device_chunk_;
-};
+    private:
+        const ResChunk_header *device_chunk_;
+    };
 
 // Provides a Java style iterator over an array of ResChunk_header's.
 // Validation is performed while iterating.
@@ -82,42 +82,47 @@ class Chunk {
 //     LOG(ERROR) << iter.GetLastError();
 //   }
 //
-class ChunkIterator {
- public:
-  ChunkIterator(const void* data, size_t len)
-      : next_chunk_(reinterpret_cast<const ResChunk_header*>(data)),
-        len_(len),
-        last_error_(nullptr) {
-    CHECK(next_chunk_ != nullptr) << "data can't be nullptr";
-    if (len_ != 0) {
-      VerifyNextChunk();
-    }
-  }
+    class ChunkIterator {
+    public:
+        ChunkIterator(const void *data, size_t len)
+                : next_chunk_(reinterpret_cast<const ResChunk_header *>(data)),
+                  len_(len),
+                  last_error_(nullptr) {
+            CHECK(next_chunk_ != nullptr) << "data can't be nullptr";
+            if (len_ != 0) {
+                VerifyNextChunk();
+            }
+        }
 
-  Chunk Next();
-  inline bool HasNext() const { return !HadError() && len_ != 0; };
-  // Returns whether there was an error and processing should stop
-  inline bool HadError() const { return last_error_ != nullptr; }
-  inline std::string GetLastError() const { return last_error_; }
-  // Returns whether there was an error and processing should stop. For legacy purposes,
-  // some errors are considered "non fatal". Fatal errors stop processing new chunks and
-  // throw away any chunks already processed. Non fatal errors also stop processing new
-  // chunks, but, will retain and use any valid chunks already processed.
-  inline bool HadFatalError() const { return HadError() && last_error_was_fatal_; }
+        Chunk Next();
 
- private:
-  DISALLOW_COPY_AND_ASSIGN(ChunkIterator);
+        inline bool HasNext() const { return !HadError() && len_ != 0; };
 
-  // Returns false if there was an error.
-  bool VerifyNextChunk();
-  // Returns false if there was an error. For legacy purposes.
-  bool VerifyNextChunkNonFatal();
+        // Returns whether there was an error and processing should stop
+        inline bool HadError() const { return last_error_ != nullptr; }
 
-  const ResChunk_header* next_chunk_;
-  size_t len_;
-  const char* last_error_;
-  bool last_error_was_fatal_ = true;
-};
+        inline std::string GetLastError() const { return last_error_; }
+
+        // Returns whether there was an error and processing should stop. For legacy purposes,
+        // some errors are considered "non fatal". Fatal errors stop processing new chunks and
+        // throw away any chunks already processed. Non fatal errors also stop processing new
+        // chunks, but, will retain and use any valid chunks already processed.
+        inline bool HadFatalError() const { return HadError() && last_error_was_fatal_; }
+
+    private:
+        DISALLOW_COPY_AND_ASSIGN(ChunkIterator);
+
+        // Returns false if there was an error.
+        bool VerifyNextChunk();
+
+        // Returns false if there was an error. For legacy purposes.
+        bool VerifyNextChunkNonFatal();
+
+        const ResChunk_header *next_chunk_;
+        size_t len_;
+        const char *last_error_;
+        bool last_error_was_fatal_ = true;
+    };
 
 }  // namespace android
 

@@ -25,16 +25,18 @@ extern "C" {
 /*
  * Send a simple string to the log.
  */
-int __android_log_buf_write(int bufID, int prio, const char* tag,
-                            const char* text);
-int __android_log_buf_print(int bufID, int prio, const char* tag, const char* fmt, ...)
-    __attribute__((__format__(printf, 4, 5)));
+int __android_log_buf_write(int bufID, int prio, const char *tag,
+                            const char *text);
+
+int __android_log_buf_print(int bufID, int prio, const char *tag, const char *fmt, ...)
+__attribute__((__format__(printf, 4, 5)));
 
 /*
  * log_id_t helpers
  */
-log_id_t android_name_to_log_id(const char* logName);
-const char* android_log_id_to_name(log_id_t log_id);
+log_id_t android_name_to_log_id(const char *logName);
+
+const char *android_log_id_to_name(log_id_t log_id);
 
 #ifdef __cplusplus
 }

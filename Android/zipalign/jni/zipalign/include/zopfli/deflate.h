@@ -54,19 +54,19 @@ out: pointer to the dynamic output array to which the result is appended. Must
   be freed after use.
 outsize: pointer to the dynamic output array size.
 */
-void ZopfliDeflate(const ZopfliOptions* options, int btype, int final,
-                   const unsigned char* in, size_t insize,
-                   unsigned char* bp, unsigned char** out, size_t* outsize);
+void ZopfliDeflate(const ZopfliOptions *options, int btype, int final,
+                   const unsigned char *in, size_t insize,
+                   unsigned char *bp, unsigned char **out, size_t *outsize);
 
 /*
 Like ZopfliDeflate, but allows to specify start and end byte with instart and
 inend. Only that part is compressed, but earlier bytes are still used for the
 back window.
 */
-void ZopfliDeflatePart(const ZopfliOptions* options, int btype, int final,
-                       const unsigned char* in, size_t instart, size_t inend,
-                       unsigned char* bp, unsigned char** out,
-                       size_t* outsize);
+void ZopfliDeflatePart(const ZopfliOptions *options, int btype, int final,
+                       const unsigned char *in, size_t instart, size_t inend,
+                       unsigned char *bp, unsigned char **out,
+                       size_t *outsize);
 
 /*
 Calculates block size in bits.
@@ -75,8 +75,8 @@ dists: ll77 distances
 lstart: start of block
 lend: end of block (not inclusive)
 */
-double ZopfliCalculateBlockSize(const unsigned short* litlens,
-                                const unsigned short* dists,
+double ZopfliCalculateBlockSize(const unsigned short *litlens,
+                                const unsigned short *dists,
                                 size_t lstart, size_t lend, int btype);
 
 #ifdef __cplusplus

@@ -32,40 +32,40 @@ typedef struct EventTagMap EventTagMap;
  *
  * Returns NULL on failure.
  */
-EventTagMap* android_openEventTagMap(const char* fileName);
+EventTagMap *android_openEventTagMap(const char *fileName);
 
 /*
  * Close the map.
  */
-void android_closeEventTagMap(EventTagMap* map);
+void android_closeEventTagMap(EventTagMap *map);
 
 /*
  * Look up a tag by index.  Returns the tag string, or NULL if not found.
  */
-const char* android_lookupEventTag(const EventTagMap* map, unsigned int tag)
-    __attribute__((
-        deprecated("use android_lookupEventTag_len() instead to minimize "
-                   "MAP_PRIVATE copy-on-write memory impact")));
+const char *android_lookupEventTag(const EventTagMap *map, unsigned int tag)
+__attribute__((
+deprecated("use android_lookupEventTag_len() instead to minimize "
+"MAP_PRIVATE copy-on-write memory impact")));
 
 /*
  * Look up a tag by index.  Returns the tag string & string length, or NULL if
  * not found.  Returned string is not guaranteed to be nul terminated.
  */
-const char* android_lookupEventTag_len(const EventTagMap* map, size_t* len,
+const char *android_lookupEventTag_len(const EventTagMap *map, size_t *len,
                                        unsigned int tag);
 
 /*
  * Look up a format by index. Returns the format string & string length,
  * or NULL if not found. Returned string is not guaranteed to be nul terminated.
  */
-const char* android_lookupEventFormat_len(const EventTagMap* map, size_t* len,
+const char *android_lookupEventFormat_len(const EventTagMap *map, size_t *len,
                                           unsigned int tag);
 
 /*
  * Look up tagname, generate one if necessary, and return a tag
  */
-int android_lookupEventTagNum(EventTagMap* map, const char* tagname,
-                              const char* format, int prio);
+int android_lookupEventTagNum(EventTagMap *map, const char *tagname,
+                              const char *format, int prio);
 
 #ifdef __cplusplus
 }

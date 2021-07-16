@@ -138,6 +138,7 @@ extern int atrace_marker_fd;
 #define ATRACE_GET_ENABLED_TAGS() atrace_get_enabled_tags()
 
 void atrace_init();
+
 uint64_t atrace_get_enabled_tags();
 
 /**
@@ -146,8 +147,8 @@ uint64_t atrace_get_enabled_tags();
  * It can be used as a guard condition around more expensive trace calculations.
  */
 #define ATRACE_ENABLED() atrace_is_tag_enabled(ATRACE_TAG)
-static inline uint64_t atrace_is_tag_enabled(uint64_t tag)
-{
+
+static inline uint64_t atrace_is_tag_enabled(uint64_t tag) {
     return atrace_get_enabled_tags() & tag;
 }
 
@@ -156,10 +157,10 @@ static inline uint64_t atrace_is_tag_enabled(uint64_t tag)
  * This is often used to time function execution.
  */
 #define ATRACE_BEGIN(name) atrace_begin(ATRACE_TAG, name)
-static inline void atrace_begin(uint64_t tag, const char* name)
-{
+
+static inline void atrace_begin(uint64_t tag, const char *name) {
     if (CC_UNLIKELY(atrace_is_tag_enabled(tag))) {
-        void atrace_begin_body(const char*);
+        void atrace_begin_body(const char *);
         atrace_begin_body(name);
     }
 }
@@ -169,8 +170,8 @@ static inline void atrace_begin(uint64_t tag, const char* name)
  * This should match up (and occur after) a corresponding ATRACE_BEGIN.
  */
 #define ATRACE_END() atrace_end(ATRACE_TAG)
-static inline void atrace_end(uint64_t tag)
-{
+
+static inline void atrace_end(uint64_t tag) {
     if (CC_UNLIKELY(atrace_is_tag_enabled(tag))) {
         void atrace_end_body();
         atrace_end_body();
@@ -186,11 +187,11 @@ static inline void atrace_end(uint64_t tag)
  */
 #define ATRACE_ASYNC_BEGIN(name, cookie) \
     atrace_async_begin(ATRACE_TAG, name, cookie)
-static inline void atrace_async_begin(uint64_t tag, const char* name,
-        int32_t cookie)
-{
+
+static inline void atrace_async_begin(uint64_t tag, const char *name,
+                                      int32_t cookie) {
     if (CC_UNLIKELY(atrace_is_tag_enabled(tag))) {
-        void atrace_async_begin_body(const char*, int32_t);
+        void atrace_async_begin_body(const char *, int32_t);
         atrace_async_begin_body(name, cookie);
     }
 }
@@ -200,10 +201,10 @@ static inline void atrace_async_begin(uint64_t tag, const char* name,
  * This should have a corresponding ATRACE_ASYNC_BEGIN.
  */
 #define ATRACE_ASYNC_END(name, cookie) atrace_async_end(ATRACE_TAG, name, cookie)
-static inline void atrace_async_end(uint64_t tag, const char* name, int32_t cookie)
-{
+
+static inline void atrace_async_end(uint64_t tag, const char *name, int32_t cookie) {
     if (CC_UNLIKELY(atrace_is_tag_enabled(tag))) {
-        void atrace_async_end_body(const char*, int32_t);
+        void atrace_async_end_body(const char *, int32_t);
         atrace_async_end_body(name, cookie);
     }
 }
@@ -213,10 +214,10 @@ static inline void atrace_async_end(uint64_t tag, const char* name, int32_t cook
  * This can be used to track how a value changes over time.
  */
 #define ATRACE_INT(name, value) atrace_int(ATRACE_TAG, name, value)
-static inline void atrace_int(uint64_t tag, const char* name, int32_t value)
-{
+
+static inline void atrace_int(uint64_t tag, const char *name, int32_t value) {
     if (CC_UNLIKELY(atrace_is_tag_enabled(tag))) {
-        void atrace_int_body(const char*, int32_t);
+        void atrace_int_body(const char *, int32_t);
         atrace_int_body(name, value);
     }
 }
@@ -226,10 +227,10 @@ static inline void atrace_int(uint64_t tag, const char* name, int32_t value)
  * counter. This can be used to track how a value changes over time.
  */
 #define ATRACE_INT64(name, value) atrace_int64(ATRACE_TAG, name, value)
-static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
-{
+
+static inline void atrace_int64(uint64_t tag, const char *name, int64_t value) {
     if (CC_UNLIKELY(atrace_is_tag_enabled(tag))) {
-        void atrace_int64_body(const char*, int64_t);
+        void atrace_int64_body(const char *, int64_t);
         atrace_int64_body(name, value);
     }
 }

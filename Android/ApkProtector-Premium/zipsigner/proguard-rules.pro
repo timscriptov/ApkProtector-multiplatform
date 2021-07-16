@@ -1,3 +1,0 @@
--dontshrink
--dontoptimize
--dontobfuscate

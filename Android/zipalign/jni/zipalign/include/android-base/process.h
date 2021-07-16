@@ -24,37 +24,42 @@
 #include <vector>
 
 namespace android {
-namespace base {
+    namespace base {
 
-class AllPids {
-  class PidIterator {
-   public:
-    PidIterator(DIR* dir) : dir_(dir, closedir) { Increment(); }
-    PidIterator& operator++() {
-      Increment();
-      return *this;
-    }
-    bool operator==(const PidIterator& other) const { return pid_ == other.pid_; }
-    bool operator!=(const PidIterator& other) const { return !(*this == other); }
-    long operator*() const { return pid_; }
-    // iterator traits
-    using difference_type = pid_t;
-    using value_type = pid_t;
-    using pointer = const pid_t*;
-    using reference = const pid_t&;
-    using iterator_category = std::input_iterator_tag;
+        class AllPids {
+            class PidIterator {
+            public:
+                PidIterator(DIR *dir) : dir_(dir, closedir) { Increment(); }
 
-   private:
-    void Increment();
+                PidIterator &operator++() {
+                    Increment();
+                    return *this;
+                }
 
-    pid_t pid_ = -1;
-    std::unique_ptr<DIR, decltype(&closedir)> dir_;
-  };
+                bool operator==(const PidIterator &other) const { return pid_ == other.pid_; }
 
- public:
-  PidIterator begin() { return opendir("/proc"); }
-  PidIterator end() { return nullptr; }
-};
+                bool operator!=(const PidIterator &other) const { return !(*this == other); }
 
-}  // namespace base
+                long operator*() const { return pid_; }
+                // iterator traits
+                using difference_type = pid_t;
+                using value_type = pid_t;
+                using pointer = const pid_t *;
+                using reference = const pid_t &;
+                using iterator_category = std::input_iterator_tag;
+
+            private:
+                void Increment();
+
+                pid_t pid_ = -1;
+                std::unique_ptr<DIR, decltype(&closedir)> dir_;
+            };
+
+        public:
+            PidIterator begin() { return opendir("/proc"); }
+
+            PidIterator end() { return nullptr; }
+        };
+
+    }  // namespace base
 }  // namespace android

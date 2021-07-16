@@ -28,86 +28,88 @@
 #include "androidfw/misc.h"
 
 struct ZipArchive;
-typedef ZipArchive* ZipArchiveHandle;
+typedef ZipArchive *ZipArchiveHandle;
 
 namespace android {
 
-class LoadedIdmap;
+    class LoadedIdmap;
 
 // Holds an APK.
-class ApkAssets {
- public:
-  // Creates an ApkAssets.
-  // If `system` is true, the package is marked as a system package, and allows some functions to
-  // filter out this package when computing what configurations/resources are available.
-  static std::unique_ptr<const ApkAssets> Load(const std::string& path, bool system = false);
+    class ApkAssets {
+    public:
+        // Creates an ApkAssets.
+        // If `system` is true, the package is marked as a system package, and allows some functions to
+        // filter out this package when computing what configurations/resources are available.
+        static std::unique_ptr<const ApkAssets> Load(const std::string &path, bool system = false);
 
-  // Creates an ApkAssets, but forces any package with ID 0x7f to be loaded as a shared library.
-  // If `system` is true, the package is marked as a system package, and allows some functions to
-  // filter out this package when computing what configurations/resources are available.
-  static std::unique_ptr<const ApkAssets> LoadAsSharedLibrary(const std::string& path,
-                                                              bool system = false);
+        // Creates an ApkAssets, but forces any package with ID 0x7f to be loaded as a shared library.
+        // If `system` is true, the package is marked as a system package, and allows some functions to
+        // filter out this package when computing what configurations/resources are available.
+        static std::unique_ptr<const ApkAssets> LoadAsSharedLibrary(const std::string &path,
+                                                                    bool system = false);
 
-  // Creates an ApkAssets from an IDMAP, which contains the original APK path, and the overlay
-  // data.
-  // If `system` is true, the package is marked as a system package, and allows some functions to
-  // filter out this package when computing what configurations/resources are available.
-  static std::unique_ptr<const ApkAssets> LoadOverlay(const std::string& idmap_path,
-                                                      bool system = false);
+        // Creates an ApkAssets from an IDMAP, which contains the original APK path, and the overlay
+        // data.
+        // If `system` is true, the package is marked as a system package, and allows some functions to
+        // filter out this package when computing what configurations/resources are available.
+        static std::unique_ptr<const ApkAssets> LoadOverlay(const std::string &idmap_path,
+                                                            bool system = false);
 
-  // Creates an ApkAssets from the given file descriptor, and takes ownership of the file
-  // descriptor. The `friendly_name` is some name that will be used to identify the source of
-  // this ApkAssets in log messages and other debug scenarios.
-  // If `system` is true, the package is marked as a system package, and allows some functions to
-  // filter out this package when computing what configurations/resources are available.
-  // If `force_shared_lib` is true, any package with ID 0x7f is loaded as a shared library.
-  static std::unique_ptr<const ApkAssets> LoadFromFd(base::unique_fd fd,
-                                                     const std::string& friendly_name, bool system,
-                                                     bool force_shared_lib);
+        // Creates an ApkAssets from the given file descriptor, and takes ownership of the file
+        // descriptor. The `friendly_name` is some name that will be used to identify the source of
+        // this ApkAssets in log messages and other debug scenarios.
+        // If `system` is true, the package is marked as a system package, and allows some functions to
+        // filter out this package when computing what configurations/resources are available.
+        // If `force_shared_lib` is true, any package with ID 0x7f is loaded as a shared library.
+        static std::unique_ptr<const ApkAssets> LoadFromFd(base::unique_fd fd,
+                                                           const std::string &friendly_name,
+                                                           bool system,
+                                                           bool force_shared_lib);
 
-  std::unique_ptr<Asset> Open(const std::string& path,
-                              Asset::AccessMode mode = Asset::AccessMode::ACCESS_RANDOM) const;
+        std::unique_ptr <Asset> Open(const std::string &path,
+                                     Asset::AccessMode mode = Asset::AccessMode::ACCESS_RANDOM) const;
 
-  bool ForEachFile(const std::string& path,
-                   const std::function<void(const StringPiece&, FileType)>& f) const;
+        bool ForEachFile(const std::string &path,
+                         const std::function<void(const StringPiece &, FileType)> &f) const;
 
-  inline const std::string& GetPath() const {
-    return path_;
-  }
+        inline const std::string &GetPath() const {
+            return path_;
+        }
 
-  // This is never nullptr.
-  inline const LoadedArsc* GetLoadedArsc() const {
-    return loaded_arsc_.get();
-  }
+        // This is never nullptr.
+        inline const LoadedArsc *GetLoadedArsc() const {
+            return loaded_arsc_.get();
+        }
 
-  inline bool IsOverlay() const {
-    return idmap_asset_.get() != nullptr;
-  }
+        inline bool IsOverlay() const {
+            return idmap_asset_.get() != nullptr;
+        }
 
-  bool IsUpToDate() const;
+        bool IsUpToDate() const;
 
- private:
-  DISALLOW_COPY_AND_ASSIGN(ApkAssets);
+    private:
+        DISALLOW_COPY_AND_ASSIGN(ApkAssets);
 
-  static std::unique_ptr<const ApkAssets> LoadImpl(base::unique_fd fd, const std::string& path,
-                                                   std::unique_ptr<Asset> idmap_asset,
-                                                   std::unique_ptr<const LoadedIdmap> loaded_idmap,
-                                                   bool system, bool load_as_shared_library);
+        static std::unique_ptr<const ApkAssets>
+        LoadImpl(base::unique_fd fd, const std::string &path,
+                 std::unique_ptr <Asset> idmap_asset,
+                 std::unique_ptr<const LoadedIdmap> loaded_idmap,
+                 bool system, bool load_as_shared_library);
 
-  // Creates an Asset from any file on the file system.
-  static std::unique_ptr<Asset> CreateAssetFromFile(const std::string& path);
+        // Creates an Asset from any file on the file system.
+        static std::unique_ptr <Asset> CreateAssetFromFile(const std::string &path);
 
-  ApkAssets(ZipArchiveHandle unmanaged_handle, const std::string& path, time_t last_mod_time);
+        ApkAssets(ZipArchiveHandle unmanaged_handle, const std::string &path, time_t last_mod_time);
 
-  using ZipArchivePtr = std::unique_ptr<ZipArchive, void(*)(ZipArchiveHandle)>;
+        using ZipArchivePtr = std::unique_ptr<ZipArchive, void (*)(ZipArchiveHandle)>;
 
-  ZipArchivePtr zip_handle_;
-  const std::string path_;
-  time_t last_mod_time_;
-  std::unique_ptr<Asset> resources_asset_;
-  std::unique_ptr<Asset> idmap_asset_;
-  std::unique_ptr<const LoadedArsc> loaded_arsc_;
-};
+        ZipArchivePtr zip_handle_;
+        const std::string path_;
+        time_t last_mod_time_;
+        std::unique_ptr <Asset> resources_asset_;
+        std::unique_ptr <Asset> idmap_asset_;
+        std::unique_ptr<const LoadedArsc> loaded_arsc_;
+    };
 
 }  // namespace android
 

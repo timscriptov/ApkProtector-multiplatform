@@ -19,9 +19,9 @@
 #include <stdint.h>
 
 namespace android {
-namespace base {
-uint64_t GetThreadId();
-}
+    namespace base {
+        uint64_t GetThreadId();
+    }
 }  // namespace android
 
 #if defined(__GLIBC__)

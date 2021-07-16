@@ -31,8 +31,7 @@ extern "C" {
     alignas(native_handle_t) char (name)[                            \
       sizeof(native_handle_t) + sizeof(int) * ((maxFds) + (maxInts))]
 
-typedef struct native_handle
-{
+typedef struct native_handle {
     int version;        /* sizeof(native_handle_t) */
     int numFds;         /* number of file-descriptors at &data[0] */
     int numInts;        /* number of ints at &data[numFds] */
@@ -46,7 +45,7 @@ typedef struct native_handle
 #endif
 } native_handle_t;
 
-typedef const native_handle_t* buffer_handle_t;
+typedef const native_handle_t *buffer_handle_t;
 
 /*
  * native_handle_close
@@ -56,7 +55,7 @@ typedef const native_handle_t* buffer_handle_t;
  * return 0 on success, or a negative error code on failure
  * 
  */
-int native_handle_close(const native_handle_t* h);
+int native_handle_close(const native_handle_t *h);
 
 /*
  * native_handle_init
@@ -65,7 +64,7 @@ int native_handle_close(const native_handle_t* h);
  * NATIVE_HANDLE_DECLARE_STORAGE.  numFds and numInts must not respectively
  * exceed maxFds and maxInts used to declare the storage.
  */
-native_handle_t* native_handle_init(char* storage, int numFds, int numInts);
+native_handle_t *native_handle_init(char *storage, int numFds, int numInts);
 
 /*
  * native_handle_create
@@ -75,7 +74,7 @@ native_handle_t* native_handle_init(char* storage, int numFds, int numInts);
  * numInts must be <= NATIVE_HANDLE_MAX_INTS, and both must be >= 0.
  *
  */
-native_handle_t* native_handle_create(int numFds, int numInts);
+native_handle_t *native_handle_create(int numFds, int numInts);
 
 /*
  * native_handle_clone
@@ -84,7 +83,7 @@ native_handle_t* native_handle_create(int numFds, int numInts);
  * Must be destroyed with native_handle_delete().
  *
  */
-native_handle_t* native_handle_clone(const native_handle_t* handle);
+native_handle_t *native_handle_clone(const native_handle_t *handle);
 
 /*
  * native_handle_delete
@@ -96,7 +95,7 @@ native_handle_t* native_handle_clone(const native_handle_t* handle);
  * return 0 on success, or a negative error code on failure
  * 
  */
-int native_handle_delete(native_handle_t* h);
+int native_handle_delete(native_handle_t *h);
 
 
 #ifdef __cplusplus

@@ -67,25 +67,26 @@ extern int set_sched_policy(int tid, SchedPolicy policy);
  * On platforms which support gettid(), zero tid means current thread.
  * Return value: 0 for success, or -1 for error and set errno.
  */
-extern int get_sched_policy(int tid, SchedPolicy* policy);
+extern int get_sched_policy(int tid, SchedPolicy *policy);
 
 /* Return a displayable string corresponding to policy.
  * Return value: NUL-terminated name of unspecified length, nullptr if invalid;
  * the caller is responsible for displaying the useful part of the string.
  */
-extern const char* get_sched_policy_name(SchedPolicy policy);
+extern const char *get_sched_policy_name(SchedPolicy policy);
 
 /* Return the aggregated task profile name corresponding to cpuset policy.
  * Return value: NUL-terminated name of unspecified length, nullptr if invalid;
  * the caller could use it to call SetTaskProfiles.
  */
-extern const char* get_cpuset_policy_profile_name(SchedPolicy policy);
+extern const char *get_cpuset_policy_profile_name(SchedPolicy policy);
 
 /* Return the aggregated task profile name corresponding to sched policy.
  * Return value: NUL-terminated name of unspecified length, nullptr if invalid;
  * the caller could use it to call SetTaskProfiles.
  */
-extern const char* get_sched_policy_profile_name(SchedPolicy policy);
+extern const char *get_sched_policy_profile_name(SchedPolicy policy);
+
 #ifdef __cplusplus
 }
 #endif

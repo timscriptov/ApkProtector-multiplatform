@@ -25,13 +25,16 @@ __BEGIN_DECLS
 struct str_parms;
 
 struct str_parms *str_parms_create(void);
+
 struct str_parms *str_parms_create_str(const char *_string);
+
 void str_parms_destroy(struct str_parms *str_parms);
 
 void str_parms_del(struct str_parms *str_parms, const char *key);
 
 int str_parms_add_str(struct str_parms *str_parms, const char *key,
                       const char *value);
+
 int str_parms_add_int(struct str_parms *str_parms, const char *key, int value);
 
 int str_parms_add_float(struct str_parms *str_parms, const char *key,
@@ -45,8 +48,10 @@ int str_parms_has_key(struct str_parms *str_parms, const char *key);
 // If 'key' isn't in the parms, then return -ENOENT (-2) and leave 'out_val' untouched.
 int str_parms_get_str(struct str_parms *str_parms, const char *key,
                       char *out_val, int len);
+
 int str_parms_get_int(struct str_parms *str_parms, const char *key,
                       int *out_val);
+
 int str_parms_get_float(struct str_parms *str_parms, const char *key,
                         float *out_val);
 

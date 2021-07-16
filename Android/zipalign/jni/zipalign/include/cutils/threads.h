@@ -21,7 +21,9 @@
 #if defined(_WIN32)
 #include <windows.h>
 #else
+
 #include <pthread.h>
+
 #endif
 
 #ifdef __cplusplus
@@ -32,7 +34,9 @@ extern "C" {
 // Deprecated: use android::base::GetThreadId instead, which doesn't truncate on Mac/Windows.
 //
 #if !defined(__GLIBC__) || __GLIBC__ >= 2 && __GLIBC_MINOR__ < 32
+
 extern pid_t gettid();
+
 #endif
 
 #ifdef __cplusplus

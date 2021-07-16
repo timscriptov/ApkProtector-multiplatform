@@ -28,89 +28,97 @@ namespace android {
 /**
  * A convenience class to build and parse locales.
  */
-struct LocaleValue {
-  char language[4];
-  char region[4];
-  char script[4];
-  char variant[8];
+    struct LocaleValue {
+        char language[4];
+        char region[4];
+        char script[4];
+        char variant[8];
 
-  inline LocaleValue();
+        inline LocaleValue();
 
-  /**
-   * Initialize this LocaleValue from a config string.
-   */
-  bool InitFromFilterString(const android::StringPiece& config);
+        /**
+         * Initialize this LocaleValue from a config string.
+         */
+        bool InitFromFilterString(const android::StringPiece &config);
 
-  // Initializes this LocaleValue from a BCP-47 locale tag.
-  bool InitFromBcp47Tag(const android::StringPiece& bcp47tag);
+        // Initializes this LocaleValue from a BCP-47 locale tag.
+        bool InitFromBcp47Tag(const android::StringPiece &bcp47tag);
 
-  /**
-   * Initialize this LocaleValue from parts of a vector.
-   */
-  ssize_t InitFromParts(std::vector<std::string>::iterator iter,
-                        std::vector<std::string>::iterator end);
+        /**
+         * Initialize this LocaleValue from parts of a vector.
+         */
+        ssize_t InitFromParts(std::vector<std::string>::iterator iter,
+                              std::vector<std::string>::iterator end);
 
-  /**
-   * Initialize this LocaleValue from a ResTable_config.
-   */
-  void InitFromResTable(const android::ResTable_config& config);
+        /**
+         * Initialize this LocaleValue from a ResTable_config.
+         */
+        void InitFromResTable(const android::ResTable_config &config);
 
-  /**
-   * Set the locale in a ResTable_config from this LocaleValue.
-   */
-  void WriteTo(android::ResTable_config* out) const;
+        /**
+         * Set the locale in a ResTable_config from this LocaleValue.
+         */
+        void WriteTo(android::ResTable_config *out) const;
 
-  inline int compare(const LocaleValue& other) const;
+        inline int compare(const LocaleValue &other) const;
 
-  inline bool operator<(const LocaleValue& o) const;
-  inline bool operator<=(const LocaleValue& o) const;
-  inline bool operator==(const LocaleValue& o) const;
-  inline bool operator!=(const LocaleValue& o) const;
-  inline bool operator>=(const LocaleValue& o) const;
-  inline bool operator>(const LocaleValue& o) const;
+        inline bool operator<(const LocaleValue &o) const;
 
- private:
-  bool InitFromBcp47TagImpl(const android::StringPiece& bcp47tag, const char separator);
+        inline bool operator<=(const LocaleValue &o) const;
 
-  void set_language(const char* language);
-  void set_region(const char* language);
-  void set_script(const char* script);
-  void set_variant(const char* variant);
-};
+        inline bool operator==(const LocaleValue &o) const;
+
+        inline bool operator!=(const LocaleValue &o) const;
+
+        inline bool operator>=(const LocaleValue &o) const;
+
+        inline bool operator>(const LocaleValue &o) const;
+
+    private:
+        bool InitFromBcp47TagImpl(const android::StringPiece &bcp47tag, const char separator);
+
+        void set_language(const char *language);
+
+        void set_region(const char *language);
+
+        void set_script(const char *script);
+
+        void set_variant(const char *variant);
+    };
 
 //
 // Implementation
 //
 
-LocaleValue::LocaleValue() { memset(this, 0, sizeof(LocaleValue)); }
+    LocaleValue::LocaleValue() { memset(this, 0, sizeof(LocaleValue)); }
 
-int LocaleValue::compare(const LocaleValue& other) const {
-  return memcmp(this, &other, sizeof(LocaleValue));
-}
+    int LocaleValue::compare(const LocaleValue &other) const {
+        return memcmp(this, &other, sizeof(LocaleValue));
+    }
 
-bool LocaleValue::operator<(const LocaleValue& o) const {
-  return compare(o) < 0;
-}
+    bool LocaleValue::operator<(const LocaleValue &o) const {
+        return compare(o) < 0;
+    }
 
-bool LocaleValue::operator<=(const LocaleValue& o) const {
-  return compare(o) <= 0;
-}
+    bool LocaleValue::operator<=(const LocaleValue &o) const {
+        return compare(o) <= 0;
+    }
 
-bool LocaleValue::operator==(const LocaleValue& o) const {
-  return compare(o) == 0;
-}
+    bool LocaleValue::operator==(const LocaleValue &o) const {
+        return compare(o) == 0;
+    }
 
-bool LocaleValue::operator!=(const LocaleValue& o) const {
-  return compare(o) != 0;
-}
+    bool LocaleValue::operator!=(const LocaleValue &o) const {
+        return compare(o) != 0;
+    }
 
-bool LocaleValue::operator>=(const LocaleValue& o) const {
-  return compare(o) >= 0;
-}
+    bool LocaleValue::operator>=(const LocaleValue &o) const {
+        return compare(o) >= 0;
+    }
 
-bool LocaleValue::operator>(const LocaleValue& o) const {
-  return compare(o) > 0;
-}
+    bool LocaleValue::operator>(const LocaleValue &o) const {
+        return compare(o) > 0;
+    }
 
 }  // namespace android
 

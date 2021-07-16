@@ -26,13 +26,16 @@
 namespace android {
 
 // Returns milliseconds since boot, not counting time spent in deep sleep.
-int64_t uptimeMillis();
+    int64_t uptimeMillis();
+
 // Returns nanoseconds since boot, not counting time spent in deep sleep.
-int64_t uptimeNanos();
+    int64_t uptimeNanos();
+
 // Returns milliseconds since boot, including time spent in sleep.
-int64_t elapsedRealtime();
+    int64_t elapsedRealtime();
+
 // Returns nanoseconds since boot, including time spent in sleep.
-int64_t elapsedRealtimeNano();
+    int64_t elapsedRealtimeNano();
 
 }  // namespace android
 

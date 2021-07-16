@@ -21,22 +21,22 @@
 #include "android-base/macros.h"
 
 namespace android {
-namespace base {
+    namespace base {
 
-class ErrnoRestorer {
- public:
-  ErrnoRestorer() : saved_errno_(errno) {}
+        class ErrnoRestorer {
+        public:
+            ErrnoRestorer() : saved_errno_(errno) {}
 
-  ~ErrnoRestorer() { errno = saved_errno_; }
+            ~ErrnoRestorer() { errno = saved_errno_; }
 
-  // Allow this object to be used as part of && operation.
-  explicit operator bool() const { return true; }
+            // Allow this object to be used as part of && operation.
+            explicit operator bool() const { return true; }
 
- private:
-  const int saved_errno_;
+        private:
+            const int saved_errno_;
 
-  DISALLOW_COPY_AND_ASSIGN(ErrnoRestorer);
-};
+            DISALLOW_COPY_AND_ASSIGN(ErrnoRestorer);
+        };
 
-}  // namespace base
+    }  // namespace base
 }  // namespace android

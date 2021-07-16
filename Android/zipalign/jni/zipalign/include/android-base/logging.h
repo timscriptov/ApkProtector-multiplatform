@@ -78,64 +78,72 @@
 #endif
 
 namespace android {
-namespace base {
+    namespace base {
 
-enum LogSeverity {
-  VERBOSE,
-  DEBUG,
-  INFO,
-  WARNING,
-  ERROR,
-  FATAL_WITHOUT_ABORT,  // For loggability tests, this is considered identical to FATAL.
-  FATAL,
-};
+        enum LogSeverity {
+            VERBOSE,
+            DEBUG,
+            INFO,
+            WARNING,
+            ERROR,
+            FATAL_WITHOUT_ABORT,  // For loggability tests, this is considered identical to FATAL.
+            FATAL,
+        };
 
-enum LogId {
-  DEFAULT,
-  MAIN,
-  SYSTEM,
-  RADIO,
-  CRASH,
-};
+        enum LogId {
+            DEFAULT,
+            MAIN,
+            SYSTEM,
+            RADIO,
+            CRASH,
+        };
 
-using LogFunction = std::function<void(LogId /*log_buffer_id*/,
-                                       LogSeverity /*severity*/,
-                                       const char* /*tag*/,
-                                       const char* /*file*/,
-                                       unsigned int /*line*/,
-                                       const char* /*message*/)>;
-using AbortFunction = std::function<void(const char* /*abort_message*/)>;
+        using LogFunction = std::function<void(LogId /*log_buffer_id*/,
+                                               LogSeverity /*severity*/,
+                                               const char * /*tag*/,
+                                               const char * /*file*/,
+                                               unsigned int /*line*/,
+                                               const char * /*message*/)>;
+        using AbortFunction = std::function<void(const char * /*abort_message*/)>;
 
 // Loggers for use with InitLogging/SetLogger.
 
 // Log to the kernel log (dmesg).
-void KernelLogger(LogId log_buffer_id, LogSeverity severity, const char* tag, const char* file, unsigned int line, const char* message);
+        void
+        KernelLogger(LogId log_buffer_id, LogSeverity severity, const char *tag, const char *file,
+                     unsigned int line, const char *message);
+
 // Log to stderr in the full logcat format (with pid/tid/time/tag details).
-void StderrLogger(LogId log_buffer_id, LogSeverity severity, const char* tag, const char* file, unsigned int line, const char* message);
+        void
+        StderrLogger(LogId log_buffer_id, LogSeverity severity, const char *tag, const char *file,
+                     unsigned int line, const char *message);
+
 // Log just the message to stdout/stderr (without pid/tid/time/tag details).
 // The choice of stdout versus stderr is based on the severity.
 // Errors are also prefixed by the program name (as with err(3)/error(3)).
 // Useful for replacing printf(3)/perror(3)/err(3)/error(3) in command-line tools.
-void StdioLogger(LogId log_buffer_id, LogSeverity severity, const char* tag, const char* file, unsigned int line, const char* message);
+        void
+        StdioLogger(LogId log_buffer_id, LogSeverity severity, const char *tag, const char *file,
+                    unsigned int line, const char *message);
 
-void DefaultAborter(const char* abort_message);
+        void DefaultAborter(const char *abort_message);
 
-void SetDefaultTag(const std::string& tag);
+        void SetDefaultTag(const std::string &tag);
 
 // The LogdLogger sends chunks of up to ~4000 bytes at a time to logd.  It does not prevent other
 // threads from writing to logd between sending each chunk, so other threads may interleave their
 // messages.  If preventing interleaving is required, then a custom logger that takes a lock before
 // calling this logger should be provided.
-class LogdLogger {
- public:
-  explicit LogdLogger(LogId default_log_id = android::base::MAIN);
+        class LogdLogger {
+        public:
+            explicit LogdLogger(LogId default_log_id = android::base::MAIN);
 
-  void operator()(LogId, LogSeverity, const char* tag, const char* file,
-                  unsigned int line, const char* message);
+            void operator()(LogId, LogSeverity, const char *tag, const char *file,
+                            unsigned int line, const char *message);
 
- private:
-  LogId default_log_id_;
-};
+        private:
+            LogId default_log_id_;
+        };
 
 // Configure logging based on ANDROID_LOG_TAGS environment variable.
 // We need to parse a string that looks like
@@ -150,16 +158,18 @@ class LogdLogger {
 #else
 #define INIT_LOGGING_DEFAULT_LOGGER StderrLogger
 #endif
-void InitLogging(char* argv[],
-                 LogFunction&& logger = INIT_LOGGING_DEFAULT_LOGGER,
-                 AbortFunction&& aborter = DefaultAborter);
+
+        void InitLogging(char *argv[],
+                         LogFunction &&logger = INIT_LOGGING_DEFAULT_LOGGER,
+                         AbortFunction &&aborter = DefaultAborter);
+
 #undef INIT_LOGGING_DEFAULT_LOGGER
 
 // Replace the current logger and return the old one.
-LogFunction SetLogger(LogFunction&& logger);
+        LogFunction SetLogger(LogFunction &&logger);
 
 // Replace the current aborter and return the old one.
-AbortFunction SetAborter(AbortFunction&& aborter);
+        AbortFunction SetAborter(AbortFunction &&aborter);
 
 // A helper macro that produces an expression that accepts both a qualified name and an
 // unqualified name for a LogSeverity, and returns a LogSeverity value.
@@ -175,18 +185,18 @@ AbortFunction SetAborter(AbortFunction&& aborter);
   return (severity); }())
 
 #ifdef __clang_analyzer__
-// Clang's static analyzer does not see the conditional statement inside
-// LogMessage's destructor that will abort on FATAL severity.
+        // Clang's static analyzer does not see the conditional statement inside
+        // LogMessage's destructor that will abort on FATAL severity.
 #define ABORT_AFTER_LOG_FATAL for (;; abort())
 
-struct LogAbortAfterFullExpr {
-  ~LogAbortAfterFullExpr() __attribute__((noreturn)) { abort(); }
-  explicit operator bool() const { return false; }
-};
-// Provides an expression that evaluates to the truthiness of `x`, automatically
-// aborting if `c` is true.
+        struct LogAbortAfterFullExpr {
+          ~LogAbortAfterFullExpr() __attribute__((noreturn)) { abort(); }
+          explicit operator bool() const { return false; }
+        };
+        // Provides an expression that evaluates to the truthiness of `x`, automatically
+        // aborting if `c` is true.
 #define ABORT_AFTER_LOG_EXPR_IF(c, x) (((c) && ::android::base::LogAbortAfterFullExpr()) || (x))
-// Note to the static analyzer that we always execute FATAL logs in practice.
+        // Note to the static analyzer that we always execute FATAL logs in practice.
 #define MUST_LOG_MESSAGE(severity) (SEVERITY_LAMBDA(severity) == ::android::base::FATAL)
 #else
 #define ABORT_AFTER_LOG_FATAL
@@ -311,9 +321,9 @@ struct LogAbortAfterFullExpr {
 // CHECK should be used unless profiling identifies a CHECK as being in
 // performance critical code.
 #if defined(NDEBUG) && !defined(__clang_analyzer__)
-static constexpr bool kEnableDChecks = false;
+        static constexpr bool kEnableDChecks = false;
 #else
-static constexpr bool kEnableDChecks = true;
+        static constexpr bool kEnableDChecks = true;
 #endif
 
 #define DCHECK(x) \
@@ -335,75 +345,96 @@ static constexpr bool kEnableDChecks = true;
 #define DCHECK_STRNE(s1, s2) \
   if (::android::base::kEnableDChecks) CHECK_STRNE(s1, s2)
 
-namespace log_detail {
+        namespace log_detail {
 
 // Temporary storage for a single eagerly evaluated check expression operand.
-template <typename T> struct Storage {
-  template <typename U> explicit constexpr Storage(U&& u) : v(std::forward<U>(u)) {}
-  explicit Storage(const Storage& t) = delete;
-  explicit Storage(Storage&& t) = delete;
-  T v;
-};
+            template<typename T>
+            struct Storage {
+                template<typename U>
+                explicit constexpr Storage(U &&u) : v(std::forward<U>(u)) {}
+
+                explicit Storage(const Storage &t) = delete;
+
+                explicit Storage(Storage &&t) = delete;
+
+                T v;
+            };
 
 // Partial specialization for smart pointers to avoid copying.
-template <typename T> struct Storage<std::unique_ptr<T>> {
-  explicit constexpr Storage(const std::unique_ptr<T>& ptr) : v(ptr.get()) {}
-  const T* v;
-};
-template <typename T> struct Storage<std::shared_ptr<T>> {
-  explicit constexpr Storage(const std::shared_ptr<T>& ptr) : v(ptr.get()) {}
-  const T* v;
-};
+            template<typename T>
+            struct Storage<std::unique_ptr < T>> {
+            explicit constexpr Storage(const std::unique_ptr <T> &ptr) : v(ptr.get()) {}
+
+            const T *v;
+        };
+        template<typename T>
+        struct Storage<std::shared_ptr < T>> {
+        explicit constexpr Storage(const std::shared_ptr <T> &ptr) : v(ptr.get()) {}
+
+        const T *v;
+    };
 
 // Type trait that checks if a type is a (potentially const) char pointer.
-template <typename T> struct IsCharPointer {
-  using Pointee = std::remove_cv_t<std::remove_pointer_t<T>>;
-  static constexpr bool value = std::is_pointer_v<T> &&
-      (std::is_same_v<Pointee, char> || std::is_same_v<Pointee, signed char> ||
-       std::is_same_v<Pointee, unsigned char>);
-};
+    template<typename T>
+    struct IsCharPointer {
+        using Pointee = std::remove_cv_t <std::remove_pointer_t<T>>;
+        static constexpr bool value = std::is_pointer_v < T > &&
+                                      (std::is_same_v < Pointee, char > || std::is_same_v < Pointee,
+                                              signed char > ||
+                                              std::is_same_v < Pointee, unsigned char >);
+    };
 
 // Counterpart to Storage that depends on both operands. This is used to prevent
 // char pointers being treated as strings in the log output - they might point
 // to buffers of unprintable binary data.
-template <typename LHS, typename RHS> struct StorageTypes {
-  static constexpr bool voidptr = IsCharPointer<LHS>::value && IsCharPointer<RHS>::value;
-  using LHSType = std::conditional_t<voidptr, const void*, LHS>;
-  using RHSType = std::conditional_t<voidptr, const void*, RHS>;
-};
+    template<typename LHS, typename RHS>
+    struct StorageTypes {
+        static constexpr bool voidptr = IsCharPointer<LHS>::value && IsCharPointer<RHS>::value;
+        using LHSType = std::conditional_t<voidptr, const void *, LHS>;
+        using RHSType = std::conditional_t<voidptr, const void *, RHS>;
+    };
 
 // Temporary class created to evaluate the LHS and RHS, used with
 // MakeEagerEvaluator to infer the types of LHS and RHS.
-template <typename LHS, typename RHS>
-struct EagerEvaluator {
-  template <typename A, typename B> constexpr EagerEvaluator(A&& l, B&& r)
-      : lhs(std::forward<A>(l)), rhs(std::forward<B>(r)) {}
-  const Storage<typename StorageTypes<LHS, RHS>::LHSType> lhs;
-  const Storage<typename StorageTypes<LHS, RHS>::RHSType> rhs;
-};
+    template<typename LHS, typename RHS>
+    struct EagerEvaluator {
+        template<typename A, typename B>
+        constexpr EagerEvaluator(A &&l, B &&r)
+                : lhs(std::forward<A>(l)), rhs(std::forward<B>(r)) {}
+
+        const Storage<typename StorageTypes<LHS, RHS>::LHSType> lhs;
+        const Storage<typename StorageTypes<LHS, RHS>::RHSType> rhs;
+    };
 
 }  // namespace log_detail
 
 // Converts std::nullptr_t and null char pointers to the string "null"
 // when writing the failure message.
-template <typename T> struct LogNullGuard {
-  static const T& Guard(const T& v) { return v; }
+template<typename T>
+struct LogNullGuard {
+    static const T &Guard(const T &v) { return v; }
 };
-template <> struct LogNullGuard<std::nullptr_t> {
-  static const char* Guard(const std::nullptr_t&) { return "(null)"; }
+
+template<>
+struct LogNullGuard<std::nullptr_t> {
+    static const char *Guard(const std::nullptr_t &) { return "(null)"; }
 };
-template <> struct LogNullGuard<char*> {
-  static const char* Guard(const char* v) { return v ? v : "(null)"; }
+
+template<>
+struct LogNullGuard<char *> {
+    static const char *Guard(const char *v) { return v ? v : "(null)"; }
 };
-template <> struct LogNullGuard<const char*> {
-  static const char* Guard(const char* v) { return v ? v : "(null)"; }
+
+template<>
+struct LogNullGuard<const char *> {
+    static const char *Guard(const char *v) { return v ? v : "(null)"; }
 };
 
 // Helper function for CHECK_xx.
-template <typename LHS, typename RHS>
-constexpr auto MakeEagerEvaluator(LHS&& lhs, RHS&& rhs) {
-  return log_detail::EagerEvaluator<std::decay_t<LHS>, std::decay_t<RHS>>(
-      std::forward<LHS>(lhs), std::forward<RHS>(rhs));
+template<typename LHS, typename RHS>
+constexpr auto MakeEagerEvaluator(LHS &&lhs, RHS &&rhs) {
+    return log_detail::EagerEvaluator < std::decay_t < LHS > , std::decay_t < RHS >> (
+            std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 }
 
 // Data for the log message, not stored in LogMessage to avoid increasing the
@@ -413,26 +444,28 @@ class LogMessageData;
 // A LogMessage is a temporarily scoped object used by LOG and the unlikely part
 // of a CHECK. The destructor will abort if the severity is FATAL.
 class LogMessage {
- public:
-  // LogId has been deprecated, but this constructor must exist for prebuilts.
-  LogMessage(const char* file, unsigned int line, LogId, LogSeverity severity, const char* tag,
-             int error);
-  LogMessage(const char* file, unsigned int line, LogSeverity severity, const char* tag, int error);
+public:
+    // LogId has been deprecated, but this constructor must exist for prebuilts.
+    LogMessage(const char *file, unsigned int line, LogId, LogSeverity severity, const char *tag,
+               int error);
 
-  ~LogMessage();
+    LogMessage(const char *file, unsigned int line, LogSeverity severity, const char *tag,
+               int error);
 
-  // Returns the stream associated with the message, the LogMessage performs
-  // output when it goes out of scope.
-  std::ostream& stream();
+    ~LogMessage();
 
-  // The routine that performs the actual logging.
-  static void LogLine(const char* file, unsigned int line, LogSeverity severity, const char* tag,
-                      const char* msg);
+    // Returns the stream associated with the message, the LogMessage performs
+    // output when it goes out of scope.
+    std::ostream &stream();
 
- private:
-  const std::unique_ptr<LogMessageData> data_;
+    // The routine that performs the actual logging.
+    static void LogLine(const char *file, unsigned int line, LogSeverity severity, const char *tag,
+                        const char *msg);
 
-  DISALLOW_COPY_AND_ASSIGN(LogMessage);
+private:
+    const std::unique_ptr <LogMessageData> data_;
+
+    DISALLOW_COPY_AND_ASSIGN(LogMessage);
 };
 
 // Get the minimum severity level for logging.
@@ -442,16 +475,17 @@ LogSeverity GetMinimumLogSeverity();
 LogSeverity SetMinimumLogSeverity(LogSeverity new_severity);
 
 // Return whether or not a log message with the associated tag should be logged.
-bool ShouldLog(LogSeverity severity, const char* tag);
+bool ShouldLog(LogSeverity severity, const char *tag);
 
 // Allows to temporarily change the minimum severity level for logging.
 class ScopedLogSeverity {
- public:
-  explicit ScopedLogSeverity(LogSeverity level);
-  ~ScopedLogSeverity();
+public:
+    explicit ScopedLogSeverity(LogSeverity level);
 
- private:
-  LogSeverity old_;
+    ~ScopedLogSeverity();
+
+private:
+    LogSeverity old_;
 };
 
 }  // namespace base
@@ -471,10 +505,12 @@ namespace std {  // NOLINT(cert-dcl58-cpp)
 #pragma clang diagnostic ignored "-Wgcc-compat"
 #define OSTREAM_STRING_POINTER_USAGE_WARNING \
     __attribute__((diagnose_if(true, "Unexpected logging of string pointer", "warning")))
-inline OSTREAM_STRING_POINTER_USAGE_WARNING
-std::ostream& operator<<(std::ostream& stream, const std::string* string_pointer) {
-  return stream << static_cast<const void*>(string_pointer);
-}
+
+    inline OSTREAM_STRING_POINTER_USAGE_WARNING
+    std::ostream &operator<<(std::ostream &stream, const std::string *string_pointer) {
+        return stream << static_cast<const void *>(string_pointer);
+    }
+
 #pragma clang diagnostic pop
 
 }  // namespace std

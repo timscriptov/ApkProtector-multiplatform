@@ -24,8 +24,8 @@
 
 namespace android {
 
-template <typename T>
-class ScopedLock;
+    template<typename T>
+    class ScopedLock;
 
 // Owns the guarded object and protects access to it via a mutex.
 // The guarded object is inaccessible via this class.
@@ -42,59 +42,60 @@ class ScopedLock;
 //     *locked_string += " world";
 //   }
 //
-template <typename T>
-class Guarded {
-  static_assert(!std::is_pointer<T>::value, "T must not be a raw pointer");
+    template<typename T>
+    class Guarded {
+        static_assert(!std::is_pointer<T>::value, "T must not be a raw pointer");
 
- public:
-  explicit Guarded() : guarded_() {
-  }
+    public:
+        explicit Guarded() : guarded_() {
+        }
 
-  template <typename U = T>
-  explicit Guarded(const T& guarded,
-                   typename std::enable_if<std::is_copy_constructible<U>::value>::type = void())
-      : guarded_(guarded) {
-  }
+        template<typename U = T>
+        explicit Guarded(const T &guarded,
+                         typename std::enable_if<std::is_copy_constructible<U>::value>::type = void())
+                : guarded_(guarded) {
+        }
 
-  template <typename U = T>
-  explicit Guarded(T&& guarded,
-                   typename std::enable_if<std::is_move_constructible<U>::value>::type = void())
-      : guarded_(std::move(guarded)) {
-  }
+        template<typename U = T>
+        explicit Guarded(T &&guarded,
+                         typename std::enable_if<std::is_move_constructible<U>::value>::type = void())
+                : guarded_(std::move(guarded)) {
+        }
 
- private:
-  friend class ScopedLock<T>;
+    private:
+        friend class ScopedLock<T>;
 
-  DISALLOW_COPY_AND_ASSIGN(Guarded);
+        DISALLOW_COPY_AND_ASSIGN(Guarded);
 
-  std::mutex lock_;
-  T guarded_;
-};
+        std::mutex lock_;
+        T guarded_;
+    };
 
-template <typename T>
-class ScopedLock {
- public:
-  explicit ScopedLock(Guarded<T>& guarded) : lock_(guarded.lock_), guarded_(guarded.guarded_) {
-  }
+    template<typename T>
+    class ScopedLock {
+    public:
+        explicit ScopedLock(Guarded<T> &guarded) : lock_(guarded.lock_),
+                                                   guarded_(guarded.guarded_) {
+        }
 
-  T& operator*() {
-    return guarded_;
-  }
+        T &operator*() {
+            return guarded_;
+        }
 
-  T* operator->() {
-    return &guarded_;
-  }
+        T *operator->() {
+            return &guarded_;
+        }
 
-  T* get() {
-    return &guarded_;
-  }
+        T *get() {
+            return &guarded_;
+        }
 
- private:
-  DISALLOW_COPY_AND_ASSIGN(ScopedLock);
+    private:
+        DISALLOW_COPY_AND_ASSIGN(ScopedLock);
 
-  std::lock_guard<std::mutex> lock_;
-  T& guarded_;
-};
+        std::lock_guard <std::mutex> lock_;
+        T &guarded_;
+    };
 
 }  // namespace android
 

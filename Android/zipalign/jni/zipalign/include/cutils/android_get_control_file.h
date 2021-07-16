@@ -28,7 +28,7 @@ extern "C" {
  * descriptor of our init-managed file. `path' is the filename path as
  * given in init.rc. Returns -1 on error.
  */
-int android_get_control_file(const char* path);
+int android_get_control_file(const char *path);
 
 #ifdef __cplusplus
 }

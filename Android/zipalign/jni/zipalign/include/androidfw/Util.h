@@ -26,100 +26,103 @@
 #include "androidfw/StringPiece.h"
 
 namespace android {
-namespace util {
+    namespace util {
 
 /**
  * Makes a std::unique_ptr<> with the template parameter inferred by the
  * compiler.
  * This will be present in C++14 and can be removed then.
  */
-template <typename T, class... Args>
-std::unique_ptr<T> make_unique(Args&&... args) {
-  return std::unique_ptr<T>(new T{std::forward<Args>(args)...});
-}
+        template<typename T, class... Args>
+        std::unique_ptr <T> make_unique(Args &&... args) {
+            return std::unique_ptr<T>(new T{std::forward<Args>(args)...});
+        }
 
 // Based on std::unique_ptr, but uses free() to release malloc'ed memory
 // without incurring the size increase of holding on to a custom deleter.
-template <typename T>
-class unique_cptr {
- public:
-  using pointer = typename std::add_pointer<T>::type;
+        template<typename T>
+        class unique_cptr {
+        public:
+            using pointer = typename std::add_pointer<T>::type;
 
-  constexpr unique_cptr() : ptr_(nullptr) {}
-  constexpr explicit unique_cptr(std::nullptr_t) : ptr_(nullptr) {}
-  explicit unique_cptr(pointer ptr) : ptr_(ptr) {}
-  unique_cptr(unique_cptr&& o) noexcept : ptr_(o.ptr_) { o.ptr_ = nullptr; }
+            constexpr unique_cptr() : ptr_(nullptr) {}
 
-  ~unique_cptr() { std::free(reinterpret_cast<void*>(ptr_)); }
+            constexpr explicit unique_cptr(std::nullptr_t) : ptr_(nullptr) {}
 
-  inline unique_cptr& operator=(unique_cptr&& o) noexcept {
-    if (&o == this) {
-      return *this;
-    }
+            explicit unique_cptr(pointer ptr) : ptr_(ptr) {}
 
-    std::free(reinterpret_cast<void*>(ptr_));
-    ptr_ = o.ptr_;
-    o.ptr_ = nullptr;
-    return *this;
-  }
+            unique_cptr(unique_cptr &&o) noexcept: ptr_(o.ptr_) { o.ptr_ = nullptr; }
 
-  inline unique_cptr& operator=(std::nullptr_t) {
-    std::free(reinterpret_cast<void*>(ptr_));
-    ptr_ = nullptr;
-    return *this;
-  }
+            ~unique_cptr() { std::free(reinterpret_cast<void *>(ptr_)); }
 
-  pointer release() {
-    pointer result = ptr_;
-    ptr_ = nullptr;
-    return result;
-  }
+            inline unique_cptr &operator=(unique_cptr &&o) noexcept {
+                if (&o == this) {
+                    return *this;
+                }
 
-  inline pointer get() const { return ptr_; }
+                std::free(reinterpret_cast<void *>(ptr_));
+                ptr_ = o.ptr_;
+                o.ptr_ = nullptr;
+                return *this;
+            }
 
-  void reset(pointer ptr = pointer()) {
-    if (ptr == ptr_) {
-      return;
-    }
+            inline unique_cptr &operator=(std::nullptr_t) {
+                std::free(reinterpret_cast<void *>(ptr_));
+                ptr_ = nullptr;
+                return *this;
+            }
 
-    pointer old_ptr = ptr_;
-    ptr_ = ptr;
-    std::free(reinterpret_cast<void*>(old_ptr));
-  }
+            pointer release() {
+                pointer result = ptr_;
+                ptr_ = nullptr;
+                return result;
+            }
 
-  inline void swap(unique_cptr& o) { std::swap(ptr_, o.ptr_); }
+            inline pointer get() const { return ptr_; }
 
-  inline explicit operator bool() const { return ptr_ != nullptr; }
+            void reset(pointer ptr = pointer()) {
+                if (ptr == ptr_) {
+                    return;
+                }
 
-  inline typename std::add_lvalue_reference<T>::type operator*() const { return *ptr_; }
+                pointer old_ptr = ptr_;
+                ptr_ = ptr;
+                std::free(reinterpret_cast<void *>(old_ptr));
+            }
 
-  inline pointer operator->() const { return ptr_; }
+            inline void swap(unique_cptr &o) { std::swap(ptr_, o.ptr_); }
 
-  inline bool operator==(const unique_cptr& o) const { return ptr_ == o.ptr_; }
+            inline explicit operator bool() const { return ptr_ != nullptr; }
 
-  inline bool operator!=(const unique_cptr& o) const { return ptr_ != o.ptr_; }
+            inline typename std::add_lvalue_reference<T>::type operator*() const { return *ptr_; }
 
-  inline bool operator==(std::nullptr_t) const { return ptr_ == nullptr; }
+            inline pointer operator->() const { return ptr_; }
 
-  inline bool operator!=(std::nullptr_t) const { return ptr_ != nullptr; }
+            inline bool operator==(const unique_cptr &o) const { return ptr_ == o.ptr_; }
 
- private:
-  DISALLOW_COPY_AND_ASSIGN(unique_cptr);
+            inline bool operator!=(const unique_cptr &o) const { return ptr_ != o.ptr_; }
 
-  pointer ptr_;
-};
+            inline bool operator==(std::nullptr_t) const { return ptr_ == nullptr; }
 
-void ReadUtf16StringFromDevice(const uint16_t* src, size_t len, std::string* out);
+            inline bool operator!=(std::nullptr_t) const { return ptr_ != nullptr; }
+
+        private:
+            DISALLOW_COPY_AND_ASSIGN(unique_cptr);
+
+            pointer ptr_;
+        };
+
+        void ReadUtf16StringFromDevice(const uint16_t *src, size_t len, std::string *out);
 
 // Converts a UTF-8 string to a UTF-16 string.
-std::u16string Utf8ToUtf16(const StringPiece& utf8);
+        std::u16string Utf8ToUtf16(const StringPiece &utf8);
 
 // Converts a UTF-16 string to a UTF-8 string.
-std::string Utf16ToUtf8(const StringPiece16& utf16);
+        std::string Utf16ToUtf8(const StringPiece16 &utf16);
 
-std::vector<std::string> SplitAndLowercase(const android::StringPiece& str, char sep);
+        std::vector <std::string> SplitAndLowercase(const android::StringPiece &str, char sep);
 
-}  // namespace util
+    }  // namespace util
 }  // namespace android
 
 #endif /* UTIL_H_ */

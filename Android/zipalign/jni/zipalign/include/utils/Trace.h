@@ -40,19 +40,19 @@
 
 namespace android {
 
-class ScopedTrace {
-public:
-    inline ScopedTrace(uint64_t tag, const char* name) : mTag(tag) {
-        atrace_begin(mTag, name);
-    }
+    class ScopedTrace {
+    public:
+        inline ScopedTrace(uint64_t tag, const char *name) : mTag(tag) {
+            atrace_begin(mTag, name);
+        }
 
-    inline ~ScopedTrace() {
-        atrace_end(mTag);
-    }
+        inline ~ScopedTrace() {
+            atrace_end(mTag);
+        }
 
-private:
-    uint64_t mTag;
-};
+    private:
+        uint64_t mTag;
+    };
 
 }  // namespace android
 

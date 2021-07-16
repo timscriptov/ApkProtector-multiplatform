@@ -36,21 +36,21 @@ extern "C" {
 /*
  * The opaque context used to manipulate lists of events.
  */
-typedef struct android_log_context_internal* android_log_context;
+typedef struct android_log_context_internal *android_log_context;
 
 /*
  * Elements returned when reading a list of events.
  */
 typedef struct {
-  AndroidEventLogType type;
-  uint16_t complete;
-  uint16_t len;
-  union {
-    int32_t int32;
-    int64_t int64;
-    char* string;
-    float float32;
-  } data;
+    AndroidEventLogType type;
+    uint16_t complete;
+    uint16_t len;
+    union {
+        int32_t int32;
+        int64_t int64;
+        char *string;
+        float float32;
+    } data;
 } android_log_list_element;
 
 /*
@@ -66,13 +66,18 @@ android_log_context create_android_logger(uint32_t tag);
  *     convenience. For a single element, it will remain solitary.
  */
 int android_log_write_list_begin(android_log_context ctx);
+
 int android_log_write_list_end(android_log_context ctx);
 
 int android_log_write_int32(android_log_context ctx, int32_t value);
+
 int android_log_write_int64(android_log_context ctx, int64_t value);
-int android_log_write_string8(android_log_context ctx, const char* value);
-int android_log_write_string8_len(android_log_context ctx, const char* value,
+
+int android_log_write_string8(android_log_context ctx, const char *value);
+
+int android_log_write_string8_len(android_log_context ctx, const char *value,
                                   size_t maxlen);
+
 int android_log_write_float32(android_log_context ctx, float value);
 
 /* Submit the composed list context to the specified logger id */
@@ -82,9 +87,10 @@ int android_log_write_list(android_log_context ctx, log_id_t id);
 /*
  * Creates a context from a raw buffer representing a list of events to be read.
  */
-android_log_context create_android_log_parser(const char* msg, size_t len);
+android_log_context create_android_log_parser(const char *msg, size_t len);
 
 android_log_list_element android_log_read_next(android_log_context ctx);
+
 android_log_list_element android_log_peek_next(android_log_context ctx);
 
 /* Reset writer context */
@@ -92,10 +98,10 @@ int android_log_reset(android_log_context ctx);
 
 /* Reset reader context */
 int android_log_parser_reset(android_log_context ctx,
-                             const char* msg, size_t len);
+                             const char *msg, size_t len);
 
 /* Finished with reader or writer context */
-int android_log_destroy(android_log_context* ctx);
+int android_log_destroy(android_log_context *ctx);
 
 #ifdef __cplusplus
 /* android_log_list C++ helpers */

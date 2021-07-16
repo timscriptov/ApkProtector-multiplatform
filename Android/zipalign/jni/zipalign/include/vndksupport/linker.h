@@ -30,9 +30,9 @@ extern "C" {
  */
 int android_is_in_vendor_process();
 
-void* android_load_sphal_library(const char* name, int flag);
+void *android_load_sphal_library(const char *name, int flag);
 
-int android_unload_sphal_library(void* handle);
+int android_unload_sphal_library(void *handle);
 
 #ifdef __cplusplus
 }

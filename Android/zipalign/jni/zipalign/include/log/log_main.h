@@ -360,8 +360,9 @@ extern int __fake_use_va_args(int, ...);
  * ANDROID_LOG_FATAL. default_prio if no property. Undefined behavior if
  * any other value.
  */
-int __android_log_is_loggable(int prio, const char* tag, int default_prio);
-int __android_log_is_loggable_len(int prio, const char* tag, size_t len, int default_prio);
+int __android_log_is_loggable(int prio, const char *tag, int default_prio);
+
+int __android_log_is_loggable_len(int prio, const char *tag, size_t len, int default_prio);
 
 #if LOG_NDEBUG /* Production */
 #define android_testLog(prio, tag)                                           \

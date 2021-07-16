@@ -46,7 +46,7 @@ extern "C" {
 ** If the property read fails or returns an empty value, the default
 ** value is used (if nonnull).
 */
-int property_get(const char* key, char* value, const char* default_value);
+int property_get(const char *key, char *value, const char *default_value);
 
 /* property_get_bool: returns the value of key coerced into a
 ** boolean. If the property is not set, then the default value is returned.

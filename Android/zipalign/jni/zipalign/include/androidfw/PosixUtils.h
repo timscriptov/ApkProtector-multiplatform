@@ -19,18 +19,18 @@
 #include <vector>
 
 namespace android {
-namespace util {
+    namespace util {
 
-struct ProcResult {
-  int status;
-  std::string stdout;
-  std::string stderr;
-};
+        struct ProcResult {
+            int status;
+            std::string stdout;
+            std::string stderr;
+        };
 
 // Fork, exec and wait for an external process. Return nullptr if the process could not be launched,
 // otherwise a ProcResult containing the external process' exit status and captured stdout and
 // stderr.
-std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv);
+        std::unique_ptr <ProcResult> ExecuteBinary(const std::vector <std::string> &argv);
 
-} // namespace util
+    } // namespace util
 } // namespace android

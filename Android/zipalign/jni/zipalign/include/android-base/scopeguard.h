@@ -19,49 +19,53 @@
 #include <utility>  // for std::move, std::forward
 
 namespace android {
-namespace base {
+    namespace base {
 
 // ScopeGuard ensures that the specified functor is executed no matter how the
 // current scope exits.
-template <typename F>
-class ScopeGuard {
- public:
-  ScopeGuard(F&& f) : f_(std::forward<F>(f)), active_(true) {}
+        template<typename F>
+        class ScopeGuard {
+        public:
+            ScopeGuard(F &&f) : f_(std::forward<F>(f)), active_(true) {}
 
-  ScopeGuard(ScopeGuard&& that) noexcept : f_(std::move(that.f_)), active_(that.active_) {
-    that.active_ = false;
-  }
+            ScopeGuard(ScopeGuard &&that) noexcept: f_(std::move(that.f_)), active_(that.active_) {
+                that.active_ = false;
+            }
 
-  template <typename Functor>
-  ScopeGuard(ScopeGuard<Functor>&& that) : f_(std::move(that.f_)), active_(that.active_) {
-    that.active_ = false;
-  }
+            template<typename Functor>
+            ScopeGuard(ScopeGuard<Functor> &&that) : f_(std::move(that.f_)), active_(that.active_) {
+                that.active_ = false;
+            }
 
-  ~ScopeGuard() {
-    if (active_) f_();
-  }
+            ~ScopeGuard() {
+                if (active_) f_();
+            }
 
-  ScopeGuard() = delete;
-  ScopeGuard(const ScopeGuard&) = delete;
-  void operator=(const ScopeGuard&) = delete;
-  void operator=(ScopeGuard&& that) = delete;
+            ScopeGuard() = delete;
 
-  void Disable() { active_ = false; }
+            ScopeGuard(const ScopeGuard &) = delete;
 
-  bool active() const { return active_; }
+            void operator=(const ScopeGuard &) = delete;
 
- private:
-  template <typename Functor>
-  friend class ScopeGuard;
+            void operator=(ScopeGuard &&that) = delete;
 
-  F f_;
-  bool active_;
-};
+            void Disable() { active_ = false; }
 
-template <typename F>
-ScopeGuard<F> make_scope_guard(F&& f) {
-  return ScopeGuard<F>(std::forward<F>(f));
-}
+            bool active() const { return active_; }
 
-}  // namespace base
+        private:
+            template<typename Functor>
+            friend
+            class ScopeGuard;
+
+            F f_;
+            bool active_;
+        };
+
+        template<typename F>
+        ScopeGuard<F> make_scope_guard(F &&f) {
+            return ScopeGuard<F>(std::forward<F>(f));
+        }
+
+    }  // namespace base
 }  // namespace android

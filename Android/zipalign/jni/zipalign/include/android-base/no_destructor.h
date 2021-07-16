@@ -21,7 +21,7 @@
 #include "android-base/macros.h"
 
 namespace android {
-namespace base {
+    namespace base {
 
 // A wrapper that makes it easy to create an object of type T with static
 // storage duration that:
@@ -57,38 +57,43 @@ namespace base {
 // Note that since the destructor is never run, this *will* leak memory if used
 // as a stack or member variable. Furthermore, a NoDestructor<T> should never
 // have global scope as that may require a static initializer.
-template <typename T>
-class NoDestructor {
- public:
-  // Not constexpr; just write static constexpr T x = ...; if the value should
-  // be a constexpr.
-  template <typename... Args>
-  explicit NoDestructor(Args&&... args) {
-    new (storage_) T(std::forward<Args>(args)...);
-  }
+        template<typename T>
+        class NoDestructor {
+        public:
+            // Not constexpr; just write static constexpr T x = ...; if the value should
+            // be a constexpr.
+            template<typename... Args>
+            explicit NoDestructor(Args &&... args) {
+                new(storage_) T(std::forward<Args>(args)...);
+            }
 
-  // Allows copy and move construction of the contained type, to allow
-  // construction from an initializer list, e.g. for std::vector.
-  explicit NoDestructor(const T& x) { new (storage_) T(x); }
-  explicit NoDestructor(T&& x) { new (storage_) T(std::move(x)); }
+            // Allows copy and move construction of the contained type, to allow
+            // construction from an initializer list, e.g. for std::vector.
+            explicit NoDestructor(const T &x) { new(storage_) T(x); }
 
-  NoDestructor(const NoDestructor&) = delete;
-  NoDestructor& operator=(const NoDestructor&) = delete;
+            explicit NoDestructor(T &&x) { new(storage_) T(std::move(x)); }
 
-  ~NoDestructor() = default;
+            NoDestructor(const NoDestructor &) = delete;
 
-  const T& operator*() const { return *get(); }
-  T& operator*() { return *get(); }
+            NoDestructor &operator=(const NoDestructor &) = delete;
 
-  const T* operator->() const { return get(); }
-  T* operator->() { return get(); }
+            ~NoDestructor() = default;
 
-  const T* get() const { return reinterpret_cast<const T*>(storage_); }
-  T* get() { return reinterpret_cast<T*>(storage_); }
+            const T &operator*() const { return *get(); }
 
- private:
-  alignas(T) char storage_[sizeof(T)];
-};
+            T &operator*() { return *get(); }
 
-}  // namespace base
+            const T *operator->() const { return get(); }
+
+            T *operator->() { return get(); }
+
+            const T *get() const { return reinterpret_cast<const T *>(storage_); }
+
+            T *get() { return reinterpret_cast<T *>(storage_); }
+
+        private:
+            alignas(T) char storage_[sizeof(T)];
+        };
+
+    }  // namespace base
 }  // namespace android

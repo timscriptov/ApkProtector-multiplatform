@@ -23,7 +23,7 @@ import com.mcal.dexprotect.task.DexCrypto
 import com.mcal.dexprotect.utils.*
 import com.mcal.dexprotect.utils.file.FileUtils
 import com.mcal.dexprotect.utils.file.ScopedStorage
-import com.mcal.dexprotect.zipalign.ZipAlign
+import com.mcal.apkprotector.zipalign.ZipAlign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -18,8 +18,11 @@
 
 /* Too many in the ecosystem assume these are included */
 #if !defined(_WIN32)
+
 #include <pthread.h>
+
 #endif
+
 #include <stdint.h> /* uint16_t, int32_t */
 #include <stdio.h>
 #include <time.h>
@@ -72,12 +75,14 @@ extern "C" {
  * The following should not be used directly.
  */
 
-int __android_log_bwrite(int32_t tag, const void* payload, size_t len);
-int __android_log_btwrite(int32_t tag, char type, const void* payload,
-                          size_t len);
-int __android_log_bswrite(int32_t tag, const char* payload);
+int __android_log_bwrite(int32_t tag, const void *payload, size_t len);
 
-int __android_log_stats_bwrite(int32_t tag, const void* payload, size_t len);
+int __android_log_btwrite(int32_t tag, char type, const void *payload,
+                          size_t len);
+
+int __android_log_bswrite(int32_t tag, const char *payload);
+
+int __android_log_stats_bwrite(int32_t tag, const void *payload, size_t len);
 
 #define android_bWriteLog(tag, payload, len) \
   __android_log_bwrite(tag, payload, len)
@@ -90,16 +95,16 @@ int __android_log_stats_bwrite(int32_t tag, const void* payload, size_t len);
 #ifndef __AndroidEventLogType_defined
 #define __AndroidEventLogType_defined
 typedef enum {
-  /* Special markers for android_log_list_element type */
-  EVENT_TYPE_LIST_STOP = '\n', /* declare end of list  */
-  EVENT_TYPE_UNKNOWN = '?',    /* protocol error       */
+    /* Special markers for android_log_list_element type */
+    EVENT_TYPE_LIST_STOP = '\n', /* declare end of list  */
+    EVENT_TYPE_UNKNOWN = '?',    /* protocol error       */
 
-  /* must match with declaration in java/android/android/util/EventLog.java */
-  EVENT_TYPE_INT = 0,  /* int32_t */
-  EVENT_TYPE_LONG = 1, /* int64_t */
-  EVENT_TYPE_STRING = 2,
-  EVENT_TYPE_LIST = 3,
-  EVENT_TYPE_FLOAT = 4,
+    /* must match with declaration in java/android/android/util/EventLog.java */
+    EVENT_TYPE_INT = 0,  /* int32_t */
+    EVENT_TYPE_LONG = 1, /* int64_t */
+    EVENT_TYPE_STRING = 2,
+    EVENT_TYPE_LIST = 3,
+    EVENT_TYPE_FLOAT = 4,
 } AndroidEventLogType;
 #endif
 #define sizeof_AndroidEventLogType sizeof(typeof_AndroidEventLogType)

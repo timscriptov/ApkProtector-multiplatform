@@ -26,8 +26,9 @@ __BEGIN_DECLS
 void klog_set_level(int level);
 
 void klog_write(int level, const char *fmt, ...)
-    __attribute__ ((format(printf, 2, 3)));
-void klog_writev(int level, const struct iovec* iov, int iov_count);
+__attribute__ ((format(printf, 2, 3)));
+
+void klog_writev(int level, const struct iovec *iov, int iov_count);
 
 __END_DECLS
 
@@ -37,10 +38,10 @@ __END_DECLS
 #define KLOG_INFO_LEVEL    6
 #define KLOG_DEBUG_LEVEL   7
 
-#define KLOG_ERROR(tag,x...)   klog_write(KLOG_ERROR_LEVEL, "<3>" tag ": " x)
-#define KLOG_WARNING(tag,x...) klog_write(KLOG_WARNING_LEVEL, "<4>" tag ": " x)
-#define KLOG_NOTICE(tag,x...)  klog_write(KLOG_NOTICE_LEVEL, "<5>" tag ": " x)
-#define KLOG_INFO(tag,x...)    klog_write(KLOG_INFO_LEVEL, "<6>" tag ": " x)
-#define KLOG_DEBUG(tag,x...)   klog_write(KLOG_DEBUG_LEVEL, "<7>" tag ": " x)
+#define KLOG_ERROR(tag, x...)   klog_write(KLOG_ERROR_LEVEL, "<3>" tag ": " x)
+#define KLOG_WARNING(tag, x...) klog_write(KLOG_WARNING_LEVEL, "<4>" tag ": " x)
+#define KLOG_NOTICE(tag, x...)  klog_write(KLOG_NOTICE_LEVEL, "<5>" tag ": " x)
+#define KLOG_INFO(tag, x...)    klog_write(KLOG_INFO_LEVEL, "<6>" tag ": " x)
+#define KLOG_DEBUG(tag, x...)   klog_write(KLOG_DEBUG_LEVEL, "<7>" tag ": " x)
 
 #endif

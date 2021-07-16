@@ -27,7 +27,7 @@
 #include <android-base/unique_fd.h>
 
 namespace android {
-namespace base {
+    namespace base {
 
 #if !defined(_WIN32)
 
@@ -51,56 +51,59 @@ namespace base {
 // Note that the write can return short if the socket type is SOCK_STREAM. When
 // this happens, file descriptors are still sent to the other end, but with
 // truncated data. For this reason, using SOCK_SEQPACKET or SOCK_DGRAM is recommended.
-ssize_t SendFileDescriptorVector(borrowed_fd sock, const void* data, size_t len,
-                                 const std::vector<int>& fds);
+        ssize_t SendFileDescriptorVector(borrowed_fd sock, const void *data, size_t len,
+                                         const std::vector<int> &fds);
 
 // Receive file descriptors from a Unix domain socket.
 //
 // If more FDs (or bytes, for datagram sockets) are received than expected,
 // -1 is returned with errno set to EMSGSIZE, and all received FDs are thrown away.
-ssize_t ReceiveFileDescriptorVector(borrowed_fd sock, void* data, size_t len, size_t max_fds,
-                                    std::vector<android::base::unique_fd>* fds);
+        ssize_t
+        ReceiveFileDescriptorVector(borrowed_fd sock, void *data, size_t len, size_t max_fds,
+                                    std::vector <android::base::unique_fd> *fds);
 
 // Helper for SendFileDescriptorVector that constructs a std::vector for you, e.g.:
 //   SendFileDescriptors(sock, "foo", 3, std::move(fd1), std::move(fd2))
-template <typename... Args>
-ssize_t SendFileDescriptors(borrowed_fd sock, const void* data, size_t len, Args&&... sent_fds) {
-  // Do not allow implicit conversion to int: people might try to do something along the lines of:
-  //   SendFileDescriptors(..., std::move(a_unique_fd))
-  // and be surprised when the unique_fd isn't closed afterwards.
-  AssertType<int>(std::forward<Args>(sent_fds)...);
-  std::vector<int> fds;
-  Append(fds, std::forward<Args>(sent_fds)...);
-  return SendFileDescriptorVector(sock, data, len, fds);
-}
+        template<typename... Args>
+        ssize_t
+        SendFileDescriptors(borrowed_fd sock, const void *data, size_t len, Args &&... sent_fds) {
+            // Do not allow implicit conversion to int: people might try to do something along the lines of:
+            //   SendFileDescriptors(..., std::move(a_unique_fd))
+            // and be surprised when the unique_fd isn't closed afterwards.
+            AssertType<int>(std::forward<Args>(sent_fds)...);
+            std::vector<int> fds;
+            Append(fds, std::forward<Args>(sent_fds)...);
+            return SendFileDescriptorVector(sock, data, len, fds);
+        }
 
 // Helper for ReceiveFileDescriptorVector that receives an exact number of file descriptors.
 // If more file descriptors are received than requested, -1 is returned with errno set to EMSGSIZE.
 // If fewer file descriptors are received than requested, -1 is returned with errno set to ENOMSG.
 // In both cases, all arguments are cleared and any received FDs are thrown away.
-template <typename... Args>
-ssize_t ReceiveFileDescriptors(borrowed_fd sock, void* data, size_t len, Args&&... received_fds) {
-  std::vector<unique_fd*> fds;
-  Append(fds, std::forward<Args>(received_fds)...);
+        template<typename... Args>
+        ssize_t
+        ReceiveFileDescriptors(borrowed_fd sock, void *data, size_t len, Args &&... received_fds) {
+            std::vector < unique_fd * > fds;
+            Append(fds, std::forward<Args>(received_fds)...);
 
-  std::vector<unique_fd> result;
-  ssize_t rc = ReceiveFileDescriptorVector(sock, data, len, fds.size(), &result);
-  if (rc == -1 || result.size() != fds.size()) {
-    int err = rc == -1 ? errno : ENOMSG;
-    for (unique_fd* fd : fds) {
-      fd->reset();
-    }
-    errno = err;
-    return -1;
-  }
+            std::vector <unique_fd> result;
+            ssize_t rc = ReceiveFileDescriptorVector(sock, data, len, fds.size(), &result);
+            if (rc == -1 || result.size() != fds.size()) {
+                int err = rc == -1 ? errno : ENOMSG;
+                for (unique_fd *fd : fds) {
+                    fd->reset();
+                }
+                errno = err;
+                return -1;
+            }
 
-  for (size_t i = 0; i < fds.size(); ++i) {
-    *fds[i] = std::move(result[i]);
-  }
-  return rc;
-}
+            for (size_t i = 0; i < fds.size(); ++i) {
+                *fds[i] = std::move(result[i]);
+            }
+            return rc;
+        }
 
 #endif
 
-}  // namespace base
+    }  // namespace base
 }  // namespace android

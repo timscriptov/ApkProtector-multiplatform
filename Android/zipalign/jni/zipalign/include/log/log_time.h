@@ -156,8 +156,8 @@ struct log_time {
 #else /* __cplusplus */
 
 typedef struct log_time {
-  uint32_t tv_sec;
-  uint32_t tv_nsec;
+    uint32_t tv_sec;
+    uint32_t tv_nsec;
 } __attribute__((__packed__)) log_time;
 
 #endif /* __cplusplus */

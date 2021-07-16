@@ -12,8 +12,7 @@ LOCAL_SRC_FILES := ZipAlign.cpp \
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include \
 
 LOCAL_STATIC_LIBRARIES := utils_static ziparchive_static zopfli_static
-LOCAL_CFLAGS := -DSILENT -DRARDLL -I$(LOCAL_PATH)/rar -fexceptions -Os -ffunction-sections -fdata-sections -fvisibility=hidden -w -Wl,--gc-sections
-
+LOCAL_CFLAGS := -DSILENT -DRARDLL -I$(LOCAL_PATH)/rar -fexceptions -Os -ffunction-sections -fdata-sections -fvisibility=hidden -w -Wl,--gc-sections\
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -23,7 +22,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := zipalign
-LOCAL_SRC_FILES := Main.cpp
+LOCAL_SRC_FILES := JNImain.cpp
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 
 LOCAL_STATIC_LIBRARIES := zipalign_static

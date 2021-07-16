@@ -26,7 +26,7 @@
 # dexlib2
 -keep class com.google.common.collect.** { *; }
 
--keep class com.mcal.dexprotect.zipalign.ZipAlign { *; }
+-keep class com.mcal.apkprotector.zipalign.ZipAlign { *; }
 
 -obfuscationdictionary proguard-bin.txt
 -packageobfuscationdictionary proguard-bin.txt
