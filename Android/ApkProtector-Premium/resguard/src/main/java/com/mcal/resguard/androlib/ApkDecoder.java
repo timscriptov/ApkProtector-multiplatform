@@ -11,12 +11,15 @@ import com.mcal.resguard.util.TypedValue;
 import com.mcal.resguard.util.Utils;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
+/*import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.BasicFileAttributes;*/
+import java.net.URI;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,7 +31,7 @@ import java.util.regex.Pattern;
  */
 public class ApkDecoder {
 
-    final HashSet<Path> mRawResourceFiles = new HashSet<>();
+    final HashSet<File> mRawResourceFiles = new HashSet<>();
     private final Configuration config;
     private final ExtFile apkFile;
     private File mOutDir;
@@ -46,23 +49,27 @@ public class ApkDecoder {
         this.apkFile = new ExtFile(apkFile);
     }
 
-    private void copyOtherResFiles() throws IOException {
+    private void copyOtherResFiles() {
         if (mRawResourceFiles.isEmpty()) {
             return;
         }
-        Path resPath = mRawResFile.toPath();
-        Path destPath = mOutResFile.toPath();
+        File resPath = mRawResFile;
+        File destPath = mOutResFile;
 
-        for (Path path : mRawResourceFiles) {
-            Path relativePath = resPath.relativize(path);
-            Path dest = destPath.resolve(relativePath);
-
-            System.out.printf("copy res file not in resources.arsc file:%s\n", relativePath.toString());
-            FileOperation.copyFileUsingStream(path.toFile(), dest.toFile());
+        for (File path : mRawResourceFiles) {
+            System.out.printf("copy res file not in resources.arsc file:%s\n", destPath.toString());
+            FileOperation.copyFileStream(path, destPath);
         }
     }
 
-    public void removeCopiedResFile(Path key) {
+    public static String combine(String path1, String path2)
+    {
+        File file1 = new File(path1);
+        File file2 = new File(file1, path2);
+        return file2.getPath();
+    }
+
+    public void removeCopiedResFile(File key) {
         mRawResourceFiles.remove(key);
     }
 
@@ -100,8 +107,10 @@ public class ApkDecoder {
                 + "res");
         mOutTempDir = new File(mOutDir.getAbsoluteFile().getAbsolutePath() + File.separator + TypedValue.UNZIP_FILE_PATH);
 
-        //这里纪录原始res目录的文件
-        Files.walkFileTree(mRawResFile.toPath(), new ResourceFilesVisitor());
+        mRawResFile.listFiles(pathname -> {
+            mRawResourceFiles.add(pathname);
+            return true;
+        });
 
         if (!mRawResFile.exists() || !mRawResFile.isDirectory()) {
             throw new IOException("can not found res dir in the apk or it is not a dir");
@@ -151,7 +160,7 @@ public class ApkDecoder {
         return mOutDir;
     }
 
-    public void setOutDir(File outDir) throws AndrolibException {
+    public void setOutDir(File outDir) {
         mOutDir = outDir;
     }
 
@@ -196,14 +205,6 @@ public class ApkDecoder {
             copyOtherResFiles();
 
             ARSCDecoder.write(apkFile.getDirectory().getFileInput("resources.arsc"), this, pkgs);
-        }
-    }
-
-    class ResourceFilesVisitor extends SimpleFileVisitor<Path> {
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            mRawResourceFiles.add(file);
-            return FileVisitResult.CONTINUE;
         }
     }
 }

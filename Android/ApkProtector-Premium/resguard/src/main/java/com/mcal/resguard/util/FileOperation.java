@@ -97,6 +97,16 @@ public class FileOperation {
         return true;
     }
 
+    public static boolean copyFileStream(File file, File file1) {
+        try {
+            copyFileUsingStream(file, file1);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static void copyFileUsingStream(File source, File dest) throws IOException {
         FileInputStream is = null;
         FileOutputStream os = null;

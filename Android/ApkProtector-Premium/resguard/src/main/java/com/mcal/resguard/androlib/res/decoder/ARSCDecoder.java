@@ -90,7 +90,7 @@ public class ARSCDecoder {
     private boolean mShouldResguardForType = false;
     private Writer mMappingWriter;
     private Writer mMergeDuplicatedResMappingWriter;
-    private Map<Long, List<MergeDuplicatedResInfo>> mMergeDuplicatedResInfoData = new HashMap<>();
+    private final Map<Long, List<MergeDuplicatedResInfo>> mMergeDuplicatedResInfoData = new HashMap<>();
 
     private ARSCDecoder(InputStream arscStream, ApkDecoder decoder) throws AndrolibException, IOException {
         mOldFileName = new LinkedHashMap<>();
@@ -115,8 +115,7 @@ public class ARSCDecoder {
     public static ResPackage[] decode(InputStream arscStream, ApkDecoder apkDecoder) throws AndrolibException {
         try {
             ARSCDecoder decoder = new ARSCDecoder(arscStream, apkDecoder);
-            ResPackage[] pkgs = decoder.readTable();
-            return pkgs;
+            return decoder.readTable();
         } catch (IOException ex) {
             throw new AndrolibException("Could not decode arsc file", ex);
         }
@@ -785,7 +784,7 @@ public class ARSCDecoder {
                         FileOperation.copyFileUsingStream(resRawFile, resDestFile);
                     }
                     //already copied
-                    mApkDecoder.removeCopiedResFile(resRawFile.toPath());
+                    mApkDecoder.removeCopiedResFile(resRawFile);
                     mTableStringsResguard.put(data, result);
                 }
             }

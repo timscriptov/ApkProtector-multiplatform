@@ -24,6 +24,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //noinspection GradleDependency
     implementation 'commons-io:commons-io:2.3'
 }

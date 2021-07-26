@@ -47,7 +47,7 @@ public class ResourceApkBuilder {
         this.config = config;
     }
 
-    public void setOutDir(File outDir, String apkName, File finalApkFile) throws AndrolibException {
+    public void setOutDir(File outDir, String apkName, File finalApkFile) {
         this.mOutDir = outDir;
         this.mApkName = apkName;
         this.finalApkFile = finalApkFile;
