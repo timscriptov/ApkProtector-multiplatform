@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
             public void afterTextChanged(Editable p1) {
                 if (!p1.toString().isEmpty()) {
                     File apk = new File(p1.toString());
-                    if (apk.exists()) {
+                    if (apk.exists() && apk.getName().endsWith(".apk") && !apk.isDirectory()) {
                         apkIcon.setImageDrawable(new MyAppInfo(getContext(), apk.getAbsolutePath()).getIcon());
                         apkName.setText(MyAppInfo.getAppName());
                         apkPack.setText(MyAppInfo.getPackage());

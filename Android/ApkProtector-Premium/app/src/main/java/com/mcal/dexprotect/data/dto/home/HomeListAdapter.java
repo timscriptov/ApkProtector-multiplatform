@@ -100,57 +100,75 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
         }
         View finalConvertView = convertView;
         holder.cardlayout.setOnClickListener(v -> {
-            apk = new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
 
-            View apk_info = LayoutInflater.from(getContext()).inflate(R.layout.apk_info, null);
+            File apkPath = new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
+            File infoMz = new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName() + "/info.mz");
+            if (infoMz.exists()) {
+                if (apkPath.exists()) {
+                    apk = apkPath;
 
-            AppCompatImageView icon = apk_info.findViewById(R.id.icon);
-            AppCompatTextView app_path = apk_info.findViewById(R.id.app_path);
-            AppCompatTextView app_name = apk_info.findViewById(R.id.app_name);
-            AppCompatTextView package_name = apk_info.findViewById(R.id.package_name);
-            icon.setImageDrawable(new MyAppInfo(getContext(), apk.getAbsolutePath()).getIcon());
-            app_name.setText(pkg.getPackageLabel());
-            package_name.setText(pkg.getPackageName());
-            app_path.setText(pkg.getPackagePath().replace("info.mz", "").replace("/storage/emulated/0/", ""));
-            final SweetContentDialog dialog = new SweetContentDialog(getContext());
-            dialog.setTitle(R.string.about);
-            dialog.setView(apk_info);
-            dialog.setPositive(R.drawable.ic_play, getContext().getString(R.string.install), v1 -> {
-                try {
-                    if (apk.exists()) {
-                        if (CommonUtils.isSameSign(getContext(), apk.getAbsolutePath(), pkg.getPackageName())) {
-                            InstallProvider.install(getContext(), apk);
-                        } else {
-                            new AlertDialog.Builder(finalConvertView.getContext())
-                                    .setCancelable(false)
-                                    .setTitle(R.string.warning)
-                                    .setMessage(R.string.different_signature)
-                                    .setPositiveButton(android.R.string.ok, (p1, p2) -> InstallProvider.uninstall((AppCompatActivity) getContext(), pkg.getPackageName()))
-                                    .setNegativeButton(android.R.string.cancel, null)
-                                    .create().show();
-                        }
-                    } else {
-                        Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName()));
-                        // FIXME СУКА
-                        notifyDataSetChanged();
+                    View apk_info = LayoutInflater.from(getContext()).inflate(R.layout.apk_info, null);
+
+                    AppCompatImageView icon = apk_info.findViewById(R.id.icon);
+                    AppCompatTextView app_path = apk_info.findViewById(R.id.app_path);
+                    AppCompatTextView app_name = apk_info.findViewById(R.id.app_name);
+                    AppCompatTextView package_name = apk_info.findViewById(R.id.package_name);
+                    if (apkPath.exists()) {
+                        icon.setImageDrawable(new MyAppInfo(getContext(), apk.getAbsolutePath()).getIcon());
+                        app_name.setText(pkg.getPackageLabel());
+                        package_name.setText(pkg.getPackageName());
+                        app_path.setText(pkg.getPackagePath().replace("info.mz", "").replace("/storage/emulated/0/", ""));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                dialog.cancel();
-            });
-            dialog.setNegative(R.drawable.ic_delete, getContext().getString(R.string.delete), v1 -> {
-                try {
-                    Utils.deleteFolder(new File(pkg.getPackagePath()));
-                    //FIXME СУКА
+                    final SweetContentDialog dialog = new SweetContentDialog(getContext());
+                    dialog.setTitle(R.string.about);
+                    dialog.setView(apk_info);
+                    dialog.setPositive(R.drawable.ic_play, getContext().getString(R.string.install), v1 -> {
+                        try {
+                            if (apk.exists()) {
+                                if (CommonUtils.isSameSign(getContext(), apk.getAbsolutePath(), pkg.getPackageName())) {
+                                    InstallProvider.install(getContext(), apk);
+                                } else {
+                                    new AlertDialog.Builder(finalConvertView.getContext())
+                                            .setCancelable(false)
+                                            .setTitle(R.string.warning)
+                                            .setMessage(R.string.different_signature)
+                                            .setPositiveButton(android.R.string.ok, (p1, p2) -> InstallProvider.uninstall((AppCompatActivity) getContext(), pkg.getPackageName()))
+                                            .setNegativeButton(android.R.string.cancel, null)
+                                            .create().show();
+                                }
+                            } else {
+                                Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName()));
+                                // FIXME СУКА
+                                notifyDataSetChanged();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        dialog.cancel();
+                    });
+                    dialog.setNegative(R.drawable.ic_delete, getContext().getString(R.string.delete), v1 -> {
+                        try {
+                            Utils.deleteFolder(new File(pkg.getPackagePath()));
+                            //FIXME СУКА
+                            notifyDataSetChanged();
+                            Toast.makeText(getContext(), pkg.getPackageLabel() + getContext().getString(R.string.apk_deleted), Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        dialog.cancel();
+                    });
+                    dialog.show();
+
+                } else {
+                    Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName()));
+                    // FIXME СУКА
                     notifyDataSetChanged();
-                    Toast.makeText(getContext(), pkg.getPackageLabel() + getContext().getString(R.string.apk_deleted), Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-                dialog.cancel();
-            });
-            dialog.show();
+            } else {
+                Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName()));
+                // FIXME СУКА
+                notifyDataSetChanged();
+            }
         });
         return convertView;
     }

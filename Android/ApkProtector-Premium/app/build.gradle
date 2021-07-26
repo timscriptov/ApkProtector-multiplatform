@@ -11,8 +11,8 @@ android {
         applicationId "com.mcal.dexprotect"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 145
-        versionName "1.4.5"
+        versionCode 146
+        versionName "1.4.6"
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'

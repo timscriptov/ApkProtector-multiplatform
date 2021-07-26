@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class AppListDialog implements AppInteractor {
-    private Context mContext;
-    private AppCompatEditText mEdit;
+    private final Context mContext;
+    private final AppCompatEditText mEdit;
     private AlertDialog adx;
 
     public AppListDialog(Context c, AppCompatEditText e) {
@@ -62,7 +62,6 @@ public class AppListDialog implements AppInteractor {
                 holder.packageName.setText(pkg.packageName);
                 holder.packageVersion.setText(getContext().getString(R.string.version) + pkg.packageVersion);
                 holder.packageFilePath.setText(pkg.packageFilePath);
-
                 holder.packageIcon.setImageDrawable(pkg.packageIcon);
 
                 return convertView;
