@@ -3,8 +3,8 @@ package com.mcal.dexprotect.task;
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.resguard.ResGuard;
 import com.mcal.dexprotect.utils.file.FileUtils;
-import com.mcal.resguard.resourceproguard.InputParam;
-import com.mcal.resguard.resourceproguard.Main;
+import com.tencent.mm.resourceproguard.InputParam;
+import com.tencent.mm.resourceproguard.Main;
 
 import java.io.File;
 import java.util.ArrayList;
