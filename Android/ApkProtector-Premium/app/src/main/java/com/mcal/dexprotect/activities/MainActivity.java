@@ -132,25 +132,19 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
-            switch (menuItem.getItemId()) {
-                case R.id.item:
-                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                    return true;
-                case R.id.keystore:
-                    new CreateSignDialog(MainActivity.this).show();
-                    return true;
-                case R.id.setting:
-                    startActivityForResult(new Intent(this, SettingActivity.class), 0);
-                    return true;
-                case R.id.about:
-                    Dialogs.about(this);
-                    return true;
-                case R.id.community:
-                    Dialogs.showCommunitySheet(this);
-                    return true;
-                default:
-                    return true;
+            int itemId = menuItem.getItemId();
+            if (itemId == R.id.item) {
+                startActivity(new Intent(MainActivity.this, HomeActivity.class));
+            } else if (itemId == R.id.keystore) {
+                new CreateSignDialog(MainActivity.this).show();
+            } else if (itemId == R.id.setting) {
+                startActivityForResult(new Intent(this, SettingActivity.class), 0);
+            } else if (itemId == R.id.about) {
+                Dialogs.about(this);
+            } else if (itemId == R.id.community) {
+                Dialogs.showCommunitySheet(this);
             }
+            return true;
         });
         drawerLayout = findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
