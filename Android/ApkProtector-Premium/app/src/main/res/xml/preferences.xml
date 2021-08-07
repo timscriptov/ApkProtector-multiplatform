@@ -89,7 +89,7 @@
             android:summary="V4(Full APK Signature)"
             android:title="Signature V4" />
     </androidx.preference.PreferenceCategory>
-    <androidx.preference.PreferenceCategory
+    <!-- androidx.preference.PreferenceCategory
         android:layout="@layout/preference_category"
         android:title="@string/pref_title_category_zipaligner">
         <androidx.preference.SwitchPreference
@@ -118,5 +118,5 @@
             android:key="pageAlignSharedLibsBoolean"
             android:summary="@string/pref_msg_page_align_shared_libs"
             android:title="Page Align Shared Libs" />
-    </androidx.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory -->
 </androidx.preference.PreferenceScreen>

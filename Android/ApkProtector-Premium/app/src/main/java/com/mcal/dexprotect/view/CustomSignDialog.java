@@ -26,7 +26,7 @@ import java.io.File;
 public class CustomSignDialog implements DialogInterface.OnClickListener {
     private TextInputEditText keyStorePath;
     private FilePickerDialog pickerDialog;
-    private DialogInterface.OnClickListener listener;
+    private final DialogInterface.OnClickListener listener;
 
     @Contract(pure = true)
     public CustomSignDialog(DialogInterface.OnClickListener listener) {
@@ -116,7 +116,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
         DialogProperties properties = new DialogProperties();
         properties.selection_mode = DialogConfigs.SINGLE_MODE;
         properties.selection_type = DialogConfigs.FILE_SELECT;
-        properties.root = new File(ScopedStorage.getStorageDirectory().getAbsolutePath());
+        properties.root = new File(ScopedStorage.getStorageDirectory().getAbsolutePath().replace("/ApkProtect", ""));
         properties.extensions = new String[]{".keystore", ".KEYSTORE", ".jks", ".JKS"};
 
         pickerDialog = new FilePickerDialog(context, properties, R.style.AlertDialogTheme);

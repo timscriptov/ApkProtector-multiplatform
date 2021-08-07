@@ -23,7 +23,6 @@ import com.mcal.dexprotect.task.DexCrypto
 import com.mcal.dexprotect.utils.*
 import com.mcal.dexprotect.utils.file.FileUtils
 import com.mcal.dexprotect.utils.file.ScopedStorage
-import com.mcal.apkprotector.zipalign.ZipAlign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -151,24 +150,6 @@ class ProtectAsync(
                 LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH)
                 SourceInfo.initialise("$path/output", mi!!)
                 doProgress("Signing Apk…")
-                if (Preferences.getZipAlignerBoolean()) {
-                    doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess(Constants.UNSIGNED_PATH, "$xpath/output/aligned.apk")) {
-                        LoggerUtils.writeLog("APK aligned")
-                        doProgress("Signing Apk…")
-                        if (SignatureTool.sign(
-                                context,
-                                File("$xpath/output/aligned.apk"),
-                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                            )
-                        ) {
-                            LoggerUtils.writeLog("APK signed")
-                            doProgress("Done")
-                            t = true
-                        }
-                    }
-                } else {
-                    doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
                             File(Constants.UNSIGNED_PATH),
@@ -179,7 +160,6 @@ class ProtectAsync(
                         doProgress("Done")
                         t = true
                     }
-                }
             } catch (e: Exception) {
                 LoggerUtils.writeLog("$e")
             }
@@ -202,25 +182,7 @@ class ProtectAsync(
             )
             LoggerUtils.writeLog("Encrypted Resources")
             SourceInfo.initialise("$path/output", mi!!)
-            if (Preferences.getZipAlignerBoolean()) {
-                doProgress("Aligning Apk…")
-                if (ZipAlign.runProcess(encryptedApk, alignedApk)) {
-                    LoggerUtils.writeLog("Apk Aligned")
-                    doProgress("Signing Apk…")
-                    if (SignatureTool.sign(
-                            context,
-                            File(alignedApk),
-                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                        )
-                    ) {
-                        LoggerUtils.writeLog("Apk Signed")
-                        doProgress("Done")
-                        t = true
-                    }
-                }
-
-            } else {
-                doProgress("Signing Apk…")
+            doProgress("Signing Apk…")
                 if (SignatureTool.sign(
                         context,
                         File(encryptedApk),
@@ -231,34 +193,15 @@ class ProtectAsync(
                     doProgress("Done")
                     t = true
                 }
-            }
 
         }
         if (Preferences.getSignApkBoolean()) {
             doProgress("Copying apk…")
             val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
-            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
 
             if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 SourceInfo.initialise("$path/output", mi!!)
-                if (Preferences.getZipAlignerBoolean()) {
-                    doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
-                        LoggerUtils.writeLog("Apk Aligned")
-                        doProgress("Signing Apk…")
-                        if (SignatureTool.sign(
-                                context,
-                                File(alignedApk),
-                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                            )
-                        ) {
-                            LoggerUtils.writeLog("Apk Signed")
-                            doProgress("Done")
-                            t = true
-                        }
-                    }
-                } else {
-                    doProgress("Signing Apk…")
+                doProgress("Signing Apk…")
                     if (SignatureTool.sign(
                             context,
                             File(tmpApk),
@@ -268,7 +211,6 @@ class ProtectAsync(
                         LoggerUtils.writeLog("Apk Signed")
                         doProgress("Done")
                         t = true
-                    }
                 }
             }
         }

@@ -115,19 +115,20 @@ public class MainActivity extends AppCompatActivity {
             String[] files = new String[]{xpath + "/libfuck.so", xpath + "/libarm.so",
                     xpath + "/libarm_signer.so", xpath + "/libsandhook.so",
                     xpath + "/libsandhook-native.so", xpath + "/libarm_classes.so",
-                    xpath + "/libArmEpic.so", xpath + "/libEpic.so"};
+                    xpath + "/libArmEpic.so", xpath + "/libEpic.so",
+                    xpath + "/libcnfix.so"};
             for (String s : files) {
                 if (new File(s).exists()) {
-                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected kill++2 or ARM");
+                    Utils.showDialogWarn(this, "ApkProtector Security", "Detected kill++2 or ARM or CNFIX");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (LuckyPatcherCheck.isLucky(this) || BuildConfig.DEBUG) {
+        /*if (LuckyPatcherCheck.isLucky(this) || BuildConfig.DEBUG) {
             Dialogs.dialog(this, "ApkProtector Security", "Please delete Lucky Patcher");
-        }
+        }*/
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
