@@ -1,6 +1,8 @@
 package com.mcal.dexprotect.utils.security;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -66,7 +68,7 @@ public class SecurityUtils {
     public static boolean isVerifyInstaller() {
         try {
             /* getting context */
-            Class appGlobals = Class.forName("android.app.AppGlobals");
+            @SuppressLint("PrivateApi") Class appGlobals = Class.forName("android.app.AppGlobals");
             Class application = Class.forName("android.app.Application");
             Method getInitialApplication = appGlobals.getMethod("getInitialApplication");
             Method createPackageContext = application.getMethod("createPackageContext", String.class, int.class);
@@ -83,5 +85,10 @@ public class SecurityUtils {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static String getApplicationName(Context context) {
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        return applicationInfo.className;
     }
 }

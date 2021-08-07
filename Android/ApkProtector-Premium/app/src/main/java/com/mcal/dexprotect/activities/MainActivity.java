@@ -126,6 +126,10 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        if (!SecurityUtils.getApplicationName(this).equals("com.mcal.dexprotect.App")) {
+            Dialogs.dialog(this, "ApkProtector Security", "You have a non-licensed version of the program installed");
+        }
+
         /*if (LuckyPatcherCheck.isLucky(this) || BuildConfig.DEBUG) {
             Dialogs.dialog(this, "ApkProtector Security", "Please delete Lucky Patcher");
         }*/
