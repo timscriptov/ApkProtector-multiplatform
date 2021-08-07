@@ -300,7 +300,7 @@ public class Configuration {
         Pattern pattern = Pattern.compile(name);
         patterns.add(pattern);
         typeMap.put(typeName, patterns);
-        System.out.println(String.format("convertToPatternString typeName %s format %s", typeName, name));
+        System.out.printf("convertToPatternString typeName %s format %s%n", typeName, name);
         mWhiteList.put(packageName, typeMap);
     }
 

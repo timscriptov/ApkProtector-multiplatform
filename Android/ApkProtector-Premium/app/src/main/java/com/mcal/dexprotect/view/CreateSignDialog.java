@@ -35,7 +35,7 @@ public class CreateSignDialog {
     }
 
     public void show() {
-        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.create_sign_dialog, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.dialog_create_sign, null);
 
         keystoreAlias = view.findViewById(R.id.alias);
         keystorePassword = view.findViewById(R.id.password);

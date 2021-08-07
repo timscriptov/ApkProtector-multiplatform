@@ -42,7 +42,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
 
     public void show(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.custom_sign_dialog, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.dialog_custom_sign, null);
 
         keyStorePath = view.findViewById(R.id.keystore_path);
         TextInputEditText keyStoreAlias = view.findViewById(R.id.keystore_alias);

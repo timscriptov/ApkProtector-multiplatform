@@ -224,7 +224,7 @@ public abstract class AbstractDirectory implements Directory {
 
     abstract protected void removeFileLocal(String name);
 
-    private class ParsedPath {
+    private static class ParsedPath {
         public String dir;
         public String subpath;
 
@@ -234,7 +234,7 @@ public abstract class AbstractDirectory implements Directory {
         }
     }
 
-    private class SubPath {
+    private static class SubPath {
         public AbstractDirectory dir;
         public String path;
 

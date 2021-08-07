@@ -1,6 +1,8 @@
 package com.mcal.dexprotect.fragment;
 
 import android.animation.LayoutTransition;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import androidx.annotation.RequiresApi;
@@ -294,6 +297,9 @@ public class HomeFragment extends Fragment {
         shrinkResources.setOnCheckedChangeListener((p1, p2) -> {
             Preferences.setEncryptResourcesBoolean(p2);
             updateView();
+            if(shrinkResources.isChecked()) {
+                resGuardView();
+            }
         });
 
         signApk = mView.findViewById(R.id.sign_apk);
@@ -304,6 +310,23 @@ public class HomeFragment extends Fragment {
         });
 
         return mView;
+    }
+
+    private void resGuardView() {
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_resguard, null);
+        AppCompatEditText resNameArsc = view.findViewById(R.id.fixedResName);
+        resNameArsc.setText(Preferences.getResNameArscString());
+        //AppCompatCheckBox rootDir = view.findViewById(R.id.rootDir);
+        //rootDir.setChecked(Preferences.getResNameArscBoolean());
+        new AlertDialog.Builder(getActivity())
+                .setTitle("ResGuard")
+                .setView(view)
+                .setPositiveButton(R.string.save, (p1, p2) -> {
+                    //Preferences.setResNameArscBoolean(rootDir.isChecked());
+                    Preferences.setResNameArscString(resNameArsc.getText().toString());
+                })
+                .create().show();
     }
 
     private void checkIllegalCode() {

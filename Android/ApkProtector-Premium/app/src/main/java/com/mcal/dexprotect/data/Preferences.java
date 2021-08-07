@@ -171,6 +171,22 @@ public final class Preferences {
         preferences.edit().putBoolean("illegalCodeCheckBoolean", flag).apply();
     }
 
+    public static boolean getResNameArscBoolean() {
+        return preferences.getBoolean("resNameArscBoolean", false);
+    }
+
+    public static void setResNameArscBoolean(Boolean flag) {
+        preferences.edit().putBoolean("resNameArscBoolean", flag).apply();
+    }
+
+    public static String getResNameArscString() {
+        return preferences.getString("resNameArscString", "ApkProtector");
+    }
+
+    public static void setResNameArscString(String flag) {
+        preferences.edit().putString("resNameArscString", flag).apply();
+    }
+
     public static boolean isIllegalCodeCheckBoolean() {
         return preferences.getBoolean("illegalCodeCheckBoolean", false);
     }

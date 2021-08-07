@@ -1,6 +1,7 @@
 package com.mcal.dexprotect.task;
 
 import com.mcal.dexprotect.data.Constants;
+import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.data.resguard.ResGuard;
 import com.mcal.dexprotect.utils.file.FileUtils;
 import com.tencent.mm.resourceproguard.InputParam;
@@ -19,15 +20,15 @@ public class AndResGuard {
         if (rules.exists() && rules.isFile()) {
             try {
                 builder.setKeepRoot(ResGuard.resguardFile(rules).getKeepRoot());
-                String fixedResName = ResGuard.resguardFile(rules).getFixedResName();
+                String fixedResName = Preferences.getResNameArscString();//ResGuard.resguardFile(rules).getFixedResName();
                 if (fixedResName != null && fixedResName.length() > 0) {
-                    builder.setFixedResName(ResGuard.resguardFile(rules).getFixedResName());
+                    builder.setFixedResName(fixedResName);
                 }
                 String mappingFile = ResGuard.resguardFile(rules).getMappingFile();
                 if (mappingFile != null) {
                     File file3 = new File(file, mappingFile);
                     if (file3.exists() && file3.isFile()) {
-                        builder.setMappingFile(new File(ResGuard.resguardFile(rules).getMappingFile()));
+                        builder.setMappingFile(new File(mappingFile));
                     }
                 }
                 List<String> whiteList = ResGuard.resguardFile(rules).getWhiteList();
