@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -52,12 +53,20 @@ public class SecurityUtils {
     }
 
     public static boolean assetsCheck(Context context, String files) throws IOException {
-        InputStream input = context.getResources().getAssets().open(files);
-
-        input.mark(1);
-        final int bytesRead = input.read(new byte[1]);
-        input.reset();
-        return bytesRead != -1;
+        AssetManager mg = context.getResources().getAssets();
+        InputStream is = null;
+        try {
+            is = mg.open(files);
+            return true;
+            //File exists so do something with it
+        } catch (IOException ex) {
+            return false;
+            //file does not exist
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
     }
 
     /**

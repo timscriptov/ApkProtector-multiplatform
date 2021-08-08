@@ -49,7 +49,6 @@ public class SecurityUtils {
     }
 
     public static boolean assetsCheck(Context context, String files) throws IOException {
-        //return Arrays.asList(context.getResources().getAssets().list(files)).contains(files);
         AssetManager mg = context.getResources().getAssets();
         InputStream is = null;
         try {
