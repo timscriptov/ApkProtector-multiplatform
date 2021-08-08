@@ -8,10 +8,13 @@ import android.content.pm.InstallSourceInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
+import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
+
+import com.mcal.apkprotector.utils.CommonUtils;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +26,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.NetworkInterface;
 import java.security.cert.Certificate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -38,6 +42,29 @@ public class SecurityUtils {
 
     private static final String XPOSED_HELPERS = "de.robv.android.xposed.XposedHelpers";
     private static final String XPOSED_BRIDGE = "de.robv.android.xposed.XposedBridge";
+
+    public static boolean cppCheck(Context context, String files) {
+        File xpath = new File(context.getApplicationInfo().nativeLibraryDir);
+        return new File(xpath + "/" + files).exists();
+    }
+
+    public static boolean assetsCheck(Context context, String files) throws IOException {
+        //return Arrays.asList(context.getResources().getAssets().list(files)).contains(files);
+        AssetManager mg = context.getResources().getAssets();
+        InputStream is = null;
+        try {
+            is = mg.open(files);
+            return true;
+            //File exists so do something with it
+        } catch (IOException ex) {
+            return false;
+            //file does not exist
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
 
     @Nullable
     static String getCurrentSignature(Context context) {

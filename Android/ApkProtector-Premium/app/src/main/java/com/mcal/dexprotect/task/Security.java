@@ -27,6 +27,8 @@ public class Security {
             jSONObject.put("magiskCheckBoolean", Preferences.isMagiskCheckBoolean());
             // Проверка Xposed
             jSONObject.put("xposedCheckBoolean", Preferences.isXposedCheckBoolean());
+            // Проверка Modex 3.0
+            jSONObject.put("modexCheckBoolean", Preferences.isModexHookCheckBoolean());
             // Проверка отладки
             jSONObject.put("debugCheckBoolean", Preferences.isDebugCheckBoolean());
             // Проверка установки в Google Play Store
@@ -45,6 +47,26 @@ public class Security {
                     jSONArray.put(put);
                 }
                 jSONObject.put("illegalCodeCheckString", jSONArray);
+            }
+            // Проверка C++ библиотек
+            jSONObject.put("cppLibsCheckBoolean", Preferences.isCppLibCheckBoolean());
+            if (Preferences.isCppLibCheckBoolean()) {
+                JSONArray jSONArray = new JSONArray();
+                value = Preferences.getCppLibCheckString().split("\n");
+                for (Object put : value) {
+                    jSONArray.put(put);
+                }
+                jSONObject.put("cppLibsCheckString", jSONArray);
+            }
+            // Проверка assets файлов
+            jSONObject.put("assetsCheckBoolean", Preferences.isAssetsCheckBoolean());
+            if (Preferences.isAssetsCheckBoolean()) {
+                JSONArray jSONArray = new JSONArray();
+                value = Preferences.getAssetsCheckString().split("\n");
+                for (Object put : value) {
+                    jSONArray.put(put);
+                }
+                jSONObject.put("assetsCheckString", jSONArray);
             }
             // Проверка пиратских приложений
             jSONObject.put("hookCheckBoolean", Preferences.isHookCheckBoolean());

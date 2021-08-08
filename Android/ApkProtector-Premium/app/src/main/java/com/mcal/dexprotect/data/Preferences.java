@@ -1,5 +1,6 @@
 package com.mcal.dexprotect.data;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
@@ -151,6 +152,22 @@ public final class Preferences {
         return preferences.getBoolean("deviceLockBoolean", false);
     }
 
+    public static void setAssetsCheckString(String flag) {
+        preferences.edit().putString("assetsCheckString", flag).apply();
+    }
+
+    public static void setCppLibCheckString(String flag) {
+        preferences.edit().putString("cppLibCheckString", flag).apply();
+    }
+
+    public static String getCppLibCheckString() {
+        return preferences.getString("cppLibCheckString", "libfuck.so\nlibarm.so\nlibarm_signer.so\nlibsandhook.so\nlibEpic.so\nlibcnfix.so");
+    }
+
+    public static String getAssetsCheckString() {
+        return preferences.getString("assetsCheckString", "Hook_apk\nlibjiagu.so\nlibjiagu_a64.so\nlibjiagu_x64.so\nlibjiagu_x86.so\narm\nhook.apk\nArm_Epic\nApp_dex/classes.dex\nApp_dex/Modex.txt\nHook_so/arm64-v8a/libIOHook.so\nHook_so/arm64-v8a/libmocls.so\nHook_so/arm64-v8a/libsandhook.so\nHook_so/armeabi-v7a/libmocls.so\nHook_so/armeabi-v7a/libsandhook.so\nHook_so/armeabi-v7a/libIOHook.so\npackage$Info");
+    }
+
     public static void isHookCheckString(String flag) {
         preferences.edit().putString("hookCheckString", flag).apply();
     }
@@ -263,8 +280,32 @@ public final class Preferences {
         return preferences.getBoolean("signatureCheckBoolean", false);
     }
 
+    public static void setAssetsCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("assetsCheckBoolean", flag).apply();
+    }
+
+    public static void setCppLibCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("cppLibCheckBoolean", flag).apply();
+    }
+
+    public static boolean isCppLibCheckBoolean() {
+        return preferences.getBoolean("cppLibCheckBoolean", false);
+    }
+
+    public static boolean isAssetsCheckBoolean() {
+        return preferences.getBoolean("assetsCheckBoolean", false);
+    }
+
     public static void isLuckyPatcherCheckBoolean(boolean flag) {
         preferences.edit().putBoolean("luckyPatcherCheckBoolean", flag).apply();
+    }
+
+    public static void setModexHookCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("modexHookBoolean", flag).apply();
+    }
+
+    public static boolean isModexHookCheckBoolean() {
+        return preferences.getBoolean("modexHookBoolean", false);
     }
 
     public static boolean isLuckyPatcherCheckBoolean() {

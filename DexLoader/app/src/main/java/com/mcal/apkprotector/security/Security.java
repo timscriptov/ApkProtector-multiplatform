@@ -8,6 +8,9 @@ import com.mcal.apkprotector.utils.CommonUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.InputStream;
+
 public class Security {
     public Security(Context context, String data) {
         try {
@@ -81,6 +84,20 @@ public class Security {
                         CommonUtils.showDialogWarn(context, "ApkProtector Security", "Detected Debug!");
                     }
                 }
+                // Проверка Modex 3.0
+                if (obj.getBoolean("modexCheckBoolean")) {
+                    File xpath = context.getDir("libs", Context.MODE_PRIVATE);
+                    String[] files = new String[]{xpath + "/App_dex/classes.dex",
+                            xpath + "/App_dex/Modex.txt", xpath + "/arm64-v8a/libIOHook.so",
+                            xpath + "/arm64-v8a/libmock.so", xpath + "/arm64-v8a/libsandhook.so",
+                            xpath + "/armeabi-v7a/libIOHook.so", xpath + "/armeabi-v7a/libmock.so",
+                            xpath + "/armeabi-v7a/libsandhook.so"};
+                    for (String s : files) {
+                        if(new File(s).exists()) {
+                            CommonUtils.showDialogWarn(context, "ApkProtector Security", "Detected Modex 3.0!");
+                        }
+                    }
+                }
                 if (obj.getBoolean("debugCheckBoolean")) {
                     if (SecurityUtils.detectDebugger()) {
                         CommonUtils.showDialogWarn(context, "ApkProtector Security", "Detected Debug!");
@@ -114,6 +131,29 @@ public class Security {
                         }
                     }
                 }
+                // Проверка файлов в assets
+                if (obj.getBoolean("assetsCheckBoolean")) {
+                    JSONArray jSONArray = obj.getJSONArray("assetsCheckString");
+
+                    for (int i = 0; i < jSONArray.length(); i++) {
+                        if (SecurityUtils.assetsCheck(context, jSONArray.getString(i))) {
+                            CommonUtils.showDialogWarn(context, data, "Detected Pirate App:\n " + jSONArray.getString(i));
+                            break;
+                        }
+                    }
+                }
+                // Проверка C++ библиотек
+                if (obj.getBoolean("cppLibsCheckBoolean")) {
+                    JSONArray jSONArray = obj.getJSONArray("cppLibsCheckString");
+
+                    for (int i = 0; i < jSONArray.length(); i++) {
+                        if (SecurityUtils.cppCheck(context, jSONArray.getString(i))) {
+                            CommonUtils.showDialogWarn(context, data, "Detected Pirate App:\n " + jSONArray.getString(i));
+                            break;
+                        }
+                    }
+                }
+
             }
         } catch (Throwable e) {
             e.printStackTrace();

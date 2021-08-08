@@ -219,6 +219,30 @@
                                     android:orientation="vertical">
 
                                     <androidx.appcompat.widget.AppCompatCheckBox
+                                        android:id="@+id/modexHookCheck"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Check Modex 3.0 Hook" />
+
+                                    <androidx.appcompat.widget.AppCompatCheckBox
+                                        android:id="@+id/cppLibCheck"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Check Illegal C++ Libraries" />
+
+                                    <androidx.appcompat.widget.AppCompatCheckBox
+                                        android:id="@+id/assets_check"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:text="Check Illegal Assets" />
+
+                                    <androidx.appcompat.widget.AppCompatCheckBox
                                         android:id="@+id/lucky_patcher_check"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"

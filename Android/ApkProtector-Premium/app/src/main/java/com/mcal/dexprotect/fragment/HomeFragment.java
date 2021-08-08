@@ -85,6 +85,9 @@ public class HomeFragment extends Fragment {
     private AppCompatRadioButton dexProtect;
     private AppCompatRadioButton shrinkResources;
     private AppCompatRadioButton signApk;
+    private AppCompatCheckBox checkCppLib;
+    private AppCompatCheckBox checkModexHook;
+    private AppCompatCheckBox checkAssets;
     private AppCompatCheckBox checkluckyPatcher;
     private AppCompatCheckBox checkSignature;
     private AppCompatCheckBox checkRoot;
@@ -204,6 +207,30 @@ public class HomeFragment extends Fragment {
                         .create().show();
             } else {
                 Snackbar.make(protect, R.string.invalid_apk_file, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+        checkModexHook = mView.findViewById(R.id.modexHookCheck);
+        checkModexHook.setChecked(Preferences.isModexHookCheckBoolean());
+        checkModexHook.setOnCheckedChangeListener((p1, p2) -> {
+            Preferences.setModexHookCheckBoolean(p2);
+        });
+
+        checkCppLib = mView.findViewById(R.id.cppLibCheck);
+        checkCppLib.setChecked(Preferences.isCppLibCheckBoolean());
+        checkCppLib.setOnCheckedChangeListener((p1, p2) -> {
+            Preferences.setCppLibCheckBoolean(p2);
+            if (checkCppLib.isChecked()) {
+                checkCppLibView();
+            }
+        });
+
+        checkAssets = mView.findViewById(R.id.assets_check);
+        checkAssets.setChecked(Preferences.isAssetsCheckBoolean());
+        checkAssets.setOnCheckedChangeListener((p1, p2) -> {
+            Preferences.setAssetsCheckBoolean(p2);
+            if (checkAssets.isChecked()) {
+                checkAssetsView();
             }
         });
 
@@ -352,6 +379,52 @@ public class HomeFragment extends Fragment {
                 .create().show();
     }
 
+    private void checkCppLibView() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout ll = new LinearLayout(getActivity());
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setPadding(40, 0, 40, 0);
+        ll.setLayoutParams(layoutParams);
+        final AppCompatEditText enterPackageName = new AppCompatEditText(getActivity());
+        enterPackageName.setHint("Enter C++ libs files");
+        enterPackageName.setText(Preferences.getCppLibCheckString());
+        ll.addView(enterPackageName);
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Illegal C++ libs")
+                .setView(ll)
+                .setPositiveButton(R.string.save, (p1, p2) -> {
+                    Preferences.setCppLibCheckString(enterPackageName.getText().toString());
+                })
+                .setNegativeButton(R.string.cancel, (p1, p2) -> {
+                    Preferences.setCppLibCheckBoolean(false);
+                    checkHook.setChecked(false);
+                })
+                .create().show();
+    }
+
+    private void checkAssetsView() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout ll = new LinearLayout(getActivity());
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setPadding(40, 0, 40, 0);
+        ll.setLayoutParams(layoutParams);
+        final AppCompatEditText enterPackageName = new AppCompatEditText(getActivity());
+        enterPackageName.setHint("Enter assets files");
+        enterPackageName.setText(Preferences.getAssetsCheckString());
+        ll.addView(enterPackageName);
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Illegal Assets Files")
+                .setView(ll)
+                .setPositiveButton(R.string.save, (p1, p2) -> {
+                    Preferences.setAssetsCheckString(enterPackageName.getText().toString());
+                })
+                .setNegativeButton(R.string.cancel, (p1, p2) -> {
+                    Preferences.setAssetsCheckBoolean(false);
+                    checkHook.setChecked(false);
+                })
+                .create().show();
+    }
+
     private void checkHook() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout ll = new LinearLayout(getActivity());
@@ -467,7 +540,6 @@ public class HomeFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            PackageManager pm = getContext().getPackageManager();
             ProtectAsync async = new ProtectAsync(listener, getActivity());
             async.execute(apk.getAbsolutePath());
         });

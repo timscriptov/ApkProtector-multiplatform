@@ -52,7 +52,7 @@ public class SecurityUtils {
     }
 
     public static boolean assetsCheck(Context context, String files) throws IOException {
-        InputStream input = context.getResources().getAssets().open("Arm_Epic");
+        InputStream input = context.getResources().getAssets().open(files);
 
         input.mark(1);
         final int bytesRead = input.read(new byte[1]);

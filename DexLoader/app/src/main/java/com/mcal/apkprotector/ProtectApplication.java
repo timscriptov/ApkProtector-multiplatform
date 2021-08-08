@@ -17,13 +17,16 @@ public class ProtectApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
+        try {
+            new Security(this, Const.DATA);
+        } finally {
+            MultiDex.install(this);
+        }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        new Security(this, Const.DATA);
         Application app = changeTopApplication(Const.REAL_APPLICATION);
         if (app != null) {
             app.onCreate();
