@@ -44,11 +44,10 @@ public class SecurityUtils {
                 Class.forName("anymy.sign.BinSignatureFix") != null ||
                 Class.forName("apkeditor.patch.signature.Fix") != null ||
                 Class.forName("com.anymy.reflection") != null ||
-                Class.forName("bin.mt.apksignaturekillerplus.HookApplication") == null ||
+                Class.forName("bin.mt.apksignaturekillerplus.HookApplication") != null ||
                 Class.forName("np.App") != null ||
                 Class.forName("np.manager.FuckSign") != null ||
                 Class.forName("np.manager.Copyright") != null ||
-                Class.forName("cc.binmt.signature.Hook") != null ||
                 Class.forName("cc.binmt.signature.Hook") != null;
     }
 
@@ -57,16 +56,19 @@ public class SecurityUtils {
         InputStream is = null;
         try {
             is = mg.open(files);
+            if (is != null) {
+                is.close();
+            }
             return true;
             //File exists so do something with it
         } catch (IOException ex) {
             return false;
             //file does not exist
-        } finally {
+        }/* finally {
             if (is != null) {
                 is.close();
             }
-        }
+        }*/
     }
 
     /**

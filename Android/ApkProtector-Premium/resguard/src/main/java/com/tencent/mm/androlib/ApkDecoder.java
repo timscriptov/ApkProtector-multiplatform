@@ -45,11 +45,10 @@ public class ApkDecoder {
         if (mRawResourceFiles.isEmpty()) {
             return;
         }
-        File destPath = mOutResFile;
 
         for (File path : mRawResourceFiles) {
-            System.out.printf("copy res file not in resources.arsc file:%s\n", destPath.toString());
-            FileOperation.copyFileStream(path, destPath);
+            System.out.printf("copy res file not in resources.arsc file:%s\n", mOutResFile.toString());
+            FileOperation.copyFileUsingStream(path, mOutResFile);
         }
     }
 
@@ -182,7 +181,7 @@ public class ApkDecoder {
             ensureFilePath();
             // read the resources.arsc checking for STORED vs DEFLATE compression
             // this will determine whether we compress on rebuild or not.
-            System.out.printf("decoding resources.arsc\n");
+            System.out.print("decoding resources.arsc\n");
             RawARSCDecoder.decode(apkFile.getDirectory().getFileInput("resources.arsc"));
             ResPackage[] pkgs = ARSCDecoder.decode(apkFile.getDirectory().getFileInput("resources.arsc"), this);
 

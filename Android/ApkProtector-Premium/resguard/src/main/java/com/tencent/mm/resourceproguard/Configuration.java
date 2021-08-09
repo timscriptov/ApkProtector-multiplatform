@@ -40,49 +40,32 @@ public class Configuration {
     private static final String WHITELIST_ISSUE = "whitelist";
     private static final String COMPRESS_ISSUE = "compress";
     private static final String MAPPING_ISSUE = "keepmapping";
-    private static final String SIGN_ISSUE = "sign";
     private static final String ATTR_7ZIP = "seventzip";
     private static final String ATTR_KEEPROOT = "keeproot";
     private static final String ATTR_SIGNFILE = "metaname";
     private static final String MERGE_DUPLICATED_RES = "mergeDuplicatedRes";
-    private static final String ATTR_SIGNFILE_PATH = "path";
-    private static final String ATTR_SIGNFILE_KEYPASS = "keypass";
-    private static final String ATTR_SIGNFILE_STOREPASS = "storepass";
-    private static final String ATTR_SIGNFILE_ALIAS = "alias";
     public final HashMap<String, HashMap<String, HashSet<Pattern>>> mWhiteList;
     public final HashMap<String, HashMap<String, HashMap<String, String>>> mOldResMapping;
     public final HashMap<String, String> mOldFileMapping;
     public final HashSet<Pattern> mCompressPatterns;
-    public final String digestAlg;
     private final Pattern MAP_PATTERN = Pattern.compile("\\s+(.*)->(.*)");
     public boolean mUse7zip = true;
     public boolean mKeepRoot = false;
     public boolean mMergeDuplicatedRes = false;
     public String mMetaName = "META-INF";
     public String mFixedResName = null;
-    public boolean mUseSignAPK = false;
     public boolean mUseKeepMapping = false;
-    public File mSignatureFile;
     public File mOldMappingFile;
     public boolean mUseWhiteList;
     public boolean mUseCompress;
-    public String mKeyPass;
-    public String mStorePass;
-    public String mStoreAlias;
     public String m7zipPath;
-    public String mZipalignPath;
 
     /**
      * use by command line with xml config
      *
      * @param config        xml config file
      * @param sevenzipPath  7zip bin file path
-     * @param zipAlignPath  zipalign bin file path
      * @param mappingFile   mapping file
-     * @param signatureFile signature file
-     * @param keypass       signature key password
-     * @param storealias    signature store alias
-     * @param storepass     signature store password
      * @throws IOException                  io exception
      * @throws ParserConfigurationException parse exception
      * @throws SAXException                 sax exception
@@ -90,27 +73,17 @@ public class Configuration {
     public Configuration(
             File config,
             String sevenzipPath,
-            String zipAlignPath,
-            File mappingFile,
-            File signatureFile,
-            String keypass,
-            String storealias,
-            String storepass) throws IOException, ParserConfigurationException, SAXException {
+            File mappingFile) throws IOException, ParserConfigurationException, SAXException {
         mWhiteList = new HashMap<>();
         mOldResMapping = new HashMap<>();
         mOldFileMapping = new HashMap<>();
         mCompressPatterns = new HashSet<>();
-        digestAlg = DEFAULT_DIGEST_ALG;
-        if (signatureFile != null) {
-            setSignData(signatureFile, keypass, storealias, storepass);
-        }
         if (mappingFile != null) {
             setKeepMappingData(mappingFile);
         }
         // setSignData and setKeepMappingData must before readXmlConfig or it will read
         readXmlConfig(config);
         this.m7zipPath = sevenzipPath;
-        this.mZipalignPath = zipAlignPath;
     }
 
     /**
@@ -124,10 +97,6 @@ public class Configuration {
         mOldResMapping = new HashMap<>();
         mOldFileMapping = new HashMap<>();
         mCompressPatterns = new HashSet<>();
-        this.digestAlg = param.digestAlg;
-        if (param.useSign) {
-            setSignData(param.signFile, param.keypass, param.storealias, param.storepass);
-        }
         if (param.mappingFile != null) {
             mUseKeepMapping = true;
             setKeepMappingData(param.mappingFile);
@@ -146,21 +115,6 @@ public class Configuration {
             addToCompressPatterns(item);
         }
         this.m7zipPath = param.sevenZipPath;
-        this.mZipalignPath = param.zipAlignPath;
-    }
-
-    private void setSignData(
-            File signatureFile, String keypass, String storealias, String storepass) throws IOException {
-        mUseSignAPK = true;
-        mSignatureFile = signatureFile;
-        if (!mSignatureFile.exists()) {
-            throw new IOException(String.format("the signature file do not exit, raw path= %s\n",
-                    mSignatureFile.getAbsolutePath()
-            ));
-        }
-        mKeyPass = keypass;
-        mStoreAlias = storealias;
-        mStorePass = storepass;
     }
 
     private void setKeepMappingData(File mappingFile) throws IOException {
@@ -218,12 +172,6 @@ public class Configuration {
                         mUseCompress = active;
                         if (mUseCompress) {
                             readCompressFromXml(node);
-                        }
-                        break;
-                    case SIGN_ISSUE:
-                        mUseSignAPK |= active;
-                        if (mUseSignAPK) {
-                            readSignFromXml(node, xmlConfigFile.getParentFile());
                         }
                         break;
                     case MAPPING_ISSUE:
@@ -302,68 +250,6 @@ public class Configuration {
         typeMap.put(typeName, patterns);
         System.out.printf("convertToPatternString typeName %s format %s%n", typeName, name);
         mWhiteList.put(packageName, typeMap);
-    }
-
-    private void readSignFromXml(Node node, File xmlConfigFileParentFile) throws IOException {
-        if (mSignatureFile != null) {
-            System.err.println("already set the sign info from command line, ignore this");
-            return;
-        }
-
-        NodeList childNodes = node.getChildNodes();
-
-        if (childNodes.getLength() > 0) {
-            for (int j = 0, n = childNodes.getLength(); j < n; j++) {
-                Node child = childNodes.item(j);
-                if (child.getNodeType() == Node.ELEMENT_NODE) {
-                    Element check = (Element) child;
-                    String tagName = check.getTagName();
-                    String vaule = check.getAttribute(ATTR_VALUE);
-                    if (vaule.length() == 0) {
-                        throw new IOException(String.format("Invalid config file: Missing required attribute %s\n", ATTR_VALUE));
-                    }
-
-                    switch (tagName) {
-                        case ATTR_SIGNFILE_PATH:
-                            char ch = vaule.charAt(0);
-                            switch (ch) {
-                                // supports the writting style like ~/.android/debug.keystore. the symbol ~ represent the home directory of the current user.
-                                case '~':
-                                    mSignatureFile = new File(String.format("%s%s", System.getProperty("user.home"), vaule.substring(1)));
-                                    break;
-                                // relative to the directory of the xml config file.
-                                case '.':
-                                    mSignatureFile = new File(xmlConfigFileParentFile, vaule);
-                                    break;
-                                // keep the origin logical.
-                                default:
-                                    mSignatureFile = new File(vaule);
-                            }
-                            if (!mSignatureFile.isFile()) {
-                                throw new IOException(String.format("the signature file do not exit. raw path= %s\n",
-                                        mSignatureFile.getAbsolutePath()
-                                ));
-                            }
-                            break;
-                        case ATTR_SIGNFILE_STOREPASS:
-                            mStorePass = vaule;
-                            mStorePass = mStorePass.trim();
-                            break;
-                        case ATTR_SIGNFILE_KEYPASS:
-                            mKeyPass = vaule;
-                            mKeyPass = mKeyPass.trim();
-                            break;
-                        case ATTR_SIGNFILE_ALIAS:
-                            mStoreAlias = vaule;
-                            mStoreAlias = mStoreAlias.trim();
-                            break;
-                        default:
-                            System.err.println("unknown tag " + tagName);
-                            break;
-                    }
-                }
-            }
-        }
     }
 
     private void readCompressFromXml(Node node) throws IOException {

@@ -83,8 +83,8 @@ public class FileDirectory extends AbstractDirectory {
     }
 
     private void loadAll() {
-        mFiles = new LinkedHashSet<String>();
-        mDirs = new LinkedHashMap<String, AbstractDirectory>();
+        mFiles = new LinkedHashSet<>();
+        mDirs = new LinkedHashMap<>();
 
         File[] files = getDir().listFiles();
         for (int i = 0; i < files.length; i++) {
@@ -96,6 +96,7 @@ public class FileDirectory extends AbstractDirectory {
                 try {
                     mDirs.put(file.getName(), new FileDirectory(file));
                 } catch (DirectoryException e) {
+                    e.printStackTrace();
                 }
             }
         }

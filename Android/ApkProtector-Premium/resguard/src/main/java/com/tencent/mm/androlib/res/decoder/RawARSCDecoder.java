@@ -62,7 +62,7 @@ public class RawARSCDecoder {
     private ResPackage[] mPkgs;
     private int mResId;
 
-    private RawARSCDecoder(InputStream arscStream) throws AndrolibException, IOException {
+    private RawARSCDecoder(InputStream arscStream)  {
         arscStream = mCountIn = new CountingInputStream(arscStream);
         mIn = new ExtDataInput(new LEDataInputStream(arscStream));
         mExistTypeNames = new HashMap<>();
@@ -71,7 +71,7 @@ public class RawARSCDecoder {
     public static ResPackage[] decode(InputStream arscStream) throws AndrolibException {
         try {
             RawARSCDecoder decoder = new RawARSCDecoder(arscStream);
-            System.out.printf("parse to get the exist names in the resouces.arsc first\n");
+            System.out.print("parse to get the exist names in the resouces.arsc first\n");
             return decoder.readTable();
         } catch (IOException ex) {
             throw new AndrolibException("Could not decode arsc file", ex);
@@ -218,7 +218,7 @@ public class RawARSCDecoder {
         }
     }
 
-    private void readComplexEntry(boolean flags, int specNamesId) throws IOException, AndrolibException {
+    private void readComplexEntry(boolean flags, int specNamesId) throws IOException {
         int parent = mIn.readInt();
         int count = mIn.readInt();
         for (int i = 0; i < count; i++) {
@@ -227,7 +227,7 @@ public class RawARSCDecoder {
         }
     }
 
-    private void readValue(boolean flags, int specNamesId) throws IOException, AndrolibException {
+    private void readValue(boolean flags, int specNamesId) throws IOException {
         /* size */
         mIn.skipCheckShort((short) 8);
         /* zero */
@@ -332,7 +332,7 @@ public class RawARSCDecoder {
         }
     }
 
-    private String readScriptOrVariantChar(int length) throws AndrolibException, IOException {
+    private String readScriptOrVariantChar(int length) throws IOException {
         StringBuilder string = new StringBuilder(16);
 
         while (length-- != 0) {

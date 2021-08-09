@@ -1,5 +1,7 @@
 package com.tencent.mm.util;
 
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,6 +9,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -48,7 +52,7 @@ public class FileOperation {
             return 1;
         }
         long size;
-        File flist[] = f.listFiles();
+        File[] flist = f.listFiles();
         size = flist.length;
         for (int i = 0; i < flist.length; i++) {
             if (flist[i].isDirectory()) {
@@ -88,7 +92,7 @@ public class FileOperation {
         if (file.isFile()) {
             file.delete();
         } else if (file.isDirectory()) {
-            File files[] = file.listFiles();
+            File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 deleteDir(files[i]);
             }
@@ -97,39 +101,24 @@ public class FileOperation {
         return true;
     }
 
-    public static boolean copyFileStream(File file, File file1) {
+    public static void copyFileUsingStream(File source, File dest) {
         try {
-            copyFileUsingStream(file, file1);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static void copyFileUsingStream(File source, File dest) throws IOException {
-        FileInputStream is = null;
-        FileOutputStream os = null;
-        File parent = dest.getParentFile();
-        if (parent != null && (!parent.exists())) {
-            parent.mkdirs();
-        }
-        try {
-            is = new FileInputStream(source);
-            os = new FileOutputStream(dest, false);
+            File parent = dest.getParentFile();
+            if (parent != null && (!parent.exists())) {
+                parent.mkdirs();
+            }
+            FileInputStream is = new FileInputStream(source);
+            FileOutputStream os = new FileOutputStream(dest, false);
 
             byte[] buffer = new byte[BUFFER];
             int length;
             while ((length = is.read(buffer)) > 0) {
                 os.write(buffer, 0, length);
             }
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-            if (os != null) {
-                os.close();
-            }
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -246,7 +235,7 @@ public class FileOperation {
                 rootpath = rootpath.replace("\\", "/");
             }
             if (!compressData.containsKey(rootpath)) {
-                System.err.printf(String.format("do not have the compress data path =%s in resource.asrc\n", rootpath));
+                System.err.print(String.format("do not have the compress data path =%s in resource.asrc\n", rootpath));
                 //throw new IOException(String.format("do not have the compress data path=%s", rootpath));
                 return;
             }

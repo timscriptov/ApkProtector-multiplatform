@@ -90,7 +90,7 @@ public class ARSCDecoder {
     private boolean mShouldResguardForType = false;
     private Writer mMappingWriter;
     private Writer mMergeDuplicatedResMappingWriter;
-    private Map<Long, List<MergeDuplicatedResInfo>> mMergeDuplicatedResInfoData = new HashMap<>();
+    private final Map<Long, List<MergeDuplicatedResInfo>> mMergeDuplicatedResInfoData = new HashMap<>();
 
     private ARSCDecoder(InputStream arscStream, ApkDecoder decoder) throws AndrolibException, IOException {
         mOldFileName = new LinkedHashMap<>();
@@ -115,8 +115,7 @@ public class ARSCDecoder {
     public static ResPackage[] decode(InputStream arscStream, ApkDecoder apkDecoder) throws AndrolibException {
         try {
             ARSCDecoder decoder = new ARSCDecoder(arscStream, apkDecoder);
-            ResPackage[] pkgs = decoder.readTable();
-            return pkgs;
+            return decoder.readTable();
         } catch (IOException ex) {
             throw new AndrolibException("Could not decode arsc file", ex);
         }
@@ -235,7 +234,7 @@ public class ARSCDecoder {
     }
 
     private void writeTable() throws IOException, AndrolibException {
-        System.out.printf("writing new resources.arsc \n");
+        System.out.print("writing new resources.arsc \n");
         mTableLenghtChange = 0;
         writeNextChunkCheck(Header.TYPE_TABLE, 0);
         int packageCount = mIn.readInt();
@@ -835,7 +834,7 @@ public class ARSCDecoder {
         return filterInfo;
     }
 
-    private void writeValue() throws IOException, AndrolibException {
+    private void writeValue() throws IOException {
         /* size */
         mOut.writeCheckShort(mIn.readShort(), (short) 8);
         /* zero */
@@ -1196,7 +1195,7 @@ public class ARSCDecoder {
 
         public String getReplaceString() throws AndrolibException {
             if (mReplaceStringBuffer.isEmpty()) {
-                throw new AndrolibException(String.format("now can only proguard less than 35594 in a single type\n"));
+                throw new AndrolibException("now can only proguard less than 35594 in a single type\n");
             }
             return mReplaceStringBuffer.remove(0);
         }

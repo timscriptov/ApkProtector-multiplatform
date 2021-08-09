@@ -61,7 +61,7 @@ public class ZipRODirectory extends AbstractDirectory {
     }
 
     @Override
-    protected AbstractDirectory createDirLocal(String name) throws DirectoryException {
+    protected AbstractDirectory createDirLocal(String name) {
         throw new UnsupportedOperationException();
     }
 
@@ -75,7 +75,7 @@ public class ZipRODirectory extends AbstractDirectory {
     }
 
     @Override
-    protected OutputStream getFileOutputLocal(String name) throws DirectoryException {
+    protected OutputStream getFileOutputLocal(String name) {
         throw new UnsupportedOperationException();
     }
 

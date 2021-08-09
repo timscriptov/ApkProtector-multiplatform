@@ -6,6 +6,7 @@ import com.mcal.dexprotect.data.resguard.ResGuard;
 import com.mcal.dexprotect.utils.file.FileUtils;
 import com.tencent.mm.resourceproguard.InputParam;
 import com.tencent.mm.resourceproguard.Main;
+import com.tencent.mm.util.FileOperation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,11 +60,12 @@ public class AndResGuard {
             Main.gradleRun(builder.create());
             File outputApk = new File(folderMapping, "app-temp_unsigned.apk");
             if (outputApk.exists()) {
-                outputApk.renameTo(new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
-            }
-            for (File f : folderMapping.listFiles()) {
-                if (f.getName().endsWith(".txt")) continue;
-                FileUtils.delete(f);
+                //outputApk.renameTo(new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
+                FileOperation.copyFileUsingStream(outputApk, new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
+                for (File f : folderMapping.listFiles()) {
+                    if (f.getName().endsWith(".txt")) continue;
+                    FileUtils.delete(f);
+                }
             }
         }
     }

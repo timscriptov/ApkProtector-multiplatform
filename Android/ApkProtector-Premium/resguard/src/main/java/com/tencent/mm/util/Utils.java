@@ -45,7 +45,7 @@ public class Utils {
             return false;
         }
         for (Pattern p : patterns) {
-            Boolean isMatch = p.matcher(str).matches();
+            boolean isMatch = p.matcher(str).matches();
             if (isMatch) return true;
         }
         return false;
@@ -66,7 +66,7 @@ public class Utils {
             output = StringUtil.readInputStream(process.getInputStream());
             process.waitFor();
             if (process.exitValue() != 0) {
-                System.err.println(String.format("%s Failed! Please check your signature file.\n", cmd[0]));
+                System.err.printf("%s Failed! Please check your signature file.\n%n", cmd[0]);
                 throw new RuntimeException(StringUtil.readInputStream(process.getErrorStream()));
             }
         } finally {
@@ -85,7 +85,7 @@ public class Utils {
             output = StringUtil.readInputStream(process.getInputStream());
             process.waitFor();
             if (process.exitValue() != 0) {
-                System.err.println(String.format("%s Failed! Please check your signature file.\n", argv[0]));
+                System.err.printf("%s Failed! Please check your signature file.\n%n", argv[0]);
                 throw new RuntimeException(StringUtil.readInputStream(process.getErrorStream()));
             }
         } finally {

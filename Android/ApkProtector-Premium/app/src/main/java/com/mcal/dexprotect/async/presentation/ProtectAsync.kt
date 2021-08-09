@@ -171,7 +171,6 @@ class ProtectAsync(
                 FileUtils.inputStreamAssets(getContext(), "proguard-resources.json", rules)
             }
             val encryptedApk = Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"
-            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
 
             doProgress("Encrypting Resources…")
             AndResGuard.proguard2(

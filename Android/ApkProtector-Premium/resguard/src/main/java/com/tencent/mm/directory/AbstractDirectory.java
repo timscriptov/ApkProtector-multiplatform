@@ -85,7 +85,7 @@ public abstract class AbstractDirectory implements Directory {
 
     @Override
     public Map<String, Directory> getDirs(boolean recursive) throws UnsupportedOperationException {
-        return new LinkedHashMap<String, Directory>(getAbstractDirs(recursive));
+        return new LinkedHashMap<>(getAbstractDirs(recursive));
     }
 
     @Override

@@ -226,9 +226,9 @@ public class StringBlock {
         StringBlock block = new StringBlock();
         block.m_isUTF8 = (flags & UTF8_FLAG) != 0;
         if (block.m_isUTF8) {
-            System.out.printf("resources.arsc Character Encoding: utf-8\n");
+            System.out.print("resources.arsc Character Encoding: utf-8\n");
         } else {
-            System.out.printf("resources.arsc Character Encoding: utf-16\n");
+            System.out.print("resources.arsc Character Encoding: utf-16\n");
         }
 
         block.m_stringOffsets = reader.readIntArray(stringCount);
@@ -363,7 +363,7 @@ public class StringBlock {
         out.writeBytes(reader, chunkSize - 8);
     }
 
-    private static final int[] getUtf8(byte[] array, int offset) {
+    private static int[] getUtf8(byte[] array, int offset) {
         int val = array[offset];
         int length;
         // We skip the utf16 length of the string
@@ -385,7 +385,7 @@ public class StringBlock {
         return new int[]{offset, length};
     }
 
-    private static final int[] getUtf16(byte[] array, int offset) {
+    private static int[] getUtf16(byte[] array, int offset) {
         int val = ((array[offset + 1] & 0xFF) << 8 | array[offset] & 0xFF);
 
         if ((val & 0x8000) != 0) {
@@ -397,16 +397,16 @@ public class StringBlock {
         return new int[]{2, val * 2};
     }
 
-    private static final int getShort(byte[] array, int offset) {
+    private static int getShort(byte[] array, int offset) {
         return (array[offset + 1] & 0xff) << 8 | array[offset] & 0xff;
     }
 
-    private static final void writeShort(byte[] array, int offset, short value) {
+    private static void writeShort(byte[] array, int offset, short value) {
         array[offset] = (byte) (0xFF & value);
         array[offset + 1] = (byte) (0xFF & (value >> 8));
     }
 
-    private static final int getShort(int[] array, int offset) {
+    private static int getShort(int[] array, int offset) {
         int value = array[offset / 4];
         if ((offset % 4) / 2 == 0) {
             return (value & 0xFFFF);

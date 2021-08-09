@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         SignatureCheck.start(this);
         // Проверка встроенного кода
         try {
-            if (SecurityUtils.illegalCodeCheck() || BuildConfig.DEBUG) {
+            if (SecurityUtils.illegalCodeCheck()) {
                 Utils.showDialogWarn(this, "ApkProtector Security", getString(R.string.vending_message));
             }
         } catch (ClassNotFoundException e) {
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     "Hook_so/armeabi-v7a/libmocls.so", "Hook_so/armeabi-v7a/libsandhook.so",
                     "Hook_so/armeabi-v7a/libIOHook.so", "package$Info"};
             for (String s : files) {
-                if (SecurityUtils.assetsCheck(this, s) || BuildConfig.DEBUG) {
+                if (SecurityUtils.assetsCheck(this, s)) {
                     Utils.showDialogWarn(this, "ApkProtector Security", "Detected Modex 3.0 or ARM or Kill++1");
                 }
             }

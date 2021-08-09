@@ -1,8 +1,5 @@
 package com.tencent.mm.resourceproguard;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-
 import com.tencent.mm.androlib.AndrolibException;
 import com.tencent.mm.androlib.ApkDecoder;
 import com.tencent.mm.androlib.ResourceApkBuilder;

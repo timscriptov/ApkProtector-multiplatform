@@ -107,7 +107,7 @@ public final class LEDataInputStream implements DataInput {
      * @return how many bytes read.
      * @throws IOException if read fails.
      */
-    public final int read(byte ba[], int off, int len) throws IOException {
+    public final int read(byte[] ba, int off, int len) throws IOException {
         // For efficiency, we avoid one layer of wrapper
         return is.read(ba, off, len);
     }
@@ -176,7 +176,7 @@ public final class LEDataInputStream implements DataInput {
      * @see java.io.DataInput#readFully(byte[])
      */
     @Override
-    public final void readFully(byte ba[]) throws IOException {
+    public final void readFully(byte[] ba) throws IOException {
         dis.readFully(ba, 0, ba.length);
     }
 
@@ -187,7 +187,7 @@ public final class LEDataInputStream implements DataInput {
      * @see java.io.DataInput#readFully(byte[], int, int)
      */
     @Override
-    public final void readFully(byte ba[], int off, int len) throws IOException {
+    public final void readFully(byte[] ba, int off, int len) throws IOException {
         dis.readFully(ba, off, len);
     }
 
