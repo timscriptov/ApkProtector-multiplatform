@@ -28,13 +28,7 @@ public class Reflect {
             method.setAccessible(true); // 暴力反射
             // 调用方法并返回结果
             return method.invoke(obj, args);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;
@@ -81,11 +75,7 @@ public class Reflect {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(obj);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
             e.printStackTrace();
         }
         return null;
@@ -103,9 +93,7 @@ public class Reflect {
         try {
             Class<?> clazz = Class.forName(className);
             return getFieldValue(clazz, obj, fieldName);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
+        } catch (ClassNotFoundException | IllegalArgumentException e) {
             e.printStackTrace();
         }
         return null;
@@ -126,11 +114,7 @@ public class Reflect {
             field.setAccessible(true);
             field.set(obj, value);
             return true;
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
             e.printStackTrace();
         }
         return false;
@@ -156,5 +140,44 @@ public class Reflect {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 设置类的属性（包括私有和保护）
+     *
+     * @param classname
+     * @param filedName
+     * @param obj
+     * @param filedVaule
+     */
+    public static void setFieldOjbect(String classname, String filedName, Object obj, Object filedVaule) {
+        try {
+            Class<?> obj_class = Class.forName(classname);
+            Field field = obj_class.getDeclaredField(filedName);
+            field.setAccessible(true);
+            field.set(obj, filedVaule);
+        } catch (SecurityException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 反射得到类的属性（包括私有和保护）
+     *
+     * @param class_name
+     * @param obj
+     * @param filedName
+     * @return
+     */
+    public static Object getFieldOjbect(String class_name, Object obj, String filedName) {
+        try {
+            Class<?> obj_class = Class.forName(class_name);
+            Field field = obj_class.getDeclaredField(filedName);
+            field.setAccessible(true);
+            return field.get(obj);
+        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
