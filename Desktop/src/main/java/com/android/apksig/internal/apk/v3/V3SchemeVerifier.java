@@ -68,8 +68,11 @@ import java.util.TreeMap;
  * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature Scheme v2</a>
  */
 public abstract class V3SchemeVerifier {
-    /** Hidden constructor to prevent instantiation. */
-    private V3SchemeVerifier() {}
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private V3SchemeVerifier() {
+    }
 
     /**
      * Verifies the provided APK's APK Signature Scheme v3 signatures and returns the result of
@@ -84,12 +87,12 @@ public abstract class V3SchemeVerifier {
      * this method returns a result with one or more errors and whose
      * {@code Result.verified == false}, or this method throws an exception.
      *
-     * @throws ApkFormatException if the APK is malformed
-     * @throws NoSuchAlgorithmException if the APK's signatures cannot be verified because a
-     *         required cryptographic algorithm implementation is missing
+     * @throws ApkFormatException         if the APK is malformed
+     * @throws NoSuchAlgorithmException   if the APK's signatures cannot be verified because a
+     *                                    required cryptographic algorithm implementation is missing
      * @throws SignatureNotFoundException if no APK Signature Scheme v3
-     * signatures are found
-     * @throws IOException if an I/O error occurs when reading the APK
+     *                                    signatures are found
+     * @throws IOException                if an I/O error occurs when reading the APK
      */
     public static ApkSigningBlockUtils.Result verify(
             RunnablesExecutor executor,
@@ -135,7 +138,7 @@ public abstract class V3SchemeVerifier {
      * int)} for more information about the contract of this method.
      *
      * @param result result populated by this method with interesting information about the APK,
-     *        such as information about signers, and verification errors and warnings.
+     *               such as information about signers, and verification errors and warnings.
      */
     private static void verify(
             RunnablesExecutor executor,
@@ -204,8 +207,8 @@ public abstract class V3SchemeVerifier {
         }
 
         try {
-             result.signingCertificateLineage =
-                     SigningCertificateLineage.consolidateLineages(lineages);
+            result.signingCertificateLineage =
+                    SigningCertificateLineage.consolidateLineages(lineages);
         } catch (IllegalArgumentException e) {
             result.addError(Issue.V3_INCONSISTENT_LINEAGES);
         }
@@ -283,7 +286,7 @@ public abstract class V3SchemeVerifier {
             CertificateFactory certFactory,
             ApkSigningBlockUtils.Result.SignerInfo result,
             Set<ContentDigestAlgorithm> contentDigestsToVerify)
-                    throws ApkFormatException, NoSuchAlgorithmException {
+            throws ApkFormatException, NoSuchAlgorithmException {
         ByteBuffer signedData = getLengthPrefixedSlice(signerBlock);
         byte[] signedDataBytes = new byte[signedData.remaining()];
         signedData.get(signedDataBytes);

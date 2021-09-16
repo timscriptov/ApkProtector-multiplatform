@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,10 +14,29 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class FileUtils {
-    public static byte[] readAllBytes(InputStream is) throws IOException {
+    public static void byteToFile(String outputFile, byte @NotNull [] bytes) throws IOException {
+        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            outputStream.write(bytes);
+        }
+    }
+
+    public static @NotNull String readTxtFromInputStream(@NotNull InputStream inputStream) {
+        try {
+            byte[] arrayOfByte = new byte[inputStream.available()];
+            inputStream.read(arrayOfByte);
+            inputStream.close();
+            return new String(arrayOfByte, StandardCharsets.UTF_8);
+        } catch (IOException localIOException) {
+            localIOException.printStackTrace();
+        }
+        return "";
+    }
+
+    public static byte @NotNull [] readAllBytes(@NotNull InputStream is) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buffer = new byte[2048];
         int len = 0;
@@ -37,7 +57,7 @@ public class FileUtils {
         }
     }
 
-    public static List<File> getFiles(File[] files) {
+    public static @NotNull List<File> getFiles(File @NotNull [] files) {
         List<File> list = new ArrayList<>();
         for (File file : files) {
             if (file.isDirectory()) {
@@ -48,8 +68,6 @@ public class FileUtils {
         }
         return list;
     }
-
-
 
     public static void delete(File file) {
         if (file != null && file.exists()) {
@@ -64,7 +82,7 @@ public class FileUtils {
         }
     }
 
-    public static void deleteDirectory(File file) throws IOException {
+    public static void deleteDirectory(@NotNull File file) throws IOException {
         //to end the recursive loop
         if (!file.exists())
             return;
@@ -81,7 +99,7 @@ public class FileUtils {
         System.out.println("Deleted file/folder: " + file.getAbsolutePath());
     }
 
-    public static void deleteDir(File file) {
+    public static void deleteDir(@NotNull File file) {
         File[] contents = file.listFiles();
         if (contents != null) {
             for (File f : contents) {
@@ -107,7 +125,7 @@ public class FileUtils {
         }
     }
 
-    public static String readFile(String path, Charset encoding) throws IOException {
+    public static @NotNull String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
     }
@@ -130,6 +148,13 @@ public class FileUtils {
         }
         File file = new File(path);
         return file != null && file.exists();
+    }
+
+    public static void writeString(String fileName, @NotNull String content) throws IOException {
+        Path logFile = Paths.get(fileName);
+        try (BufferedWriter writer = Files.newBufferedWriter(logFile, StandardCharsets.UTF_8)) {
+            writer.write(content);
+        }
     }
 
     public static void writeFile(String path, String content, boolean append) {

@@ -38,9 +38,11 @@ import java.util.Map;
  * utility functionality.
  */
 public class ApkSigningBlockUtilsLite {
-    private ApkSigningBlockUtilsLite() {}
+    private ApkSigningBlockUtilsLite() {
+    }
 
     private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
+
     /**
      * Returns the APK Signature Scheme block contained in the provided APK file for the given ID
      * and the additional information relevant for verifying the block against the file.
@@ -48,9 +50,8 @@ public class ApkSigningBlockUtilsLite {
      * @param blockId the ID value in the APK Signing Block's sequence of ID-value pairs
      *                identifying the appropriate block to find, e.g. the APK Signature Scheme v2
      *                block ID.
-     *
      * @throws SignatureNotFoundException if the APK is not signed using given APK Signature Scheme
-     * @throws IOException if an I/O error occurs while reading the APK
+     * @throws IOException                if an I/O error occurs while reading the APK
      */
     public static SignatureInfo findSignature(
             DataSource apk, ZipSections zipSections, int blockId)
@@ -140,7 +141,7 @@ public class ApkSigningBlockUtilsLite {
      * requested platform versions. As a result, the result may contain more than one signature.
      *
      * @throws NoApkSupportedSignaturesException if no supported signatures were
-     *         found for an Android platform version in the range.
+     *                                           found for an Android platform version in the range.
      */
     public static <T extends ApkSupportedSignature> List<T> getSignaturesToVerify(
             List<T> signatures, int minSdkVersion, int maxSdkVersion)
@@ -161,7 +162,7 @@ public class ApkSigningBlockUtilsLite {
      * requested platform versions. As a result, the result may contain more than one signature.
      *
      * @throws NoApkSupportedSignaturesException if no supported signatures were
-     *         found for an Android platform version in the range.
+     *                                           found for an Android platform version in the range.
      */
     public static <T extends ApkSupportedSignature> List<T> getSignaturesToVerify(
             List<T> signatures, int minSdkVersion, int maxSdkVersion,

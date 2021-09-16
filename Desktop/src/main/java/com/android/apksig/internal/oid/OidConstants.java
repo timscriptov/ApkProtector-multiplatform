@@ -56,6 +56,7 @@ public class OidConstants {
 
     public static final Map<String, List<InclusiveIntRange>> SUPPORTED_SIG_ALG_OIDS =
             new HashMap<>();
+
     static {
         addSupportedSigAlg(
                 OID_DIGEST_MD5, OID_SIG_RSA,
@@ -389,9 +390,11 @@ public class OidConstants {
     }
 
     public static class OidToUserFriendlyNameMapper {
-        private OidToUserFriendlyNameMapper() {}
+        private OidToUserFriendlyNameMapper() {
+        }
 
         private static final Map<String, String> OID_TO_USER_FRIENDLY_NAME = new HashMap<>();
+
         static {
             OID_TO_USER_FRIENDLY_NAME.put(OID_DIGEST_MD5, "MD5");
             OID_TO_USER_FRIENDLY_NAME.put(OID_DIGEST_SHA1, "SHA-1");
@@ -430,6 +433,7 @@ public class OidConstants {
     }
 
     public static final Map<String, String> OID_TO_JCA_DIGEST_ALG = new HashMap<>();
+
     static {
         OID_TO_JCA_DIGEST_ALG.put(OID_DIGEST_MD5, "MD5");
         OID_TO_JCA_DIGEST_ALG.put(OID_DIGEST_SHA1, "SHA-1");
@@ -440,6 +444,7 @@ public class OidConstants {
     }
 
     public static final Map<String, String> OID_TO_JCA_SIGNATURE_ALG = new HashMap<>();
+
     static {
         OID_TO_JCA_SIGNATURE_ALG.put(OID_SIG_MD5_WITH_RSA, "MD5withRSA");
         OID_TO_JCA_SIGNATURE_ALG.put(OID_SIG_SHA1_WITH_RSA, "SHA1withRSA");
@@ -459,5 +464,6 @@ public class OidConstants {
         OID_TO_JCA_SIGNATURE_ALG.put(OID_SIG_SHA512_WITH_ECDSA, "SHA512withECDSA");
     }
 
-    private OidConstants() {}
+    private OidConstants() {
+    }
 }

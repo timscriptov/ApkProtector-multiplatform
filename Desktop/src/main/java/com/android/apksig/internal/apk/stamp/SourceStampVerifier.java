@@ -62,7 +62,9 @@ import java.util.Map;
  * block.
  */
 class SourceStampVerifier {
-    /** Hidden constructor to prevent instantiation. */
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
     private SourceStampVerifier() {
     }
 
@@ -299,7 +301,7 @@ class SourceStampVerifier {
     }
 
     private static void parseStampAttributes(ByteBuffer stampAttributeData,
-            X509Certificate sourceStampCertificate, ApkSignerInfo result)
+                                             X509Certificate sourceStampCertificate, ApkSignerInfo result)
             throws ApkFormatException {
         ByteBuffer stampAttributes = getLengthPrefixedSlice(stampAttributeData);
         int stampAttributeCount = 0;
@@ -323,7 +325,7 @@ class SourceStampVerifier {
     }
 
     private static void readStampCertificateLineage(byte[] lineageBytes,
-            X509Certificate sourceStampCertificate, ApkSignerInfo result) {
+                                                    X509Certificate sourceStampCertificate, ApkSignerInfo result) {
         try {
             // SourceStampCertificateLineage is verified when built
             List<SourceStampCertificateLineage.SigningCertificateNode> nodes =

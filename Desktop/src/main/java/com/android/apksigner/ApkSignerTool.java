@@ -395,7 +395,7 @@ public class ApkSignerTool {
     }
 
     private static ApkSigner.SignerConfig getSignerConfig(SignerParams signer,
-            PasswordRetriever passwordRetriever, boolean deterministicDsaSigning) {
+                                                          PasswordRetriever passwordRetriever, boolean deterministicDsaSigning) {
         try {
             signer.loadPrivateKeyAndCerts(passwordRetriever);
         } catch (ParameterException e) {
@@ -590,7 +590,7 @@ public class ApkSignerTool {
         }
 
         @SuppressWarnings("resource") // false positive -- this resource is not opened here
-                PrintStream warningsOut = warningsTreatedAsErrors ? System.err : System.out;
+        PrintStream warningsOut = warningsTreatedAsErrors ? System.err : System.out;
         for (ApkVerifier.IssueWithParams warning : result.getWarnings()) {
             warningsEncountered = true;
             warningsOut.println("WARNING: " + warning);
@@ -1131,7 +1131,7 @@ public class ApkSignerTool {
      *                            the private key and certificates.
      */
     private static void loadPrivateKeyAndCerts(SignerParams params,
-            PasswordRetriever passwordRetriever) throws ParameterException {
+                                               PasswordRetriever passwordRetriever) throws ParameterException {
         try {
             params.loadPrivateKeyAndCerts(passwordRetriever);
             if (params.getKeystoreKeyAlias() != null) {

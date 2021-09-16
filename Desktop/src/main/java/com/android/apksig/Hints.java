@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.android.apksig;
+
 import java.io.IOException;
 import java.io.DataOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,7 +56,7 @@ public final class Hints {
 
         public PatternWithRange(String pattern) {
             this.pattern = Pattern.compile(pattern);
-            this.offset= 0;
+            this.offset = 0;
             this.size = Long.MAX_VALUE;
         }
 
@@ -75,9 +76,9 @@ public final class Hints {
             }
             long rangeOutStart = rangeIn.start + this.offset;
             long rangeOutSize = Math.min(rangeIn.end - rangeOutStart,
-                                           this.size);
+                    this.size);
             return new ByteRange(rangeOutStart,
-                                 rangeOutStart + rangeOutSize);
+                    rangeOutStart + rangeOutSize);
         }
     }
 

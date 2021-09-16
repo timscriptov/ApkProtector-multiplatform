@@ -153,14 +153,14 @@ public class V3SigningCertificateLineage {
                         lastCert, SignatureAlgorithm.findById(signedSigAlgorithm),
                         SignatureAlgorithm.findById(sigAlgorithmId), signature, flags));
             }
-        } catch(ApkFormatException | BufferUnderflowException e){
+        } catch (ApkFormatException | BufferUnderflowException e) {
             throw new IOException("Failed to parse V3SigningCertificateLineage object", e);
-        } catch(NoSuchAlgorithmException | InvalidKeyException
-                | InvalidAlgorithmParameterException | SignatureException e){
+        } catch (NoSuchAlgorithmException | InvalidKeyException
+                | InvalidAlgorithmParameterException | SignatureException e) {
             throw new SecurityException(
                     "Failed to verify signature over signed data for certificate #" + nodeCount
                             + " when parsing V3SigningCertificateLineage object", e);
-        } catch(CertificateException e){
+        } catch (CertificateException e) {
             throw new SecurityException("Failed to decode certificate #" + nodeCount
                     + " when parsing V3SigningCertificateLineage object", e);
         }
@@ -185,7 +185,7 @@ public class V3SigningCertificateLineage {
         for (SigningCertificateNode node : signingCertificateLineage) {
             nodes.add(encodeSigningCertificateNode(node));
         }
-        byte [] encodedSigningCertificateLineage = encodeAsSequenceOfLengthPrefixedElements(nodes);
+        byte[] encodedSigningCertificateLineage = encodeAsSequenceOfLengthPrefixedElements(nodes);
 
         // add the version code (uint32) on top of the encoded nodes
         int payloadSize = 4 + encodedSigningCertificateLineage.length;

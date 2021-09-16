@@ -1,5 +1,6 @@
 package com.mcal.apkprotector.data;
 
+import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 
 import java.io.File;
@@ -23,4 +24,11 @@ public class Constants {
     public static String DEX_SUFFIX = ".enc";
     public static String DEX_DIR = "protect";
     public static String PROXY_APP = "ProxyApplication";
+
+    // Others
+    public static final String SECONDARY_DEXES = "secondary-dexes";
+    public static final String MULTIDEX_LOCK = "MultiDex.lock";
+    public static final String CLASSES = ".classes";
+    public static final String ZIP = ".zip";
+    public static final String CODE_CACHE = "code_cache";
 }

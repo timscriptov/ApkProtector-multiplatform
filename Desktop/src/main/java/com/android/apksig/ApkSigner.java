@@ -81,7 +81,9 @@ public class ApkSigner {
 
     private static final short ANDROID_COMMON_PAGE_ALIGNMENT_BYTES = 4096;
 
-    /** Name of the Android manifest ZIP entry in APKs. */
+    /**
+     * Name of the Android manifest ZIP entry in APKs.
+     */
     private static final String ANDROID_MANIFEST_ZIP_ENTRY_NAME = "AndroidManifest.xml";
 
     private final List<SignerConfig> mSignerConfigs;
@@ -168,19 +170,19 @@ public class ApkSigner {
     /**
      * Signs the input APK and outputs the resulting signed APK. The input APK is not modified.
      *
-     * @throws IOException if an I/O error is encountered while reading or writing the APKs
-     * @throws ApkFormatException if the input APK is malformed
+     * @throws IOException              if an I/O error is encountered while reading or writing the APKs
+     * @throws ApkFormatException       if the input APK is malformed
      * @throws NoSuchAlgorithmException if the APK signatures cannot be produced or verified because
-     *     a required cryptographic algorithm implementation is missing
-     * @throws InvalidKeyException if a signature could not be generated because a signing key is
-     *     not suitable for generating the signature
-     * @throws SignatureException if an error occurred while generating or verifying a signature
-     * @throws IllegalStateException if this signer's configuration is missing required information
-     *     or if the signing engine is in an invalid state.
+     *                                  a required cryptographic algorithm implementation is missing
+     * @throws InvalidKeyException      if a signature could not be generated because a signing key is
+     *                                  not suitable for generating the signature
+     * @throws SignatureException       if an error occurred while generating or verifying a signature
+     * @throws IllegalStateException    if this signer's configuration is missing required information
+     *                                  or if the signing engine is in an invalid state.
      */
     public void sign()
             throws IOException, ApkFormatException, NoSuchAlgorithmException, InvalidKeyException,
-                    SignatureException, IllegalStateException {
+            SignatureException, IllegalStateException {
         Closeable in = null;
         DataSource inputApk;
         try {
@@ -226,7 +228,7 @@ public class ApkSigner {
 
     private void sign(DataSource inputApk, DataSink outputApkOut, DataSource outputApkIn)
             throws IOException, ApkFormatException, NoSuchAlgorithmException, InvalidKeyException,
-                    SignatureException {
+            SignatureException {
         // Step 1. Find input APK's main ZIP sections
         ApkUtils.ZipSections inputZipSections;
         try {
@@ -282,10 +284,10 @@ public class ApkSigner {
             for (SignerConfig signerConfig : mSignerConfigs) {
                 engineSignerConfigs.add(
                         new DefaultApkSignerEngine.SignerConfig.Builder(
-                                        signerConfig.getName(),
-                                        signerConfig.getPrivateKey(),
-                                        signerConfig.getCertificates(),
-                                        signerConfig.getDeterministicDsaSigning())
+                                signerConfig.getName(),
+                                signerConfig.getPrivateKey(),
+                                signerConfig.getCertificates(),
+                                signerConfig.getDeterministicDsaSigning())
                                 .build());
             }
             DefaultApkSignerEngine.Builder signerEngineBuilder =
@@ -303,10 +305,10 @@ public class ApkSigner {
             if (mSourceStampSignerConfig != null) {
                 signerEngineBuilder.setStampSignerConfig(
                         new DefaultApkSignerEngine.SignerConfig.Builder(
-                                        mSourceStampSignerConfig.getName(),
-                                        mSourceStampSignerConfig.getPrivateKey(),
-                                        mSourceStampSignerConfig.getCertificates(),
-                                        mSourceStampSignerConfig.getDeterministicDsaSigning())
+                                mSourceStampSignerConfig.getName(),
+                                mSourceStampSignerConfig.getPrivateKey(),
+                                mSourceStampSignerConfig.getCertificates(),
+                                mSourceStampSignerConfig.getDeterministicDsaSigning())
                                 .build());
             }
             if (mSourceStampSigningCertificateLineage != null) {
@@ -403,7 +405,7 @@ public class ApkSigner {
                 if ((lastModifiedDateForNewEntries == -1)
                         || (lastModifiedDate > lastModifiedDateForNewEntries)
                         || ((lastModifiedDate == lastModifiedDateForNewEntries)
-                                && (lastModifiedTime > lastModifiedTimeForNewEntries))) {
+                        && (lastModifiedTime > lastModifiedTimeForNewEntries))) {
                     lastModifiedDateForNewEntries = lastModifiedDate;
                     lastModifiedTimeForNewEntries = lastModifiedTime;
                 }
@@ -506,8 +508,8 @@ public class ApkSigner {
                 throw new ApkFormatException(
                         String.format(
                                 "Cannot generate SourceStamp. APK contains an existing entry with"
-                                    + " the name: %s, and it is different than the provided source"
-                                    + " stamp certificate",
+                                        + " the name: %s, and it is different than the provided source"
+                                        + " stamp certificate",
                                 SOURCE_STAMP_CERTIFICATE_HASH_ZIP_ENTRY_NAME));
             }
         }
@@ -524,14 +526,14 @@ public class ApkSigner {
 
             requestOutputEntryInspection(signerEngine, entryName, uncompressedData);
             outputOffset +=
-                outputDataToOutputApk(
-                    entryName,
-                    uncompressedData,
-                    outputOffset,
-                    outputCdRecords,
-                    lastModifiedTimeForNewEntries,
-                    lastModifiedDateForNewEntries,
-                    outputApkOut);
+                    outputDataToOutputApk(
+                            entryName,
+                            uncompressedData,
+                            outputOffset,
+                            outputCdRecords,
+                            lastModifiedTimeForNewEntries,
+                            lastModifiedDateForNewEntries,
+                            outputApkOut);
         }
 
         // Step 8. Generate and output JAR signatures, if necessary. This may output more Local File
@@ -703,7 +705,7 @@ public class ApkSigner {
         int dataAlignmentMultiple = getInputJarEntryDataAlignmentMultiple(inputRecord);
         if ((dataAlignmentMultiple <= 1)
                 || ((inputOffset % dataAlignmentMultiple)
-                        == (outputOffset % dataAlignmentMultiple))) {
+                == (outputOffset % dataAlignmentMultiple))) {
             // This record's data will be aligned same as in the input APK.
             return new OutputSizeAndDataOffset(
                     inputRecord.outputRecord(inputLfhSection, outputLfhSection),
@@ -981,12 +983,17 @@ public class ApkSigner {
             mCertificates = Collections.unmodifiableList(new ArrayList<>(certificates));
             mDeterministicDsaSigning = deterministicDsaSigning;
         }
-        /** Returns the name of this signer. */
+
+        /**
+         * Returns the name of this signer.
+         */
         public String getName() {
             return mName;
         }
 
-        /** Returns the signing key of this signer. */
+        /**
+         * Returns the signing key of this signer.
+         */
         public PrivateKey getPrivateKey() {
             return mPrivateKey;
         }
@@ -1007,7 +1014,9 @@ public class ApkSigner {
             return mDeterministicDsaSigning;
         }
 
-        /** Builder of {@link SignerConfig} instances. */
+        /**
+         * Builder of {@link SignerConfig} instances.
+         */
         public static class Builder {
             private final String mName;
             private final PrivateKey mPrivateKey;
@@ -1017,11 +1026,11 @@ public class ApkSigner {
             /**
              * Constructs a new {@code Builder}.
              *
-             * @param name signer's name. The name is reflected in the name of files comprising the
-             *     JAR signature of the APK.
-             * @param privateKey signing key
+             * @param name         signer's name. The name is reflected in the name of files comprising the
+             *                     JAR signature of the APK.
+             * @param privateKey   signing key
              * @param certificates list of one or more X.509 certificates. The subject public key of
-             *     the first certificate must correspond to the {@code privateKey}.
+             *                     the first certificate must correspond to the {@code privateKey}.
              */
             public Builder(
                     String name,
@@ -1033,13 +1042,13 @@ public class ApkSigner {
             /**
              * Constructs a new {@code Builder}.
              *
-             * @param name signer's name. The name is reflected in the name of files comprising the
-             *     JAR signature of the APK.
-             * @param privateKey signing key
-             * @param certificates list of one or more X.509 certificates. The subject public key of
-             *     the first certificate must correspond to the {@code privateKey}.
+             * @param name                    signer's name. The name is reflected in the name of files comprising the
+             *                                JAR signature of the APK.
+             * @param privateKey              signing key
+             * @param certificates            list of one or more X.509 certificates. The subject public key of
+             *                                the first certificate must correspond to the {@code privateKey}.
              * @param deterministicDsaSigning When signing using DSA, whether or not the
-             *     deterministic variant (RFC6979) should be used.
+             *                                deterministic variant (RFC6979) should be used.
              */
             public Builder(
                     String name,
@@ -1154,7 +1163,9 @@ public class ApkSigner {
             mSignerConfigs = null;
         }
 
-        /** Sets the signing configuration of the source stamp to be embedded in the APK. */
+        /**
+         * Sets the signing configuration of the source stamp to be embedded in the APK.
+         */
         public Builder setSourceStampSignerConfig(SignerConfig sourceStampSignerConfig) {
             mSourceStampSignerConfig = sourceStampSignerConfig;
             return this;
@@ -1292,7 +1303,7 @@ public class ApkSigner {
          * with an {@link ApkSignerEngine}.
          *
          * @throws IllegalStateException if this builder was initialized with an {@link
-         *     ApkSignerEngine}
+         *                               ApkSignerEngine}
          */
         public Builder setMinSdkVersion(int minSdkVersion) {
             checkInitializedWithoutEngine();
@@ -1312,12 +1323,12 @@ public class ApkSigner {
          * with an {@link ApkSignerEngine}.
          *
          * @param enabled {@code true} to require the APK to be signed using JAR signing, {@code
-         *     false} to require the APK to not be signed using JAR signing.
+         *                false} to require the APK to not be signed using JAR signing.
          * @throws IllegalStateException if this builder was initialized with an {@link
-         *     ApkSignerEngine}
+         *                               ApkSignerEngine}
          * @see <a
-         *     href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Signed_JAR_File">JAR
-         *     signing</a>
+         * href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Signed_JAR_File">JAR
+         * signing</a>
          */
         public Builder setV1SigningEnabled(boolean enabled) {
             checkInitializedWithoutEngine();
@@ -1337,11 +1348,11 @@ public class ApkSigner {
          * with an {@link ApkSignerEngine}.
          *
          * @param enabled {@code true} to require the APK to be signed using APK Signature Scheme
-         *     v2, {@code false} to require the APK to not be signed using APK Signature Scheme v2.
+         *                v2, {@code false} to require the APK to not be signed using APK Signature Scheme v2.
          * @throws IllegalStateException if this builder was initialized with an {@link
-         *     ApkSignerEngine}
+         *                               ApkSignerEngine}
          * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature
-         *     Scheme v2</a>
+         * Scheme v2</a>
          */
         public Builder setV2SigningEnabled(boolean enabled) {
             checkInitializedWithoutEngine();
@@ -1364,9 +1375,9 @@ public class ApkSigner {
          * may take multiple signers mapping to different targeted platform versions.
          *
          * @param enabled {@code true} to require the APK to be signed using APK Signature Scheme
-         *     v3, {@code false} to require the APK to not be signed using APK Signature Scheme v3.
+         *                v3, {@code false} to require the APK to not be signed using APK Signature Scheme v3.
          * @throws IllegalStateException if this builder was initialized with an {@link
-         *     ApkSignerEngine}
+         *                               ApkSignerEngine}
          */
         public Builder setV3SigningEnabled(boolean enabled) {
             checkInitializedWithoutEngine();
@@ -1385,7 +1396,7 @@ public class ApkSigner {
          * <p>V4 signing requires that the APK be v2 or v3 signed.
          *
          * @param enabled {@code true} to require the APK to be signed using APK Signature Scheme v2
-         *     or v3 and generate an v4 signature file
+         *                or v3 and generate an v4 signature file
          */
         public Builder setV4SigningEnabled(boolean enabled) {
             checkInitializedWithoutEngine();
@@ -1403,7 +1414,7 @@ public class ApkSigner {
          * the user did not explicitly request the v4 signing.
          *
          * @param enabled {@code false} to prevent errors encountered during the V4 signing from
-         *     halting the signing process
+         *                halting the signing process
          */
         public Builder setV4ErrorReportingEnabled(boolean enabled) {
             checkInitializedWithoutEngine();
@@ -1416,7 +1427,7 @@ public class ApkSigner {
          * schemes.
          *
          * @param enabled {@code true} to enable the verity signature algorithm for inclusion in the
-         *     v2 and v3 signature blocks.
+         *                v2 and v3 signature blocks.
          */
         public Builder setVerityEnabled(boolean enabled) {
             checkInitializedWithoutEngine();
@@ -1452,7 +1463,7 @@ public class ApkSigner {
          * with an {@link ApkSignerEngine}.
          *
          * @throws IllegalStateException if this builder was initialized with an {@link
-         *     ApkSignerEngine}
+         *                               ApkSignerEngine}
          */
         public Builder setOtherSignersSignaturesPreserved(boolean preserved) {
             checkInitializedWithoutEngine();
@@ -1467,7 +1478,7 @@ public class ApkSigner {
          * with an {@link ApkSignerEngine}.
          *
          * @throws IllegalStateException if this builder was initialized with an {@link
-         *     ApkSignerEngine}
+         *                               ApkSignerEngine}
          */
         public Builder setCreatedBy(String createdBy) {
             checkInitializedWithoutEngine();

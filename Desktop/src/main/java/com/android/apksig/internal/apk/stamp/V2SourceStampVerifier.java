@@ -52,8 +52,11 @@ import java.util.Map;
  */
 public abstract class V2SourceStampVerifier {
 
-    /** Hidden constructor to prevent instantiation. */
-    private V2SourceStampVerifier() {}
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private V2SourceStampVerifier() {
+    }
 
     /**
      * Verifies the provided APK's SourceStamp signatures and returns the result of verification.
@@ -61,11 +64,11 @@ public abstract class V2SourceStampVerifier {
      * {@code true}. If verification fails, the result will contain errors -- see {@link
      * ApkSigResult#getErrors()}.
      *
-     * @throws NoSuchAlgorithmException if the APK's signatures cannot be verified because a
-     *     required cryptographic algorithm implementation is missing
+     * @throws NoSuchAlgorithmException   if the APK's signatures cannot be verified because a
+     *                                    required cryptographic algorithm implementation is missing
      * @throws SignatureNotFoundException if no SourceStamp signatures are
-     *     found
-     * @throws IOException if an I/O error occurs when reading the APK
+     *                                    found
+     * @throws IOException                if an I/O error occurs when reading the APK
      */
     public static ApkSigResult verify(
             DataSource apk,

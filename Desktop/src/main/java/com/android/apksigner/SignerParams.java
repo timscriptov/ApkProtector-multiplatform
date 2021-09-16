@@ -18,6 +18,7 @@ package com.android.apksigner;
 
 import com.android.apksig.SigningCertificateLineage.SignerCapabilities;
 import com.android.apksig.internal.util.X509CertificateUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,7 +48,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-/** A utility class to load private key and certificates from a keystore or key and cert files. */
+/**
+ * A utility class to load private key and certificates from a keystore or key and cert files.
+ */
 public class SignerParams {
     private String name;
 
@@ -241,7 +244,7 @@ public class SignerParams {
                             ? this.keystorePasswordSpec
                             : PasswordRetriever.SPEC_STDIN;
             additionalPasswordEncodings =
-                    (passwordCharset != null) ? new Charset[] {passwordCharset} : new Charset[0];
+                    (passwordCharset != null) ? new Charset[]{passwordCharset} : new Charset[0];
             keystorePasswords =
                     passwordRetriever.getPasswords(keystorePasswordSpec,
                             "Keystore password for " + name, additionalPasswordEncodings);
@@ -350,7 +353,7 @@ public class SignerParams {
      * Loads the password-protected keystore from storage.
      *
      * @param file file backing the keystore or {@code null} if the keystore is not file-backed, for
-     *     example, a PKCS #11 KeyStore.
+     *             example, a PKCS #11 KeyStore.
      */
     private static void loadKeyStoreFromFile(KeyStore ks, String file, List<char[]> passwords)
             throws Exception {
@@ -413,7 +416,7 @@ public class SignerParams {
             String passwordSpec =
                     (keyPasswordSpec != null) ? keyPasswordSpec : PasswordRetriever.SPEC_STDIN;
             Charset[] additionalPasswordEncodings =
-                    (passwordCharset != null) ? new Charset[] {passwordCharset} : new Charset[0];
+                    (passwordCharset != null) ? new Charset[]{passwordCharset} : new Charset[0];
             List<char[]> keyPasswords =
                     passwordRetriever.getPasswords(
                             passwordSpec, "Private key password for " + name,

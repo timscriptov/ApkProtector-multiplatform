@@ -82,7 +82,8 @@ import java.util.jar.Attributes;
  * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Signed_JAR_File">Signed JAR File</a>
  */
 public abstract class V1SchemeVerifier {
-    private V1SchemeVerifier() {}
+    private V1SchemeVerifier() {
+    }
 
     /**
      * Verifies the provided APK's JAR signatures and returns the result of verification. APK is
@@ -95,10 +96,10 @@ public abstract class V1SchemeVerifier {
      * result with one or more errors and whose {@code Result.verified == false}, or this method
      * throws an exception.
      *
-     * @throws ApkFormatException if the APK is malformed
-     * @throws IOException if an I/O error occurs when reading the APK
+     * @throws ApkFormatException       if the APK is malformed
+     * @throws IOException              if an I/O error occurs when reading the APK
      * @throws NoSuchAlgorithmException if the APK's JAR signatures cannot be verified because a
-     *         required cryptographic algorithm implementation is missing
+     *                                  required cryptographic algorithm implementation is missing
      */
     public static Result verify(
             DataSource apk,
@@ -161,15 +162,15 @@ public abstract class V1SchemeVerifier {
     }
 
     /**
-    * Parses raw representation of MANIFEST.MF file into a pair of main entry manifest section
-    * representation and a mapping between entry name and its manifest section representation.
-    *
-    * @param manifestBytes raw representation of Manifest.MF
-    * @param cdEntryNames expected set of entry names
-    * @param result object to keep track of errors that happened during the parsing
-    * @return a pair of main entry manifest section representation and a mapping between entry name
-    *     and its manifest section representation
-    */
+     * Parses raw representation of MANIFEST.MF file into a pair of main entry manifest section
+     * representation and a mapping between entry name and its manifest section representation.
+     *
+     * @param manifestBytes raw representation of Manifest.MF
+     * @param cdEntryNames  expected set of entry names
+     * @param result        object to keep track of errors that happened during the parsing
+     * @return a pair of main entry manifest section representation and a mapping between entry name
+     * and its manifest section representation
+     */
     public static Pair<ManifestParser.Section, Map<String, ManifestParser.Section>> parseManifest(
             byte[] manifestBytes, Set<String> cdEntryNames, Result result) {
         ManifestParser manifest = new ManifestParser(manifestBytes);
@@ -460,7 +461,7 @@ public abstract class V1SchemeVerifier {
 
         public void verifySigBlockAgainstSigFile(
                 DataSource apk, long cdStartOffset, int minSdkVersion, int maxSdkVersion)
-                        throws IOException, ApkFormatException, NoSuchAlgorithmException {
+                throws IOException, ApkFormatException, NoSuchAlgorithmException {
             // Obtain the signature block from the APK
             byte[] sigBlockBytes;
             try {
@@ -488,7 +489,7 @@ public abstract class V1SchemeVerifier {
                         Asn1BerParser.parse(ByteBuffer.wrap(sigBlockBytes), ContentInfo.class);
                 if (!Pkcs7Constants.OID_SIGNED_DATA.equals(contentInfo.contentType)) {
                     throw new Asn1DecodingException(
-                          "Unsupported ContentInfo.contentType: " + contentInfo.contentType);
+                            "Unsupported ContentInfo.contentType: " + contentInfo.contentType);
                 }
                 signedData =
                         Asn1BerParser.parse(contentInfo.content.getEncoded(), SignedData.class);
@@ -592,8 +593,8 @@ public abstract class V1SchemeVerifier {
                 byte[] signatureFile,
                 int minSdkVersion,
                 int maxSdkVersion)
-                        throws Pkcs7DecodingException, NoSuchAlgorithmException,
-                                InvalidKeyException, SignatureException {
+                throws Pkcs7DecodingException, NoSuchAlgorithmException,
+                InvalidKeyException, SignatureException {
             String digestAlgorithmOid = signerInfo.digestAlgorithm.algorithm;
             String signatureAlgorithmOid = signerInfo.signatureAlgorithm.algorithm;
             InclusiveIntRange desiredApiLevels =
@@ -729,7 +730,7 @@ public abstract class V1SchemeVerifier {
                     }
                     byte[] actualSignatureFileDigest =
                             MessageDigest.getInstance(
-                                    getJcaDigestAlgorithm(digestAlgorithmOid))
+                                            getJcaDigestAlgorithm(digestAlgorithmOid))
                                     .digest(signatureFile);
                     if (!Arrays.equals(
                             expectedSignatureFileDigest, actualSignatureFileDigest)) {
@@ -767,7 +768,6 @@ public abstract class V1SchemeVerifier {
         }
 
 
-
         public static List<X509Certificate> getCertificateChain(
                 List<X509Certificate> certs, X509Certificate leaf) {
             List<X509Certificate> unusedCerts = new ArrayList<>(certs);
@@ -794,8 +794,6 @@ public abstract class V1SchemeVerifier {
             }
             return result;
         }
-
-
 
 
         public void verifySigFileAgainstManifest(
@@ -1135,7 +1133,7 @@ public abstract class V1SchemeVerifier {
                 alg = getCanonicalJcaMessageDigestAlgorithm(alg);
                 if ((alg == null)
                         || (getMinSdkVersionFromWhichSupportedInManifestOrSignatureFile(alg)
-                                > minSdkVersion)) {
+                        > minSdkVersion)) {
                     // Unsupported digest algorithm
                     continue;
                 }
@@ -1200,6 +1198,7 @@ public abstract class V1SchemeVerifier {
     }
 
     private static final Map<String, String> UPPER_CASE_JCA_DIGEST_ALG_TO_CANONICAL;
+
     static {
         UPPER_CASE_JCA_DIGEST_ALG_TO_CANONICAL = new HashMap<>(8);
         UPPER_CASE_JCA_DIGEST_ALG_TO_CANONICAL.put("MD5", "MD5");
@@ -1213,6 +1212,7 @@ public abstract class V1SchemeVerifier {
 
     private static final Map<String, Integer>
             MIN_SDK_VESION_FROM_WHICH_DIGEST_SUPPORTED_IN_MANIFEST;
+
     static {
         MIN_SDK_VESION_FROM_WHICH_DIGEST_SUPPORTED_IN_MANIFEST = new HashMap<>(5);
         MIN_SDK_VESION_FROM_WHICH_DIGEST_SUPPORTED_IN_MANIFEST.put("MD5", 0);
@@ -1236,7 +1236,7 @@ public abstract class V1SchemeVerifier {
     public static List<CentralDirectoryRecord> parseZipCentralDirectory(
             DataSource apk,
             ApkUtils.ZipSections apkSections)
-                    throws IOException, ApkFormatException {
+            throws IOException, ApkFormatException {
         return ZipUtils.parseZipCentralDirectory(apk, apkSections);
     }
 
@@ -1395,10 +1395,14 @@ public abstract class V1SchemeVerifier {
 
     public static class Result {
 
-        /** Whether the APK's JAR signature verifies. */
+        /**
+         * Whether the APK's JAR signature verifies.
+         */
         public boolean verified;
 
-        /** List of APK's signers. These signers are used by Android. */
+        /**
+         * List of APK's signers. These signers are used by Android.
+         */
         public final List<SignerInfo> signers = new ArrayList<>();
 
         /**

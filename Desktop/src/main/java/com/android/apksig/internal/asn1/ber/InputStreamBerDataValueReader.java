@@ -298,7 +298,8 @@ public class InputStreamBerDataValueReader implements BerDataValueReader {
         }
 
         @Override
-        public synchronized void mark(int readlimit) {}
+        public synchronized void mark(int readlimit) {
+        }
 
         @Override
         public synchronized void reset() throws IOException {

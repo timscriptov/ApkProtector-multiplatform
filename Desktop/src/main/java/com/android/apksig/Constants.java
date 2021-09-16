@@ -26,7 +26,8 @@ import com.android.apksig.internal.apk.v3.V3SchemeConstants;
  * on internal code.
  */
 public class Constants {
-    private Constants() {}
+    private Constants() {
+    }
 
     public static final int VERSION_SOURCE_STAMP = 0;
     public static final int VERSION_JAR_SIGNATURE_SCHEME = 1;

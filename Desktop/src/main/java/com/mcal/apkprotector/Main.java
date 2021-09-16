@@ -11,6 +11,7 @@ import com.mcal.apkprotector.signer.SignatureTool;
 import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -18,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String... args) {
+    public static void main(String @NotNull ... args) {
         clearTempFiles();
         generateRandom();
 
@@ -102,6 +103,12 @@ public class Main {
         config.dexPrefix = CommonUtils.generateRandomString(Constants.DEX_PREFIX);
         config.dexSuffix = CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
         config.proxyApp = CommonUtils.generateRandomString(Constants.PROXY_APP);
+
+        config.SECONDARY_DEXES = CommonUtils.generateRandomString(Constants.SECONDARY_DEXES);
+        config.MULTIDEX_LOCK = CommonUtils.generateRandomString(Constants.MULTIDEX_LOCK);
+        config.CLASSES = CommonUtils.generateRandomString(Constants.CLASSES);
+        config.ZIP = CommonUtils.generateRandomString(Constants.ZIP);
+        config.CODE_CACHE = CommonUtils.generateRandomString(Constants.CODE_CACHE);
 
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();

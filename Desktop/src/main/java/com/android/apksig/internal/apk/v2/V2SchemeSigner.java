@@ -28,6 +28,7 @@ import com.android.apksig.internal.apk.SignatureAlgorithm;
 import com.android.apksig.internal.util.Pair;
 import com.android.apksig.util.DataSource;
 import com.android.apksig.util.RunnablesExecutor;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -73,20 +74,23 @@ public abstract class V2SchemeSigner {
     public static final int APK_SIGNATURE_SCHEME_V2_BLOCK_ID =
             V2SchemeConstants.APK_SIGNATURE_SCHEME_V2_BLOCK_ID;
 
-    /** Hidden constructor to prevent instantiation. */
-    private V2SchemeSigner() {}
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private V2SchemeSigner() {
+    }
 
     /**
      * Gets the APK Signature Scheme v2 signature algorithms to be used for signing an APK using the
      * provided key.
      *
      * @param minSdkVersion minimum API Level of the platform on which the APK may be installed (see
-     *     AndroidManifest.xml minSdkVersion attribute).
+     *                      AndroidManifest.xml minSdkVersion attribute).
      * @throws InvalidKeyException if the provided key is not suitable for signing APKs using APK
-     *     Signature Scheme v2
+     *                             Signature Scheme v2
      */
     public static List<SignatureAlgorithm> getSuggestedSignatureAlgorithms(PublicKey signingKey,
-            int minSdkVersion, boolean verityEnabled, boolean deterministicDsaSigning)
+                                                                           int minSdkVersion, boolean verityEnabled, boolean deterministicDsaSigning)
             throws InvalidKeyException {
         String keyAlgorithm = signingKey.getAlgorithm();
         if ("RSA".equalsIgnoreCase(keyAlgorithm)) {
@@ -142,15 +146,15 @@ public abstract class V2SchemeSigner {
     }
 
     public static ApkSigningBlockUtils.SigningSchemeBlockAndDigests
-            generateApkSignatureSchemeV2Block(
-                    RunnablesExecutor executor,
-                    DataSource beforeCentralDir,
-                    DataSource centralDir,
-                    DataSource eocd,
-                    List<SignerConfig> signerConfigs,
-                    boolean v3SigningEnabled)
-                    throws IOException, InvalidKeyException, NoSuchAlgorithmException,
-                            SignatureException {
+    generateApkSignatureSchemeV2Block(
+            RunnablesExecutor executor,
+            DataSource beforeCentralDir,
+            DataSource centralDir,
+            DataSource eocd,
+            List<SignerConfig> signerConfigs,
+            boolean v3SigningEnabled)
+            throws IOException, InvalidKeyException, NoSuchAlgorithmException,
+            SignatureException {
         Pair<List<SignerConfig>, Map<ContentDigestAlgorithm, byte[]>> digestInfo =
                 ApkSigningBlockUtils.computeContentDigests(
                         executor, beforeCentralDir, centralDir, eocd, signerConfigs);
@@ -185,8 +189,8 @@ public abstract class V2SchemeSigner {
 
         return Pair.of(
                 encodeAsSequenceOfLengthPrefixedElements(
-                        new byte[][] {
-                            encodeAsSequenceOfLengthPrefixedElements(signerBlocks),
+                        new byte[][]{
+                                encodeAsSequenceOfLengthPrefixedElements(signerBlocks),
                         }),
                 V2SchemeConstants.APK_SIGNATURE_SCHEME_V2_BLOCK_ID);
     }
@@ -241,12 +245,12 @@ public abstract class V2SchemeSigner {
 
         signer.signedData =
                 encodeAsSequenceOfLengthPrefixedElements(
-                        new byte[][] {
-                            encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
-                                    signedData.digests),
-                            encodeAsSequenceOfLengthPrefixedElements(signedData.certificates),
-                            signedData.additionalAttributes,
-                            new byte[0],
+                        new byte[][]{
+                                encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
+                                        signedData.digests),
+                                encodeAsSequenceOfLengthPrefixedElements(signedData.certificates),
+                                signedData.additionalAttributes,
+                                new byte[0],
                         });
         signer.publicKey = encodedPublicKey;
         signer.signatures = new ArrayList<>();
@@ -260,11 +264,11 @@ public abstract class V2SchemeSigner {
         //   * length-prefixed bytes: signature of signed data
         // * length-prefixed bytes: public key (X.509 SubjectPublicKeyInfo, ASN.1 DER encoded)
         return encodeAsSequenceOfLengthPrefixedElements(
-                new byte[][] {
-                    signer.signedData,
-                    encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
-                            signer.signatures),
-                    signer.publicKey,
+                new byte[][]{
+                        signer.signedData,
+                        encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
+                                signer.signatures),
+                        signer.publicKey,
                 });
     }
 

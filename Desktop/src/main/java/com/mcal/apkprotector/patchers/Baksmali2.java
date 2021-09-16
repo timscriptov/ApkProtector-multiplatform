@@ -2,6 +2,7 @@ package com.mcal.apkprotector.patchers;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jf.baksmali.Adaptors.ClassDefinition;
 import org.jf.baksmali.BaksmaliOptions;
@@ -21,7 +22,7 @@ public class Baksmali2 {
         return disassembleDexFile(dexFile, outputDir, jobs, options, null);
     }
 
-    public static boolean disassembleDexFile(DexFile dexFile, File outputDir, int jobs, final BaksmaliOptions options,
+    public static boolean disassembleDexFile(@NotNull DexFile dexFile, File outputDir, int jobs, final BaksmaliOptions options,
                                              @Nullable List<String> classes) {
 
         //sort the classes, so that if we're on a case-insensitive file system and need to handle classes with file
@@ -74,7 +75,7 @@ public class Baksmali2 {
         return !errorOccurred;
     }
 
-    private static boolean disassembleClass(ClassDef classDef, ClassFileNameHandler fileNameHandler,
+    private static boolean disassembleClass(@NotNull ClassDef classDef, ClassFileNameHandler fileNameHandler,
                                             BaksmaliOptions options) {
         /**
          * The path for the disassembly file is based on the package name

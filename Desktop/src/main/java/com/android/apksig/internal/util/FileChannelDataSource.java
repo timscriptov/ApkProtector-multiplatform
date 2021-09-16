@@ -18,6 +18,7 @@ package com.android.apksig.internal.util;
 
 import com.android.apksig.util.DataSink;
 import com.android.apksig.util.DataSource;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.BufferOverflowException;
@@ -185,7 +186,7 @@ public class FileChannelDataSource implements DataSource {
         if (endOffset > sourceSize) {
             throw new IndexOutOfBoundsException(
                     "offset (" + offset + ") + size (" + size
-                            + ") > source size (" + sourceSize  +")");
+                            + ") > source size (" + sourceSize + ")");
         }
     }
 }

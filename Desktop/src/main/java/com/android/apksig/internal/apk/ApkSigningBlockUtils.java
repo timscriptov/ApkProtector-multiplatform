@@ -87,10 +87,10 @@ public class ApkSigningBlockUtils {
     private static final long CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES = 1024 * 1024;
     public static final int ANDROID_COMMON_PAGE_ALIGNMENT_BYTES = 4096;
     private static final byte[] APK_SIGNING_BLOCK_MAGIC =
-          new byte[] {
-              0x41, 0x50, 0x4b, 0x20, 0x53, 0x69, 0x67, 0x20,
-              0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x20, 0x34, 0x32,
-          };
+            new byte[]{
+                    0x41, 0x50, 0x4b, 0x20, 0x53, 0x69, 0x67, 0x20,
+                    0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x20, 0x34, 0x32,
+            };
     private static final int VERITY_PADDING_BLOCK_ID = 0x42726577;
 
     private static final ContentDigestAlgorithm[] V4_CONTENT_DIGEST_ALGORITHMS =
@@ -163,7 +163,7 @@ public class ApkSigningBlockUtils {
                 if ((beforeApkSigningBlock.size() % ANDROID_COMMON_PAGE_ALIGNMENT_BYTES != 0)) {
                     throw new RuntimeException(
                             "APK Signing Block is not aligned on 4k boundary: " +
-                            beforeApkSigningBlock.size());
+                                    beforeApkSigningBlock.size());
                 }
 
                 long centralDirOffset = ZipUtils.getZipEocdCentralDirectoryOffset(eocd);
@@ -171,7 +171,7 @@ public class ApkSigningBlockUtils {
                 if (signingBlockSize % ANDROID_COMMON_PAGE_ALIGNMENT_BYTES != 0) {
                     throw new RuntimeException(
                             "APK Signing Block size is not multiple of page size: " +
-                            signingBlockSize);
+                                    signingBlockSize);
                 }
             }
         } catch (DigestException e) {
@@ -268,7 +268,7 @@ public class ApkSigningBlockUtils {
         computeOneMbChunkContentDigests(
                 executor,
                 oneMbChunkBasedAlgorithm,
-                new DataSource[] { beforeCentralDir, centralDir, eocd },
+                new DataSource[]{beforeCentralDir, centralDir, eocd},
                 contentDigests);
 
         if (digestAlgorithms.contains(VERITY_CHUNKED_SHA256)) {
@@ -527,7 +527,7 @@ public class ApkSigningBlockUtils {
                                     "Number of chunks in dataSource[%d] is greater than max int.",
                                     i));
                 }
-                chunkCounts[i] = (int)chunkCount;
+                chunkCounts[i] = (int) chunkCount;
                 totalChunkCount = (int) (totalChunkCount + chunkCount);
             }
             this.totalChunkCount = totalChunkCount;
@@ -561,7 +561,7 @@ public class ApkSigningBlockUtils {
                             dataSourceChunkOffset * CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES,
                     CONTENT_DIGESTED_CHUNK_MAX_SIZE_BYTES);
 
-            final int size = (int)remainingSize;
+            final int size = (int) remainingSize;
             final ByteBuffer buffer = ByteBuffer.allocate(size);
             try {
                 dataSources[dataSourceIndex].copyTo(
@@ -590,7 +590,7 @@ public class ApkSigningBlockUtils {
 
     @SuppressWarnings("ByteBufferBackingArray")
     private static void computeApkVerityDigest(DataSource beforeCentralDir, DataSource centralDir,
-            DataSource eocd, Map<ContentDigestAlgorithm, byte[]> outputContentDigests)
+                                               DataSource eocd, Map<ContentDigestAlgorithm, byte[]> outputContentDigests)
             throws IOException, NoSuchAlgorithmException {
         ByteBuffer encoded = createVerityDigestBuffer(true);
         // Use 0s as salt for now.  This also needs to be consistent in the fsverify header for
@@ -625,7 +625,7 @@ public class ApkSigningBlockUtils {
         public final byte[] tree;
 
         VerityTreeAndDigest(ContentDigestAlgorithm contentDigestAlgorithm, byte[] rootHash,
-                byte[] tree) {
+                            byte[] tree) {
             this.contentDigestAlgorithm = contentDigestAlgorithm;
             this.rootHash = rootHash;
             this.tree = tree;
@@ -763,13 +763,13 @@ public class ApkSigningBlockUtils {
             result.put(element);
         }
         return result.array();
-      }
+    }
 
     public static byte[] encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(
             List<Pair<Integer, byte[]>> sequence) {
         return ApkSigningBlockUtilsLite
                 .encodeAsSequenceOfLengthPrefixedPairsOfIntAndLengthPrefixedBytes(sequence);
-      }
+    }
 
     /**
      * Returns the APK Signature Scheme block contained in the provided APK file for the given ID
@@ -778,13 +778,12 @@ public class ApkSigningBlockUtils {
      * @param blockId the ID value in the APK Signing Block's sequence of ID-value pairs
      *                identifying the appropriate block to find, e.g. the APK Signature Scheme v2
      *                block ID.
-     *
      * @throws SignatureNotFoundException if the APK is not signed using given APK Signature Scheme
-     * @throws IOException if an I/O error occurs while reading the APK
+     * @throws IOException                if an I/O error occurs while reading the APK
      */
     public static SignatureInfo findSignature(
             DataSource apk, ApkUtils.ZipSections zipSections, int blockId, Result result)
-                    throws IOException, SignatureNotFoundException {
+            throws IOException, SignatureNotFoundException {
         try {
             return ApkSigningBlockUtilsLite.findSignature(apk, zipSections, blockId);
         } catch (com.android.apksig.internal.apk.SignatureNotFoundException e) {
@@ -799,7 +798,7 @@ public class ApkSigningBlockUtils {
      * padding is used to allow for verity-based APK verification.
      *
      * @return {@code Pair} containing the potentially new {@code DataSource} and the amount of
-     *         padding used.
+     * padding used.
      */
     public static Pair<DataSource, Integer> generateApkSigningBlockPadding(
             DataSource beforeCentralDir,
@@ -854,9 +853,9 @@ public class ApkSigningBlockUtils {
 
         int resultSize =
                 8 // size
-                + blocksSize
-                + 8 // size
-                + 16 // magic
+                        + blocksSize
+                        + 8 // size
+                        + 16 // magic
                 ;
         ByteBuffer paddingPair = null;
         if (resultSize % ANDROID_COMMON_PAGE_ALIGNMENT_BYTES != 0) {
@@ -902,22 +901,21 @@ public class ApkSigningBlockUtils {
      * given SignerConfigs.
      *
      * @param signerConfigs signer configurations, one for each signer At least one signer config
-     *        must be provided.
-     *
-     * @throws IOException if an I/O error occurs
+     *                      must be provided.
+     * @throws IOException              if an I/O error occurs
      * @throws NoSuchAlgorithmException if a required cryptographic algorithm implementation is
-     *         missing
-     * @throws SignatureException if an error occurs when computing digests of generating
-     *         signatures
+     *                                  missing
+     * @throws SignatureException       if an error occurs when computing digests of generating
+     *                                  signatures
      */
     public static Pair<List<SignerConfig>, Map<ContentDigestAlgorithm, byte[]>>
-            computeContentDigests(
-                    RunnablesExecutor executor,
-                    DataSource beforeCentralDir,
-                    DataSource centralDir,
-                    DataSource eocd,
-                    List<SignerConfig> signerConfigs)
-                            throws IOException, NoSuchAlgorithmException, SignatureException {
+    computeContentDigests(
+            RunnablesExecutor executor,
+            DataSource beforeCentralDir,
+            DataSource centralDir,
+            DataSource eocd,
+            List<SignerConfig> signerConfigs)
+            throws IOException, NoSuchAlgorithmException, SignatureException {
         if (signerConfigs.isEmpty()) {
             throw new IllegalArgumentException(
                     "No signer configs provided. At least one is required");
@@ -961,7 +959,7 @@ public class ApkSigningBlockUtils {
      * requested platform versions. As a result, the result may contain more than one signature.
      *
      * @throws NoSupportedSignaturesException if no supported signatures were
-     *         found for an Android platform version in the range.
+     *                                        found for an Android platform version in the range.
      */
     public static <T extends ApkSupportedSignature> List<T> getSignaturesToVerify(
             List<T> signatures, int minSdkVersion, int maxSdkVersion)
@@ -982,7 +980,7 @@ public class ApkSigningBlockUtils {
      * requested platform versions. As a result, the result may contain more than one signature.
      *
      * @throws NoSupportedSignaturesException if no supported signatures were
-     *         found for an Android platform version in the range.
+     *                                        found for an Android platform version in the range.
      */
     public static <T extends ApkSupportedSignature> List<T> getSignaturesToVerify(
             List<T> signatures, int minSdkVersion, int maxSdkVersion,
@@ -1020,7 +1018,7 @@ public class ApkSigningBlockUtils {
      */
     public static List<Pair<Integer, byte[]>> generateSignaturesOverData(
             SignerConfig signerConfig, byte[] data)
-                    throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
+            throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
         List<Pair<Integer, byte[]>> signatures =
                 new ArrayList<>(signerConfig.signatureAlgorithms.size());
         PublicKey publicKey = signerConfig.certificates.get(0).getPublicKey();
@@ -1075,14 +1073,14 @@ public class ApkSigningBlockUtils {
      * Wrap the signature according to CMS PKCS #7 RFC 5652.
      * The high-level simplified structure is as follows:
      * // ContentInfo
-     *     //   digestAlgorithm
-     *     //   SignedData
-     *     //     bag of certificates
-     *     //     SignerInfo
-     *     //       signing cert issuer and serial number (for locating the cert in the above bag)
-     *     //       digestAlgorithm
-     *     //       signatureAlgorithm
-     *     //       signature
+     * //   digestAlgorithm
+     * //   SignedData
+     * //     bag of certificates
+     * //     SignerInfo
+     * //       signing cert issuer and serial number (for locating the cert in the above bag)
+     * //       digestAlgorithm
+     * //       signatureAlgorithm
+     * //       signature
      *
      * @throws Asn1EncodingException if the ASN.1 structure could not be encoded
      */
@@ -1123,7 +1121,7 @@ public class ApkSigningBlockUtils {
 
     /**
      * Picks the correct v2/v3 digest for v4 signature verification.
-     *
+     * <p>
      * Keep in sync with pickBestDigestForV4 in framework's ApkSigningBlockUtils.
      */
     public static byte[] pickBestDigestForV4(Map<ContentDigestAlgorithm, byte[]> contentDigests) {
@@ -1139,7 +1137,9 @@ public class ApkSigningBlockUtils {
      * Signer configuration.
      */
     public static class SignerConfig {
-        /** Private key. */
+        /**
+         * Private key.
+         */
         public PrivateKey privateKey;
 
         /**
@@ -1257,7 +1257,7 @@ public class ApkSigningBlockUtils {
                 private final byte[] mValue;
 
                 public ContentDigest(int signatureAlgorithmId, byte[] value) {
-                    mSignatureAlgorithmId  = signatureAlgorithmId;
+                    mSignatureAlgorithmId = signatureAlgorithmId;
                     mValue = value;
                 }
 
@@ -1275,7 +1275,7 @@ public class ApkSigningBlockUtils {
                 private final byte[] mValue;
 
                 public Signature(int algorithmId, byte[] value) {
-                    mAlgorithmId  = algorithmId;
+                    mAlgorithmId = algorithmId;
                     mValue = value;
                 }
 
@@ -1293,7 +1293,7 @@ public class ApkSigningBlockUtils {
                 private final byte[] mValue;
 
                 public AdditionalAttribute(int id, byte[] value) {
-                    mId  = id;
+                    mId = id;
                     mValue = value.clone();
                 }
 

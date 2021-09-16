@@ -58,7 +58,9 @@ public abstract class V2SourceStampSigner {
     public static final int V2_SOURCE_STAMP_BLOCK_ID =
             SourceStampConstants.V2_SOURCE_STAMP_BLOCK_ID;
 
-    /** Hidden constructor to prevent instantiation. */
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
     private V2SourceStampSigner() {
     }
 

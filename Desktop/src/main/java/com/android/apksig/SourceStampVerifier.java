@@ -159,7 +159,7 @@ public class SourceStampVerifier {
      * @see #verifySourceStamp(String)
      */
     private SourceStampVerifier.Result verifySourceStamp(DataSource apk,
-            String expectedCertDigest) {
+                                                         String expectedCertDigest) {
         Result result = new Result();
         try {
             ZipSections zipSections = ApkUtilsLite.findZipSections(apk);
@@ -445,8 +445,8 @@ public class SourceStampVerifier {
             }
             if (cdRecordName.startsWith("META-INF/")
                     && (cdRecordName.endsWith(".RSA")
-                        || cdRecordName.endsWith(".DSA")
-                        || cdRecordName.endsWith(".EC"))) {
+                    || cdRecordName.endsWith(".DSA")
+                    || cdRecordName.endsWith(".EC"))) {
                 signatureBlockRecords.add(cdRecord);
             }
         }

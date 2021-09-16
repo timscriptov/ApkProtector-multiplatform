@@ -5,13 +5,15 @@ import com.google.gson.GsonBuilder;
 import com.mcal.apkprotector.data.gson.Config;
 import com.mcal.apkprotector.data.gson.ConfigTemp;
 import com.mcal.apkprotector.utils.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class Preferences {
-    public static ConfigTemp configTemp() {
+    public static @Nullable ConfigTemp configTemp() {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         try {
@@ -23,7 +25,7 @@ public class Preferences {
         }
     }
 
-    public static Config config() {
+    public static @Nullable Config config() {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         try {
@@ -35,7 +37,7 @@ public class Preferences {
         }
     }
 
-    public static String isSignaturePath() {
+    public static @NotNull String isSignaturePath() {
         return Constants.TOOLS_PATH + File.separator + config().keystore.keystorePath;
     }
 
@@ -75,7 +77,7 @@ public class Preferences {
         return config().hideApkProtector.type;
     }
 
-    public static String getDexDir() {
+    public static @Nullable String getDexDir() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.DEX_DIR;
@@ -88,7 +90,7 @@ public class Preferences {
         return null;
     }
 
-    public static String getPackageName() {
+    public static @Nullable String getPackageName() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.PACKAGE_NAME;
@@ -101,7 +103,7 @@ public class Preferences {
         return null;
     }
 
-    public static String getProxyAppName() {
+    public static @Nullable String getProxyAppName() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.PROXY_APP;
@@ -114,7 +116,7 @@ public class Preferences {
         return null;
     }
 
-    public static String getDexPrefix() {
+    public static @Nullable String getDexPrefix() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.DEX_PREFIX;
@@ -127,7 +129,7 @@ public class Preferences {
         return null;
     }
 
-    public static String getDexSuffix() {
+    public static @Nullable String getDexSuffix() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.DEX_SUFFIX;
@@ -146,5 +148,25 @@ public class Preferences {
 
     public static String getAlphabet() {
         return config().hideApkProtector.alphabet;
+    }
+
+    public static String SECONDARY_DEXES() {
+        return configTemp().SECONDARY_DEXES;
+    }
+
+    public static String MULTIDEX_LOCK() {
+        return configTemp().MULTIDEX_LOCK;
+    }
+
+    public static String CLASSES() {
+        return configTemp().CLASSES;
+    }
+
+    public static String ZIP() {
+        return configTemp().ZIP;
+    }
+
+    public static String CODE_CACHE() {
+        return configTemp().CODE_CACHE;
     }
 }
