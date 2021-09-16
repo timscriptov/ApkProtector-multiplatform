@@ -34,9 +34,9 @@ import java.util.zip.ZipOutputStream;
  */
 final class MultiDexExtractor implements Closeable {
     static final String DEX_SUFFIX = Const.DEX_SUFFIX;
-    static final String EXTRACTED_SUFFIX = ".zip";
+    static final String EXTRACTED_SUFFIX = Const.ZIP;
     private static final String TAG = MultiDex.TAG;
-    private static final String EXTRACTED_NAME_EXT = ".classes";
+    private static final String EXTRACTED_NAME_EXT = Const.CLASSES;
     private static final int MAX_EXTRACT_ATTEMPTS = 3;
     private static final String PREFS_FILE = "multidex.version";
     private static final String KEY_TIME_STAMP = "timestamp";
@@ -49,7 +49,7 @@ final class MultiDexExtractor implements Closeable {
      */
     /* Keep value away from 0 because it is a too probable time stamp value */
     private static final long NO_VALUE = -1L;
-    private static final String LOCK_FILENAME = "MultiDex.lock";
+    private static final String LOCK_FILENAME = Const.MULTIDEX_LOCK;
     /**
      * We look for additional dex files named {@code classes2.dex},
      * {@code classes3.dex}, etc.

@@ -14,8 +14,6 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
 
-import com.mcal.apkprotector.utils.CommonUtils;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +24,6 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.NetworkInterface;
 import java.security.cert.Certificate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;

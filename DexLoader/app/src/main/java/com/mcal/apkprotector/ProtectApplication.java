@@ -19,11 +19,11 @@ public class ProtectApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        try {
-            new Security(this, Const.DATA);
-        } finally {
+        //try {
+        //    new Security(this, Const.DATA);
+        //} finally {
             MultiDex.install(this);
-        }
+        //}
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ProtectApplication extends Application {
         Application app = (Application) Reflect.invokeMethod(
                 "android.app.LoadedApk", loadedApkInfo, "makeApplication",
                 new Object[]{false, null},
-                boolean.class, Instrumentation.class);// Выполнить makeApplication (false, null)
+                boolean.class, Instrumentation.class); // Выполнить makeApplication (false, null)
 
         Reflect.setFieldValue("android.app.ActivityThread", currentActivityThread, "mInitialApplication", app);
 

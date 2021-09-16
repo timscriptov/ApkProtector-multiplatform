@@ -30,7 +30,7 @@ import dalvik.system.DexFile;
 public class MultiDex {
     static final String TAG = "MultiDex";
     private static final String OLD_SECONDARY_FOLDER_NAME = Const.SECONDARY_DEXES;
-    private static final String CODE_CACHE_NAME = "code_cache";
+    private static final String CODE_CACHE_NAME = Const.CODE_CACHE;
     private static final String CODE_CACHE_SECONDARY_FOLDER_NAME = Const.SECONDARY_DEXES;
     private static final int MAX_SUPPORTED_SDK_VERSION = 20;
     private static final int MIN_SDK_VERSION = 4;
