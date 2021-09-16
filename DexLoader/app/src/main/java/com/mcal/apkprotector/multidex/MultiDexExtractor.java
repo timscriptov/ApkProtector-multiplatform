@@ -6,6 +6,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.mcal.apkprotector.data.Const;
+import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.DexCrypto;
 
 import java.io.BufferedOutputStream;

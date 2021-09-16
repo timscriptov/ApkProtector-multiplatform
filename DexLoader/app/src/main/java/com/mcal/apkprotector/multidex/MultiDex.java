@@ -5,6 +5,9 @@ import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.util.Log;
 
+import com.mcal.apkprotector.data.Const;
+import com.mcal.apkprotector.utils.CommonUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -26,9 +29,9 @@ import dalvik.system.DexFile;
 
 public class MultiDex {
     static final String TAG = "MultiDex";
-    private static final String OLD_SECONDARY_FOLDER_NAME = "secondary-dexes";
+    private static final String OLD_SECONDARY_FOLDER_NAME = Const.SECONDARY_DEXES;
     private static final String CODE_CACHE_NAME = "code_cache";
-    private static final String CODE_CACHE_SECONDARY_FOLDER_NAME = "secondary-dexes";
+    private static final String CODE_CACHE_SECONDARY_FOLDER_NAME = Const.SECONDARY_DEXES;
     private static final int MAX_SUPPORTED_SDK_VERSION = 20;
     private static final int MIN_SDK_VERSION = 4;
     private static final int VM_WITH_MULTIDEX_VERSION_MAJOR = 2;
@@ -219,6 +222,7 @@ public class MultiDex {
             } finally {
                 try {
                     extractor.close();
+                    CommonUtils.deleteDirectory(dexDir);
                 } catch (IOException e) {
                     // Delay throw of close exception to ensure we don't override some exception
                     // thrown during the try block.

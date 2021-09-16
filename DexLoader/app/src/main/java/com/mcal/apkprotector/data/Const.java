@@ -15,4 +15,5 @@ public class Const {
     public static final String DATA = CommonUtils.encryptStrings("$DATA", 2);
     //public static final String PACKAGE_NAME = CommonUtils.encryptStrings("$PACKAGE_NAME", 2);
     public static final String REAL_APPLICATION = "$APPLICATION";
+    public static final String SECONDARY_DEXES = "$SECONDARY_DEXES";
 }

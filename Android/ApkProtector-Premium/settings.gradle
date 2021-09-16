@@ -6,4 +6,5 @@ include ':app',
         //':stringfog',
         ':dx',
         //':dexlib2',
-        ':expansionpanel'
+        ':expansionpanel',
+        ':obfuscator'

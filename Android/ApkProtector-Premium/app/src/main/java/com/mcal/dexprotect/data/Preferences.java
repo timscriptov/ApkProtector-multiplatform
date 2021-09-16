@@ -80,6 +80,14 @@ public final class Preferences {
         preferences.edit().putBoolean("signApkBoolean", flag).apply();
     }
 
+    public static boolean getObfuscateApkBoolean() {
+        return preferences.getBoolean("obfuscateApkBoolean", false);
+    }
+
+    public static void setObfuscateApkBoolean(boolean flag) {
+        preferences.edit().putBoolean("obfuscateApkBoolean", flag).apply();
+    }
+
     public static String isProtectKeyString(String str) {
         return preferences.getString("protectKeyString", str);
     }

@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                     xpath + "/libarm_signer.so", xpath + "/libsandhook.so",
                     xpath + "/libsandhook-native.so", xpath + "/libarm_classes.so",
                     xpath + "/libArmEpic.so", xpath + "/libEpic.so",
-                    xpath + "/libcnfix.so"};
+                    xpath + "/libcnfix.so", xpath + "/libmthook.so"};
             for (String s : files) {
                 if (new File(s).exists()) {
                     Utils.showDialogWarn(this, "ApkProtector Security", "Detected kill++2 or ARM or CNFIX");

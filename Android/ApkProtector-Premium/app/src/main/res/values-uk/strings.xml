@@ -114,5 +114,6 @@
     <string name="pref_title_category_resources">Resources</string>
     <string name="pref_title_category_dexer">Dexer</string>
     <string name="pref_title_category_zipaligner">ZipAligner</string>
+    <string name="arsc">Новое имя ресурсов arsc</string>
 
 </resources>

@@ -44,7 +44,7 @@ public class ProtectApplication extends Application {
         Object loadedApkInfo = Reflect.getFieldValue(
                 "android.app.ActivityThread$AppBindData",
                 mBoundApplication, "info");
-        // Установить для текущего процесса mApplication значение null
+        // Установить для текущего процесса Application значение null
         Reflect.setFieldValue("android.app.LoadedApk", loadedApkInfo, "mApplication", null);
         Object oldApplication = Reflect.getFieldValue(
                 "android.app.ActivityThread", currentActivityThread,
@@ -54,7 +54,7 @@ public class ProtectApplication extends Application {
                 .getFieldValue("android.app.ActivityThread",
                         currentActivityThread, "mAllApplications");
         if (mAllApplications != null) {
-            mAllApplications.remove(oldApplication);// Удалить старый oldApplication
+            mAllApplications.remove(oldApplication);// Удалить старый Application
         }
 
         ApplicationInfo loadedApk = (ApplicationInfo) Reflect

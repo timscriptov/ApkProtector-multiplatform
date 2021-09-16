@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import androidx.annotation.RequiresApi
 import com.mcal.dexprotect.App
 import com.mcal.dexprotect.App.Companion.getContext
 import com.mcal.dexprotect.BuildConfig
@@ -84,6 +85,7 @@ class ProtectAsync(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private suspend fun doInBackground(vararg p1: String?): Boolean = withContext(Dispatchers.IO) {
         var t = false
         mi = MyAppInfo(context, p1[0])
@@ -211,6 +213,20 @@ class ProtectAsync(
                         doProgress("Done")
                         t = true
                 }
+            }
+        }
+        if (Preferences.getObfuscateApkBoolean()) {
+            doProgress("Copying apk…")
+            val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
+
+            if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
+                SourceInfo.initialise("$path/output", mi!!)
+                doProgress("Obfuscating Apk…")
+                com.oscar0812.obfuscation.MainClass.start(
+                        tmpApk,
+                        path + "/output/" + MyAppInfo.getPackage() + "/",
+                    context
+                    )
             }
         }
         LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time))

@@ -59,16 +59,25 @@ public class HomeFragment extends Fragment {
                 Preferences.setDexProtectBoolean(true);
                 Preferences.setEncryptResourcesBoolean(false);
                 Preferences.setSignApkBoolean(false);
+                Preferences.setObfuscateApkBoolean(false);
                 break;
             case R.id.encrypt_resources:
                 Preferences.setDexProtectBoolean(false);
                 Preferences.setEncryptResourcesBoolean(true);
                 Preferences.setSignApkBoolean(false);
+                Preferences.setObfuscateApkBoolean(false);
                 break;
             case R.id.sign_apk:
                 Preferences.setDexProtectBoolean(false);
                 Preferences.setEncryptResourcesBoolean(false);
                 Preferences.setSignApkBoolean(true);
+                Preferences.setObfuscateApkBoolean(false);
+                break;
+            case R.id.obfuscate_apk:
+                Preferences.setDexProtectBoolean(false);
+                Preferences.setEncryptResourcesBoolean(false);
+                Preferences.setSignApkBoolean(false);
+                Preferences.setObfuscateApkBoolean(true);
                 break;
 
             default:
@@ -85,6 +94,7 @@ public class HomeFragment extends Fragment {
     private AppCompatRadioButton dexProtect;
     private AppCompatRadioButton shrinkResources;
     private AppCompatRadioButton signApk;
+    private AppCompatRadioButton obfuscateApk;
     private AppCompatCheckBox checkCppLib;
     private AppCompatCheckBox checkModexHook;
     private AppCompatCheckBox checkAssets;
@@ -333,6 +343,13 @@ public class HomeFragment extends Fragment {
         signApk.setChecked(Preferences.getSignApkBoolean());
         signApk.setOnCheckedChangeListener((p1, p2) -> {
             Preferences.setSignApkBoolean(p2);
+            updateView();
+        });
+
+        obfuscateApk = mView.findViewById(R.id.obfuscate_apk);
+        obfuscateApk.setChecked(Preferences.getObfuscateApkBoolean());
+        obfuscateApk.setOnCheckedChangeListener((p1, p2) -> {
+            Preferences.setObfuscateApkBoolean(p2);
             updateView();
         });
 
