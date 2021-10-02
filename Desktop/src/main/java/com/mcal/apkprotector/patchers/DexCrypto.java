@@ -33,22 +33,6 @@ public class DexCrypto {
         } else {
             outPath += Preferences.getDexPrefix() + name.replaceFirst(".+(\\d+).+", "$1") + Preferences.getDexSuffix();
         }
-        //try {
-            //if (Preferences.isAes256()) {
-            //    try {
-            //        String decryptedString = Aes256.decrypt(input2);
-
-            //        FileUtils.writeString(new File(outPath), Aes256.encrypt(FileUtils.readFile(Constants.OUTPUT_PATH + File.separator + name, StandardCharsets.UTF_8)));
-            //    } catch (Exception e) {
-            //        e.printStackTrace();
-            //    }
-            //} else {
-                Xor.encrypt(Preferences.getProtectKey(), new FileInputStream(new File(Constants.OUTPUT_PATH, name)), new FileOutputStream(outPath));
-            //}
-        //} catch (CryptoException e) {
-        //    LoggerUtils.writeLog(" " + e);
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
+        Xor.encrypt(Preferences.getProtectKey(), new FileInputStream(new File(Constants.OUTPUT_PATH, name)), new FileOutputStream(outPath));
     }
 }

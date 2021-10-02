@@ -150,7 +150,7 @@ public class FileUtils {
         return file != null && file.exists();
     }
 
-    public static void writeString(String fileName, @NotNull String content) throws IOException {
+    public static void givenUsingJava7_whenWritingToFile_thenCorrect(String fileName, @NotNull String content) throws IOException {
         Path logFile = Paths.get(fileName);
         try (BufferedWriter writer = Files.newBufferedWriter(logFile, StandardCharsets.UTF_8)) {
             writer.write(content);

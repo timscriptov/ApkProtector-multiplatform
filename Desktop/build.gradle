@@ -5,14 +5,11 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
-        classpath "net.sf.proguard:proguard-gradle:6.2.2"
-        classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
     }
 }
 
 apply plugin: 'kotlin'
-apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'application'
 
 mainClassName = "com.mcal.apkprotector.Main"
@@ -28,13 +25,11 @@ sourceSets {
 repositories {
     mavenCentral()
     google()
-    jcenter()
-    maven { url "https://dl.bintray.com/kotlin/ktor" }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31'
     implementation 'org.smali:dexlib2:2.5.2'
     implementation 'org.smali:smali:2.5.2'
     implementation 'org.smali:baksmali:2.5.2'

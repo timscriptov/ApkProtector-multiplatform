@@ -68,9 +68,9 @@ public class DexPatcher {
                 }
                 smaliData = smaliData.replace("$APPLICATION", customApplicationName);
             } else smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
-            smaliData = smaliData.replace("ProtectApplication", Preferences.getProxyAppName());
-            //Files.writeString(Paths.get(smali.getAbsolutePath()), smaliData, StandardOpenOption.WRITE);
-            FileUtils.writeString(smali.getAbsolutePath(), smaliData);
+            smaliData = smaliData.replace("ProxyApplication", Preferences.getProxyAppName());
+            Files.writeString(Paths.get(smali.getAbsolutePath()), smaliData, StandardOpenOption.WRITE);
+            //FileUtils.givenUsingJava7_whenWritingToFile_thenCorrect(smali.getAbsolutePath(), smaliData);
         }
         SmaliOptions options = new SmaliOptions();
         options.outputDexFile = outputDex.getAbsolutePath();
