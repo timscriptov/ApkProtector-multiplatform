@@ -3,6 +3,8 @@ package com.mcal.apkprotector.data;
 import com.mcal.apkprotector.utils.CommonUtils;
 
 public class Const {
+    public static final String APP_NAME = "$APP_NAME";
+
     // Assets
     public static final String DEX_SUFFIX = CommonUtils.encryptStrings("$DEX_SUFIX", 2);
     public static final String DEX_PREFIX = CommonUtils.encryptStrings("$DEX_PREFIX", 2);

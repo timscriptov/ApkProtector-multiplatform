@@ -13,15 +13,13 @@ import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 
+import com.mcal.apkprotector.data.Const;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 
 public class NotificationUtils {
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID = "ApkProtector";
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_ID_HIGH_IMPORTANCE = "ApkProtectorHighImportance";
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_NAME = "ApkProtector";
-    private static final String APP_CLONER_NOTIFICATION_CHANNEL_NAME_HIGH_IMPORTANCE = "ApkProtector High Importance";
     private static final String TAG = NotificationUtils.class.getSimpleName();
     private static Application sApplication;
     private static boolean sNotificationChannelCreated;
@@ -49,7 +47,6 @@ public class NotificationUtils {
                             return sApplication;
                         }
                     }
-                    continue;
                 }
             }
             return null;
@@ -74,16 +71,14 @@ public class NotificationUtils {
         }
         if (Build.VERSION.SDK_INT >= 26) {
             boolean z;
-            String str2;
             NotificationChannel channel;
             Application application;
             NotificationManager notificationManager;
             if (highImportance) {
                 try {
                     z = sNotificationChannelCreatedHighImportance;
-                    str2 = APP_CLONER_NOTIFICATION_CHANNEL_ID_HIGH_IMPORTANCE;
                     if (!z) {
-                        channel = new NotificationChannel(str2, APP_CLONER_NOTIFICATION_CHANNEL_NAME_HIGH_IMPORTANCE, 4);
+                        channel = new NotificationChannel(Const.APP_NAME, Const.APP_NAME, 4);
                         application = getApplication();
                         if (application != null) {
                             notificationManager = (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -93,18 +88,17 @@ public class NotificationUtils {
                             }
                         }
                     }
-                    b.setChannelId(str2);
+                    b.setChannelId(Const.APP_NAME);
                     b.setPriority(1);
                     return;
                 } catch (Throwable t) {
-                    Log.w(TAG, t);
+                    t.printStackTrace();
                     return;
                 }
             }
             z = sNotificationChannelCreated;
-            str2 = APP_CLONER_NOTIFICATION_CHANNEL_ID;
             if (!z) {
-                channel = new NotificationChannel(str2, APP_CLONER_NOTIFICATION_CHANNEL_NAME, 2);
+                channel = new NotificationChannel(Const.APP_NAME, Const.APP_NAME, 2);
                 application = getApplication();
                 if (application != null) {
                     notificationManager = (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -114,7 +108,7 @@ public class NotificationUtils {
                     }
                 }
             }
-            b.setChannelId(str2);
+            b.setChannelId(Const.APP_NAME);
         } else if (highImportance && Build.VERSION.SDK_INT >= 16) {
             b.setPriority(1);
         }
