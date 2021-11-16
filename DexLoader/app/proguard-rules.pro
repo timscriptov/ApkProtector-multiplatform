@@ -2,3 +2,6 @@
 -renamesourcefileattribute
 -dontshrink
 -dontoptimize
+
+
+-repackageclasses com.mcal.apkprotector

@@ -6,6 +6,8 @@ import bin.xml.decode.XmlPullParser;
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.LoggerUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,7 +20,7 @@ public class ManifestPatcher {
     public static String customApplicationName = "";
     public static String packageName = "";
 
-    public static byte[] parseManifest() throws IOException {
+    public static byte @NotNull [] parseManifest() throws IOException {
         FileInputStream fis = new FileInputStream(Constants.MANIFEST_PATH);
         AXmlDecoder axml = AXmlDecoder.decode(fis);
         AXmlResourceParser parser = new AXmlResourceParser();
@@ -109,14 +111,15 @@ public class ManifestPatcher {
         return baos.toByteArray();
     }
 
-    private static void writeInt(byte[] data, int off, int value) {
+    private static void writeInt(byte @NotNull [] data, int off, int value) {
         data[off++] = (byte) (value & 0xFF);
         data[off++] = (byte) ((value >>> 8) & 0xFF);
         data[off++] = (byte) ((value >>> 16) & 0xFF);
         data[off] = (byte) ((value >>> 24) & 0xFF);
     }
 
-    private static int readInt(byte[] data, int off) {
+    @Contract(pure = true)
+    private static int readInt(byte @NotNull [] data, int off) {
         return data[off + 3] << 24 | (data[off + 2] & 0xFF) << 16 | (data[off + 1] & 0xFF) << 8
                 | data[off] & 0xFF;
     }

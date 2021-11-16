@@ -15,8 +15,6 @@ import android.util.Log;
 
 import com.mcal.apkprotector.data.Const;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.lang.reflect.Method;
 
 public class NotificationUtils {
@@ -26,7 +24,6 @@ public class NotificationUtils {
     private static boolean sNotificationChannelCreatedHighImportance;
     private static Icon sNotificationIcon;
 
-    @Nullable
     public static Application getApplication() {
         Application application = sApplication;
         if (application != null) {

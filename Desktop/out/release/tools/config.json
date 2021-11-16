@@ -4,25 +4,13 @@
      */
     "keystore":{
         /**
-         * APK ALIGNER
-         */
-        "zipaligner":true,
-        
-        /**
          * KEYSTORE FOR APK SIGNING
          */
-        "keystorePath":"debug.jks",
-        "keystorePassword":"debug",
-        "keystoreAlias":"debug",
-        "certPassword":"debug",
-        
-        /**
-         * APK SIGNER
-         */
-        "signatureV1Enabled":true,
-        "signatureV2Enabled":true,
-        "signatureV3Enabled":false,
-        "signatureV4Enabled":false
+        "customSignature":false,
+        "keystorePath":"", // KEY NAME
+        "keystorePassword":"", // KEY PASSWORD
+        "keystoreAlias":"", // ALIAS
+        "certPassword":"" // CERT PASSWORD
     },
     /*
      * SETTINGS: DEX ENCRYPTION

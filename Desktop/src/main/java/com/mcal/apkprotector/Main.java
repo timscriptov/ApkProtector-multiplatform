@@ -7,7 +7,7 @@ import com.mcal.apkprotector.data.gson.ConfigTemp;
 import com.mcal.apkprotector.fastzip.FastZip;
 import com.mcal.apkprotector.patchers.DexCrypto;
 import com.mcal.apkprotector.patchers.ManifestPatcher;
-import com.mcal.apkprotector.signer.SignatureTool;
+import com.mcal.apkprotector.signer.ApkSigner;
 import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class Main {
     public static void main(String @NotNull ... args) {
@@ -76,7 +75,7 @@ public class Main {
             FastZip.repack(apkPath, Constants.UNSIGNED_PATH);
             LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH);
 
-            if (!SignatureTool.sign(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {
+            if (!new ApkSigner().apksigner(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {
                 LoggerUtils.writeLog("APK signing error");
                 return;
             }

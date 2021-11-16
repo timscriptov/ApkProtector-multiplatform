@@ -5,6 +5,7 @@ import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.patchers.DexPatcher;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
@@ -17,9 +18,9 @@ import java.util.zip.ZipOutputStream;
 
 public class FastZip {
 
-    private static final String[] n = {".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
+    public static final String[] n = {".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
 
-    public static void extract(File zip, File extractDir) throws IOException {
+    public static void extract(File zip, @NotNull File extractDir) throws IOException {
         extractDir.mkdirs();
         ZipFile apk = new ZipFile(zip);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) apk.entries();
@@ -109,9 +110,9 @@ public class FastZip {
             if (name.startsWith("META-INF/")) continue;
             for (String endsWith : n) {
                 if (name.equals(endsWith) || name.equals("resources.arsc") && !entry.isDirectory()) {
-                    fzos.setLevel(ZipOutputStream.STORED);
+                    fzos.setLevel(ZipEntry.STORED);
                 } else {
-                    fzos.setLevel(ZipOutputStream.DEFLATED);
+                    fzos.setLevel(ZipEntry.DEFLATED);
                 }
             }
 

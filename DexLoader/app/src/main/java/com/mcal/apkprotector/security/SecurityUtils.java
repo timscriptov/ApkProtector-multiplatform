@@ -14,10 +14,6 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +58,6 @@ public class SecurityUtils {
         }
     }
 
-    @Nullable
     static String getCurrentSignature(Context context) {
         byte[] readBuffer = new byte[8192];
         Certificate[] certs = null;
@@ -102,8 +97,7 @@ public class SecurityUtils {
         }
     }
 
-    @Nullable
-    private static Certificate[] loadCertificates(@NotNull JarFile jarFile, JarEntry je, byte[] readBuffer) {
+    private static Certificate[] loadCertificates(JarFile jarFile, JarEntry je, byte[] readBuffer) {
         try {
             InputStream is = jarFile.getInputStream(je);
             while (is.read(readBuffer, 0, readBuffer.length) != -1) {
@@ -116,9 +110,7 @@ public class SecurityUtils {
         }
     }
 
-    @NotNull
-    @Contract(pure = true)
-    private static char[] toChars(@NotNull byte[] mSignature) {
+    private static char[] toChars(byte[] mSignature) {
         final int N;
         N = mSignature.length;
         final int N2 = N * 2;
@@ -311,7 +303,7 @@ public class SecurityUtils {
      * @param context
      * @return
      */
-    public static boolean isDebuggable(@NotNull Context context) {
+    public static boolean isDebuggable(Context context) {
         return ((context.getApplicationContext().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
     }
 
@@ -364,7 +356,7 @@ public class SecurityUtils {
      * @return
      */
     @SuppressLint("WrongConstant")
-    public static boolean isInstallPirateApp(@NotNull Context context, String packageName) {
+    public static boolean isInstallPirateApp(Context context, String packageName) {
         try {
             context.getPackageManager().getPackageInfo(packageName, 1);
             return true;
@@ -378,7 +370,6 @@ public class SecurityUtils {
         return SecurityUtils.getSingleInstance().tryShutdownXposed();
     }
 
-    @Contract(pure = true)
     private static SecurityUtils getSingleInstance() {
         return SecurityUtils.SingletonHolder.singleInstance;
     }

@@ -1,11 +1,9 @@
 package com.mcal.apkprotector.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +27,6 @@ public class CommonUtils {
      * @param i   - символы
      * @return
      */
-    @NotNull
     public static String encryptStrings(String str, int i) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
@@ -42,8 +39,6 @@ public class CommonUtils {
         }
     }
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
     private static char[] a(int i) {
         switch (i) {
             case 0:
@@ -64,8 +59,8 @@ public class CommonUtils {
      * @param title - заголовок уведомления
      * @param msg   - сообщение уведомления
      */
-    public static void showDialogWarn(@NotNull Context context, String title, String msg) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+    public static void showDialogWarn(Context context, String title, String msg) {
+        @SuppressLint("WrongConstant") NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
         new Notification.Builder(context);
         Notification.Builder when = new Notification.Builder(context).setContentTitle(title).setContentText(msg).setWhen(System.currentTimeMillis());
         NotificationUtils.setSmallNotificationIcon(when, true);

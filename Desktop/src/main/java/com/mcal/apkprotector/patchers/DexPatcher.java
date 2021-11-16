@@ -5,7 +5,6 @@ import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.FileUtils;
 import com.mcal.apkprotector.utils.LoggerUtils;
-import org.antlr.runtime.RecognitionException;
 import org.jetbrains.annotations.NotNull;
 import org.jf.baksmali.Baksmali;
 import org.jf.baksmali.BaksmaliOptions;
@@ -14,7 +13,6 @@ import org.jf.smali.Smali;
 import org.jf.smali.SmaliOptions;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,57 +29,65 @@ public class DexPatcher {
     public static byte @NotNull [] patchDex(DexBackedDexFile dex) throws IOException {
         File output = new File(Constants.SMALI_PATH);
         File outputDex = new File(Constants.OUTPUT_PATH, "classes.dex");
-        if (!Baksmali.disassembleDexFile(dex, output, Runtime.getRuntime().availableProcessors(), new BaksmaliOptions())) {
-            System.out.println("Failed dex decompile");
-            FileUtils.delete(output);
-            System.exit(-1);
-        }
-        List<File> smalies = FileUtils.getFiles(output.listFiles());
-        for (File smali : smalies) {
-            String smaliData = new String(Files.readAllBytes(Paths.get(smali.getAbsolutePath())));
-            Pattern pattern = Pattern.compile("com.mcal.apkprotector".replaceFirst("\\.", "(.)"));
-            Matcher matcher = pattern.matcher(smaliData);
-            while (matcher.find())
-                smaliData = smaliData.replaceFirst(matcher.group(), Preferences.getPackageName().replace(".", matcher.group(1)));
-            smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
-                    .replace("$DEX_DIR", enc(Preferences.getDexDir()))
-                    .replace("$DEX_PREFIX", enc(Preferences.getDexPrefix()))
-                    //.replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
-                    //.replace("$DATA", "")
-                    .replace("$DEX_SUFIX", enc(Preferences.getDexSuffix()))
-                    .replace("ProtectApplication", Preferences.getProxyAppName())
-
-                    .replace("$SECONDARY_DEXES", enc(Preferences.SECONDARY_DEXES()))
-                    .replace("$MULTIDEX_LOCK", enc(Preferences.MULTIDEX_LOCK()))
-                    .replace("$CLASSES", enc(Preferences.CLASSES()))
-                    .replace("$ZIP", enc(Preferences.ZIP()))
-                    .replace("$CODE_CACHE", enc(Preferences.CODE_CACHE()));
-            if (customApplication) {
-                LoggerUtils.writeLog("Custom application detected");
-                if (customApplicationName.startsWith(".")) {
-                    LoggerUtils.writeLog("Custom application detected");
-                    if (packageName == null) {
-                        LoggerUtils.writeLog("Package name is null.");
-                        throw new NullPointerException("Package name is null.");
-                    }
-                    customApplicationName = packageName + customApplicationName;
+        try {
+            if (!Baksmali.disassembleDexFile(dex, output, Runtime.getRuntime().availableProcessors(), new BaksmaliOptions())) {
+                System.out.println("Failed dex decompile");
+                FileUtils.delete(output);
+                System.exit(-1);
+            }
+            List<File> smalies = FileUtils.getFiles(output.listFiles());
+            for (File smali : smalies) {
+                String smaliData = new String(Files.readAllBytes(Paths.get(smali.getAbsolutePath())));
+                Pattern pattern = Pattern.compile("com.mcal.apkprotector".replaceFirst("\\.", "(.)"));
+                Matcher matcher = pattern.matcher(smaliData);
+                while (matcher.find()) {
+                    smaliData = smaliData.replaceFirst(matcher.group(), Preferences.getPackageName().replace(".", matcher.group(1)));
                 }
-                smaliData = smaliData.replace("$APPLICATION", customApplicationName);
-            } else smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
-            smaliData = smaliData.replace("ProxyApplication", Preferences.getProxyAppName());
-            Files.writeString(Paths.get(smali.getAbsolutePath()), smaliData, StandardOpenOption.WRITE);
-            //FileUtils.givenUsingJava7_whenWritingToFile_thenCorrect(smali.getAbsolutePath(), smaliData);
-        }
-        SmaliOptions options = new SmaliOptions();
-        options.outputDexFile = outputDex.getAbsolutePath();
-        if (!Smali.assemble(options, smalies
-                .stream()
-                .map(File::getAbsolutePath)
-                .collect(Collectors.toList()))) {
-            System.out.println("failed assemble smali");
-            FileUtils.delete(output);
-            FileUtils.delete(outputDex);
-            System.exit(-1);
+                smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
+                        .replace("$DEX_DIR", enc(Preferences.getDexDir()))
+                        .replace("$DEX_PREFIX", enc(Preferences.getDexPrefix()))
+                        //.replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
+                        .replace("$DATA", "")
+                        .replace("$APP_NAME", "")
+                        .replace("$DEX_SUFIX", enc(Preferences.getDexSuffix()))
+                        //.replace("ProtectApplication", Preferences.getProxyAppName())
+
+                        .replace("$SECONDARY_DEXES", enc(Preferences.SECONDARY_DEXES()))
+                        .replace("$MULTIDEX_LOCK", enc(Preferences.MULTIDEX_LOCK()))
+                        .replace("$CLASSES", enc(Preferences.CLASSES()))
+                        .replace("$ZIP", enc(Preferences.ZIP()))
+                        .replace("$CODE_CACHE", enc(Preferences.CODE_CACHE()))
+                        .replace("ProtectApplication", Preferences.getProxyAppName());
+                if (customApplication) {
+                    LoggerUtils.writeLog("Custom application detected");
+                    if (customApplicationName.startsWith(".")) {
+                        LoggerUtils.writeLog("Custom application detected");
+                        if (packageName == null) {
+                            LoggerUtils.writeLog("Package name is null.");
+                            throw new NullPointerException("Package name is null.");
+                        }
+                        customApplicationName = packageName + customApplicationName;
+                    }
+                    smaliData = smaliData.replace("$APPLICATION", customApplicationName);
+                } else {
+                    smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
+                }
+                //Files.writeString(Paths.get(smali.getAbsolutePath()), smaliData, StandardOpenOption.WRITE);
+                FileUtils.givenUsingJava7_whenWritingToFile_thenCorrect(smali.getAbsolutePath(), smaliData);
+            }
+            SmaliOptions options = new SmaliOptions();
+            options.outputDexFile = outputDex.getAbsolutePath();
+            if (!Smali.assemble(options, smalies
+                    .stream()
+                    .map(File::getAbsolutePath)
+                    .collect(Collectors.toList()))) {
+                System.out.println("failed assemble smali");
+                FileUtils.delete(output);
+                FileUtils.delete(outputDex);
+                System.exit(-1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         byte[] dexBytes = Files.readAllBytes(Paths.get(outputDex.getAbsolutePath()));
         FileUtils.delete(output);

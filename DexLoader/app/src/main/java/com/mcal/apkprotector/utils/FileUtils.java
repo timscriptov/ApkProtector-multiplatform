@@ -1,7 +1,5 @@
 package com.mcal.apkprotector.utils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,12 +22,12 @@ public class FileUtils {
         }
     }
 
-    public static @NotNull String readFile(String path, Charset encoding) throws IOException {
+    public static String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = readAllBytes(new FileInputStream(path));
         return new String(encoded, encoding);
     }
 
-    public static byte @NotNull [] readAllBytes(@NotNull InputStream is) throws IOException {
+    public static byte [] readAllBytes(InputStream is) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buffer = new byte[2048];
         int len = 0;

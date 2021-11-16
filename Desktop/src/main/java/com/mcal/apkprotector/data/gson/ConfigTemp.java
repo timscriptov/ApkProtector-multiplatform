@@ -25,12 +25,4 @@ public class ConfigTemp {
     public String ZIP;
     @SerializedName("CODE_CACHE")
     public String CODE_CACHE;
-
-        /*public ConfigTemp(String packageName, String dexFolder, String dexPrefix, String dexSuffix, String proxyApp) {
-            this.packageName = packageName;
-            this.dexFolder = dexFolder;
-            this.dexPrefix = dexPrefix;
-            this.dexSuffix = dexSuffix;
-            this.proxyApp = proxyApp;
-        }*/
 }

@@ -12,6 +12,7 @@ import org.jf.dexlib2.iface.DexFile;
 import org.jf.util.ClassFileNameHandler;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -127,7 +128,7 @@ public class Baksmali2 {
             }
 
             BufferedWriter bufWriter = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(smaliFile), "UTF8"));
+                    new FileOutputStream(smaliFile), StandardCharsets.UTF_8));
 
             writer = new BaksmaliWriter(
                     bufWriter,

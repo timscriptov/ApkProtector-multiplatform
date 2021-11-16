@@ -4,11 +4,13 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -115,6 +117,17 @@ public class FileUtils {
         return System.getProperty("user.dir");
     }
 
+    public static String getHomePath() {
+        CodeSource codeSource = FileUtils.class.getProtectionDomain().getCodeSource();
+        try {
+            File jarFile = new File(codeSource.getLocation().toURI().getPath());
+            return jarFile.getParentFile().getPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return getHomePath();
+        }
+    }
+
     public static boolean copyFile(String src, String dest) {
         try {
             Files.copy(new File(src).toPath(), new File(dest).toPath());
@@ -147,7 +160,7 @@ public class FileUtils {
             return false;
         }
         File file = new File(path);
-        return file != null && file.exists();
+        return file.exists();
     }
 
     public static void givenUsingJava7_whenWritingToFile_thenCorrect(String fileName, @NotNull String content) throws IOException {
@@ -186,16 +199,15 @@ public class FileUtils {
         if (!f.exists()) {
             f.mkdirs();
         }
-
     }
 
-    public static void copyFolder(File source, File destination) {
+    public static void copyFolder(@NotNull File source, File destination) {
         if (source.isDirectory()) {
             if (!destination.exists()) {
                 destination.mkdirs();
             }
 
-            String files[] = source.list();
+            String[] files = source.list();
 
             for (String file : files) {
                 File srcFile = new File(source, file);
@@ -233,11 +245,10 @@ public class FileUtils {
         }
     }
 
-    public static boolean copy(String srcFile, String destFile) {
+    public static void copy(String srcFile, String destFile) {
         FileInputStream in = null;
         FileOutputStream out = null;
 
-        boolean var5;
         try {
 
             if (!isExists(destFile)) {
@@ -256,11 +267,8 @@ public class FileUtils {
             }
 
             out.flush();
-            boolean var6 = true;
-            return var6;
         } catch (Exception var20) {
             System.out.println("Error!" + var20);
-            var5 = false;
         } finally {
             if (null != in) {
                 try {
@@ -277,13 +285,11 @@ public class FileUtils {
                     var18.printStackTrace();
                 }
             }
-
         }
-        return var5;
     }
 
-    public static String readFileContent(String path) {
-        StringBuffer sb = new StringBuffer();
+    public static @NotNull String readFileContent(String path) {
+        StringBuilder sb = new StringBuilder();
         if (!isExists(path)) {
             return sb.toString();
         } else {

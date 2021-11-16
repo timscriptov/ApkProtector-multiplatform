@@ -23,7 +23,7 @@ public class Constants {
     public static String DEX_PREFIX = "protect-v";
     public static String DEX_SUFFIX = ".enc";
     public static String DEX_DIR = "protect";
-    public static String PROXY_APP = "ProxyApplication";
+    public static String PROXY_APP = "App";
 
     // Others
     public static final String SECONDARY_DEXES = "secondary-dexes";

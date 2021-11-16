@@ -37,6 +37,10 @@ public class Preferences {
         }
     }
 
+    public static boolean isCustomSignature() {
+        return config().keystore.customSignature;
+    }
+
     public static @NotNull String isSignaturePath() {
         return Constants.TOOLS_PATH + File.separator + config().keystore.keystorePath;
     }
@@ -51,22 +55,6 @@ public class Preferences {
 
     public static String isSignaturePassword() {
         return config().keystore.keystorePassword;
-    }
-
-    public static boolean getSignatureV1() {
-        return config().keystore.signatureV1Enabled;
-    }
-
-    public static boolean getSignatureV2() {
-        return config().keystore.signatureV2Enabled;
-    }
-
-    public static boolean getSignatureV3() {
-        return config().keystore.signatureV3Enabled;
-    }
-
-    public static boolean getSignatureV4() {
-        return config().keystore.signatureV4Enabled;
     }
 
     public static String getProtectKey() {
@@ -140,10 +128,6 @@ public class Preferences {
                 return configTemp().dexSuffix;
         }
         return null;
-    }
-
-    public static boolean getZipaligner() {
-        return config().keystore.zipaligner;
     }
 
     public static String getAlphabet() {

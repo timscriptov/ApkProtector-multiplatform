@@ -1,5 +1,7 @@
 package com.mcal.apkprotector.fastzip;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,7 +17,7 @@ public class FastZipOutputStream extends ZipOutputStream {
         super(out);
     }
 
-    public void copyZipEntry(ZipEntry zipEntry, final ZipFile zipFile) {
+    public void copyZipEntry(@NotNull ZipEntry zipEntry, final @NotNull ZipFile zipFile) {
         try {
             ZipEntry newEntry = new ZipEntry(zipEntry.getName());
 
