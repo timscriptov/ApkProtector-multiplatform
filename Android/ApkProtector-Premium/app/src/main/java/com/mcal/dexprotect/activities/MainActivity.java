@@ -32,7 +32,6 @@ import com.mcal.dexprotect.module.Dialogs;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.ExceptionHandler;
 import com.mcal.dexprotect.utils.Utils;
-import com.mcal.dexprotect.utils.security.LuckyPatcherCheck;
 import com.mcal.dexprotect.utils.security.SecurityUtils;
 import com.mcal.dexprotect.utils.security.SignatureCheck;
 import com.mcal.dexprotect.view.CenteredToolBar;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         setContentView(R.layout.main);
-        if(!SecurityUtils.isVerifyInstaller() || BuildConfig.DEBUG) {
+        if (!SecurityUtils.isVerifyInstaller() || BuildConfig.DEBUG) {
             Dialogs.dialog(this, "ApkProtector Security",
                     getString(R.string.vending_message));
         }

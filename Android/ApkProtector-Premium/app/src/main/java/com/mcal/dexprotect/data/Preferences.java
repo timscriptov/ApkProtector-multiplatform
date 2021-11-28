@@ -1,6 +1,5 @@
 package com.mcal.dexprotect.data;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
@@ -88,7 +87,7 @@ public final class Preferences {
         preferences.edit().putBoolean("obfuscateApkBoolean", flag).apply();
     }
 
-    public static String isProtectKeyString(String str) {
+    public static String setProtectKeyString(String str) {
         return preferences.getString("protectKeyString", str);
     }
 
@@ -100,23 +99,23 @@ public final class Preferences {
         return preferences.getString("apkPath", "");
     }
 
-    public static void isSplashActivityBoolean(boolean flag) {
-        preferences.edit().putBoolean("splashActivityBoolean", flag).apply();
-    }
-
     public static boolean isSplashActivityBoolean() {
         return preferences.getBoolean("splashActivityBoolean", false);
     }
 
-    public static void isTitleNotificationBoolean(boolean flag) {
-        preferences.edit().putBoolean("titleNotificationBoolean", flag).apply();
+    public static void setSplashActivityBoolean(boolean flag) {
+        preferences.edit().putBoolean("splashActivityBoolean", flag).apply();
     }
 
     public static boolean isTitleNotificationBoolean() {
         return preferences.getBoolean("titleNotificationBoolean", false);
     }
 
-    public static void isWelcomeMessageString(String flag) {
+    public static void setTitleNotificationBoolean(boolean flag) {
+        preferences.edit().putBoolean("titleNotificationBoolean", flag).apply();
+    }
+
+    public static void setWelcomeMessageString(String flag) {
         preferences.edit().putString("welcomeMessageString", flag).apply();
     }
 
@@ -124,59 +123,59 @@ public final class Preferences {
         return preferences.getString("welcomeMessageString", "Powered by ApkProtector");
     }
 
-    public static int isWelcomeModeInt(int i) {
+    public static int setWelcomeModeInt(int i) {
         return preferences.getInt("welcomeModeInt", i);
-    }
-
-    public static void isWelcomeMessageBoolean(boolean flag) {
-        preferences.edit().putBoolean("welcomeMessageBoolean", flag).apply();
     }
 
     public static boolean isWelcomeMessageBoolean() {
         return preferences.getBoolean("welcomeMessageBoolean", false);
     }
 
+    public static void setWelcomeMessageBoolean(boolean flag) {
+        preferences.edit().putBoolean("welcomeMessageBoolean", flag).apply();
+    }
+
     public static boolean isCheckVPNBoolean() {
         return preferences.getBoolean("checkVPNBoolean", false);
     }
 
-    public static void isCheckVPNBoolean(boolean flag) {
+    public static void setCheckVPNBoolean(boolean flag) {
         preferences.edit().putBoolean("checkVPNBoolean", flag).apply();
-    }
-
-    public static void isCrashNotificationBoolean(boolean flag) {
-        preferences.edit().putBoolean("crashNotificationBoolean", flag).apply();
     }
 
     public static boolean isCrashNotificationBoolean() {
         return preferences.getBoolean("crashNotificationBoolean", false);
     }
 
-    public static void isDeviceLockBoolean(boolean flag) {
-        preferences.edit().putBoolean("deviceLockBoolean", flag).apply();
+    public static void setCrashNotificationBoolean(boolean flag) {
+        preferences.edit().putBoolean("crashNotificationBoolean", flag).apply();
     }
 
     public static boolean isDeviceLockBoolean() {
         return preferences.getBoolean("deviceLockBoolean", false);
     }
 
-    public static void setAssetsCheckString(String flag) {
-        preferences.edit().putString("assetsCheckString", flag).apply();
-    }
-
-    public static void setCppLibCheckString(String flag) {
-        preferences.edit().putString("cppLibCheckString", flag).apply();
+    public static void setDeviceLockBoolean(boolean flag) {
+        preferences.edit().putBoolean("deviceLockBoolean", flag).apply();
     }
 
     public static String getCppLibCheckString() {
         return preferences.getString("cppLibCheckString", "libfuck.so\nlibarm.so\nlibarm_signer.so\nlibsandhook.so\nlibEpic.so\nlibcnfix.so");
     }
 
+    public static void setCppLibCheckString(String flag) {
+        preferences.edit().putString("cppLibCheckString", flag).apply();
+    }
+
     public static String getAssetsCheckString() {
         return preferences.getString("assetsCheckString", "Hook_apk\nlibjiagu.so\nlibjiagu_a64.so\nlibjiagu_x64.so\nlibjiagu_x86.so\narm\nhook.apk\nArm_Epic\nApp_dex/classes.dex\nApp_dex/Modex.txt\nHook_so/arm64-v8a/libIOHook.so\nHook_so/arm64-v8a/libmocls.so\nHook_so/arm64-v8a/libsandhook.so\nHook_so/armeabi-v7a/libmocls.so\nHook_so/armeabi-v7a/libsandhook.so\nHook_so/armeabi-v7a/libIOHook.so\npackage$Info");
     }
 
-    public static void isHookCheckString(String flag) {
+    public static void setAssetsCheckString(String flag) {
+        preferences.edit().putString("assetsCheckString", flag).apply();
+    }
+
+    public static void setHookCheckString(String flag) {
         preferences.edit().putString("hookCheckString", flag).apply();
     }
 
@@ -184,16 +183,12 @@ public final class Preferences {
         return preferences.getString("hookCheckString", "com.topjohnwu.magisk\nde.robv.android.xposed");
     }
 
-    public static void isHookCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("hookCheckBoolean", flag).apply();
-    }
-
     public static boolean isHookCheckBoolean() {
         return preferences.getBoolean("hookCheckBoolean", false);
     }
 
-    public static void isIllegalCodeCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("illegalCodeCheckBoolean", flag).apply();
+    public static void setHookCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("hookCheckBoolean", flag).apply();
     }
 
     public static boolean getResNameArscBoolean() {
@@ -216,7 +211,11 @@ public final class Preferences {
         return preferences.getBoolean("illegalCodeCheckBoolean", false);
     }
 
-    public static void isIllegalCodeCheckString(String flag) {
+    public static void setIllegalCodeCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("illegalCodeCheckBoolean", flag).apply();
+    }
+
+    public static void setIllegalCodeCheckString(String flag) {
         preferences.edit().putString("illegalCodeCheckString", flag).apply();
     }
 
@@ -224,119 +223,119 @@ public final class Preferences {
         return preferences.getString("illegalCodeCheckString", "bin.mt.apksignaturekillerplus.HookApplication\ncc.binmt.signature.PmsHookApplication\ncc.binmt.signature.Hook");
     }
 
-    public static void isCloneCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("cloneCheckBoolean", flag).apply();
-    }
-
     public static boolean isCloneCheckBoolean() {
         return preferences.getBoolean("cloneCheckBoolean", false);
     }
 
-    public static void isEmulatorCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("emulatorCheckBoolean", flag).apply();
+    public static void setCloneCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("cloneCheckBoolean", flag).apply();
     }
 
     public static boolean isEmulatorCheckBoolean() {
         return preferences.getBoolean("emulatorCheckBoolean", false);
     }
 
-    public static void isPlaystoreCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("playstoreCheckBoolean", flag).apply();
+    public static void setEmulatorCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("emulatorCheckBoolean", flag).apply();
     }
 
     public static boolean isPlaystoreCheckBoolean() {
         return preferences.getBoolean("playstoreCheckBoolean", false);
     }
 
-    public static void isDebugCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("debugCheckBoolean", flag).apply();
+    public static void setPlaystoreCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("playstoreCheckBoolean", flag).apply();
     }
 
     public static boolean isDebugCheckBoolean() {
         return preferences.getBoolean("debugCheckBoolean", false);
     }
 
-    public static void isXposedCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("xposedCheckBoolean", flag).apply();
+    public static void setDebugCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("debugCheckBoolean", flag).apply();
     }
 
     public static boolean isXposedCheckBoolean() {
         return preferences.getBoolean("xposedCheckBoolean", false);
     }
 
-    public static void isMagiskCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("magiskCheckBoolean", flag).apply();
+    public static void setXposedCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("xposedCheckBoolean", flag).apply();
     }
 
     public static boolean isMagiskCheckBoolean() {
         return preferences.getBoolean("magiskCheckBoolean", false);
     }
 
-    public static void isRootCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("rootCheckBoolean", flag).apply();
+    public static void setMagiskCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("magiskCheckBoolean", flag).apply();
     }
 
     public static boolean isRootCheckBoolean() {
         return preferences.getBoolean("rootCheckBoolean", false);
     }
 
-    public static void isSignatureCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("signatureCheckBoolean", flag).apply();
+    public static void setRootCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("rootCheckBoolean", flag).apply();
     }
 
     public static boolean isSignatureCheckBoolean() {
         return preferences.getBoolean("signatureCheckBoolean", false);
     }
 
-    public static void setAssetsCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("assetsCheckBoolean", flag).apply();
-    }
-
-    public static void setCppLibCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("cppLibCheckBoolean", flag).apply();
+    public static void setSignatureCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("signatureCheckBoolean", flag).apply();
     }
 
     public static boolean isCppLibCheckBoolean() {
         return preferences.getBoolean("cppLibCheckBoolean", false);
     }
 
+    public static void setCppLibCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("cppLibCheckBoolean", flag).apply();
+    }
+
     public static boolean isAssetsCheckBoolean() {
         return preferences.getBoolean("assetsCheckBoolean", false);
     }
 
-    public static void isLuckyPatcherCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("luckyPatcherCheckBoolean", flag).apply();
-    }
-
-    public static void setModexHookCheckBoolean(boolean flag) {
-        preferences.edit().putBoolean("modexHookBoolean", flag).apply();
+    public static void setAssetsCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("assetsCheckBoolean", flag).apply();
     }
 
     public static boolean isModexHookCheckBoolean() {
         return preferences.getBoolean("modexHookBoolean", false);
     }
 
+    public static void setModexHookCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("modexHookBoolean", flag).apply();
+    }
+
     public static boolean isLuckyPatcherCheckBoolean() {
         return preferences.getBoolean("luckyPatcherCheckBoolean", false);
+    }
+
+    public static void setLuckyPatcherCheckBoolean(boolean flag) {
+        preferences.edit().putBoolean("luckyPatcherCheckBoolean", flag).apply();
     }
 
     public static String isUserIgnoredClasses(String str) {
         return preferences.getString("userIgnoredClasses", str);
     }
 
-    public static String isCertPassword() {
+    public static String getCertPassword() {
         return preferences.getString("certPassword", "");
     }
 
-    public static String isSignaturePassword() {
+    public static String getSignaturePassword() {
         return preferences.getString("signaturePassword", "");
     }
 
-    public static String isSignatureAlias() {
+    public static String getSignatureAlias() {
         return preferences.getString("signatureAlias", "");
     }
 
-    public static String isSignaturePath() {
+    public static String getSignaturePath() {
         return preferences.getString("signaturePath", "");
     }
 
@@ -352,7 +351,7 @@ public final class Preferences {
         preferences.edit().putString("customAppNameString", flag).apply();
     }
 
-    public static String isCustomAppNameString() {
+    public static String getCustomAppNameString() {
         return preferences.getString("customAppNameString", "com.mcal.dexprotect.ProxyApplication");
     }
 

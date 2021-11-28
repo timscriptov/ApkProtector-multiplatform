@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.mcal.apkprotector.data.Const;
 import com.mcal.apkprotector.utils.CommonUtils;
+import com.mcal.apkprotector.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -222,7 +223,7 @@ public class MultiDex {
             } finally {
                 try {
                     extractor.close();
-                    CommonUtils.deleteDirectory(dexDir);
+                    FileUtils.deleteDirectory(dexDir);
                 } catch (IOException e) {
                     // Delay throw of close exception to ensure we don't override some exception
                     // thrown during the try block.

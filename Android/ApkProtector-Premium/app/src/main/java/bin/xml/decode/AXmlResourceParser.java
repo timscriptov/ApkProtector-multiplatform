@@ -16,13 +16,12 @@
 package bin.xml.decode;
 
 import android.util.TypedValue;
+import bin.io.ZInput;
+import bin.util.StringDecoder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-
-import bin.io.ZInput;
-import bin.util.StringDecoder;
 
 /**
  * @author Dmitry Skiba

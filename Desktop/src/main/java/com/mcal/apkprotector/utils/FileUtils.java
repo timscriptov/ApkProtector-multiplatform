@@ -318,4 +318,25 @@ public class FileUtils {
             return sb.toString();
         }
     }
+
+    public static boolean copyFileStream(@NotNull File file, @NotNull File file1) {
+        try {
+            copyFileUsingStream(file, file1);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void copyFileUsingStream(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source);
+             OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        }
+    }
 }

@@ -18,6 +18,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +46,30 @@ public class FileUtils {
             System.out.println("Exception " + e);
         } finally {
             out.close();
+        }
+    }
+
+    public static void writeFile(File path, String content) {
+        try {
+            File f = path;
+            if (!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
+            }
+
+            if (!f.exists()) {
+                f.createNewFile();
+                f = path;
+            }
+
+            FileWriter fw = new FileWriter(f, true);
+            if (content != null && !"".equals(content)) {
+                fw.write(content);
+                fw.flush();
+            }
+
+            fw.close();
+        } catch (Exception var5) {
+            var5.printStackTrace();
         }
     }
 
@@ -182,5 +210,12 @@ public class FileUtils {
         for (String line; (line = br.readLine()) != null; )
             text.append(line).append(System.lineSeparator());
         return text.toString();
+    }
+
+    public static void givenUsingJava7_whenWritingToFile_thenCorrect(String fileName, @NotNull String content) throws IOException {
+        Path logFile = Paths.get(fileName);
+        try (BufferedWriter writer = Files.newBufferedWriter(logFile, StandardCharsets.UTF_8)) {
+            writer.write(content);
+        }
     }
 }

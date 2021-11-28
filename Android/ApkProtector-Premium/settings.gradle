@@ -7,4 +7,5 @@ include ':app',
         ':dx',
         //':dexlib2',
         ':expansionpanel',
-        ':obfuscator'
+        ':apksigner'
+        //':obfuscator'

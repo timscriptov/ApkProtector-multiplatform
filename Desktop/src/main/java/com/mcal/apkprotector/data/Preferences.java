@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.mcal.apkprotector.data.gson.Config;
 import com.mcal.apkprotector.data.gson.ConfigTemp;
 import com.mcal.apkprotector.utils.FileUtils;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -152,5 +153,10 @@ public class Preferences {
 
     public static String CODE_CACHE() {
         return configTemp().CODE_CACHE;
+    }
+
+    @Contract(pure = true)
+    public static @NotNull String getResNameArscString() {
+        return "resname";
     }
 }

@@ -24,9 +24,9 @@ import org.jetbrains.annotations.Contract;
 import java.io.File;
 
 public class CustomSignDialog implements DialogInterface.OnClickListener {
+    private final DialogInterface.OnClickListener listener;
     private TextInputEditText keyStorePath;
     private FilePickerDialog pickerDialog;
-    private final DialogInterface.OnClickListener listener;
 
     @Contract(pure = true)
     public CustomSignDialog(DialogInterface.OnClickListener listener) {
@@ -49,7 +49,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
         TextInputEditText keyStorePass = view.findViewById(R.id.keystore_pass);
         TextInputEditText certPassword = view.findViewById(R.id.cert_password);
 
-        keyStorePath.setText(Preferences.isSignaturePath());
+        keyStorePath.setText(Preferences.getSignaturePath());
         keyStorePath.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -65,7 +65,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
             }
         });
 
-        keyStoreAlias.setText(Preferences.isSignatureAlias());
+        keyStoreAlias.setText(Preferences.getSignatureAlias());
         keyStoreAlias.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -81,7 +81,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
             }
         });
 
-        keyStorePass.setText(Preferences.isSignaturePassword());
+        keyStorePass.setText(Preferences.getSignaturePassword());
         keyStorePass.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -97,7 +97,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
             }
         });
 
-        certPassword.setText(Preferences.isCertPassword());
+        certPassword.setText(Preferences.getCertPassword());
         certPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {

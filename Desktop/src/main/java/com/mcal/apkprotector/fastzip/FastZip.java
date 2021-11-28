@@ -29,9 +29,11 @@ public class FastZip {
             ZipEntry entry = entries.nextElement();
             LoggerUtils.writeLog("Entry: " + entry.getName());
             String name = entry.getName();
+
             //extract only manifest and dex files
             if (name.equals("AndroidManifest.xml")
                     || name.matches("classes\\.dex")
+                    || name.matches("resources.arsc")
                     || name.matches("classes\\d+\\.dex")
                     && !entry.isDirectory()) {
 
@@ -44,6 +46,7 @@ public class FastZip {
                 while ((len = bis.read(buffer)) > 0) {
                     fos.write(buffer, 0, len);
                 }
+                fos.close();
                 LoggerUtils.writeLog("Success extract: " + extractDir.getAbsolutePath() + File.separator + entry.getName());
             }
         }

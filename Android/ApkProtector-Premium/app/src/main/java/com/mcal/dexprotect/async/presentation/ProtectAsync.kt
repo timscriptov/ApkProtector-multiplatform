@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.annotation.RequiresApi
 import com.mcal.dexprotect.App
 import com.mcal.dexprotect.App.Companion.getContext
 import com.mcal.dexprotect.BuildConfig
@@ -18,7 +17,7 @@ import com.mcal.dexprotect.data.Constants
 import com.mcal.dexprotect.data.Preferences
 import com.mcal.dexprotect.fastzip.FastZip
 import com.mcal.dexprotect.patchers.ManifestPatcher
-import com.mcal.dexprotect.signer.SignatureTool
+import com.mcal.dexprotect.signer.ApkSigner
 import com.mcal.dexprotect.task.AndResGuard
 import com.mcal.dexprotect.task.DexCrypto
 import com.mcal.dexprotect.utils.*
@@ -85,7 +84,6 @@ class ProtectAsync(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private suspend fun doInBackground(vararg p1: String?): Boolean = withContext(Dispatchers.IO) {
         var t = false
         mi = MyAppInfo(context, p1[0])
@@ -152,16 +150,15 @@ class ProtectAsync(
                 LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH)
                 SourceInfo.initialise("$path/output", mi!!)
                 doProgress("Signing Apk…")
-                    if (SignatureTool.sign(
-                            context,
-                            File(Constants.UNSIGNED_PATH),
-                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                        )
-                    ) {
-                        LoggerUtils.writeLog("APK signed")
-                        doProgress("Done")
-                        t = true
-                    }
+                if (ApkSigner().apksigner(
+                        Constants.UNSIGNED_PATH,
+                        path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"
+                    )
+                ) {
+                    LoggerUtils.writeLog("APK signed")
+                    doProgress("Done")
+                    t = true
+                }
             } catch (e: Exception) {
                 LoggerUtils.writeLog("$e")
             }
@@ -184,16 +181,15 @@ class ProtectAsync(
             LoggerUtils.writeLog("Encrypted Resources")
             SourceInfo.initialise("$path/output", mi!!)
             doProgress("Signing Apk…")
-                if (SignatureTool.sign(
-                        context,
-                        File(encryptedApk),
-                        File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                    )
-                ) {
-                    LoggerUtils.writeLog("Apk Signed")
-                    doProgress("Done")
-                    t = true
-                }
+            if (ApkSigner().apksigner(
+                    encryptedApk,
+                    path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"
+                )
+            ) {
+                LoggerUtils.writeLog("Apk Signed")
+                doProgress("Done")
+                t = true
+            }
 
         }
         if (Preferences.getSignApkBoolean()) {
@@ -203,19 +199,18 @@ class ProtectAsync(
             if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 SourceInfo.initialise("$path/output", mi!!)
                 doProgress("Signing Apk…")
-                    if (SignatureTool.sign(
-                            context,
-                            File(tmpApk),
-                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                        )
-                    ) {
-                        LoggerUtils.writeLog("Apk Signed")
-                        doProgress("Done")
-                        t = true
+                if (ApkSigner().apksigner(
+                        tmpApk,
+                        path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"
+                    )
+                ) {
+                    LoggerUtils.writeLog("Apk Signed")
+                    doProgress("Done")
+                    t = true
                 }
             }
         }
-        if (Preferences.getObfuscateApkBoolean()) {
+        /*if (Preferences.getObfuscateApkBoolean()) {
             doProgress("Copying apk…")
             val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
 
@@ -228,7 +223,7 @@ class ProtectAsync(
                     context
                     )
             }
-        }
+        }*/
         LoggerUtils.writeLog("Work time: " + (System.currentTimeMillis() - time))
         return@withContext t
     }

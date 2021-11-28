@@ -27,9 +27,13 @@ public class DexCrypto {
     }
 
     private static void encodeSingleDex(@NotNull String name) throws IOException {
-        String outPath = Constants.ASSETS_PATH + File.separator;
+        String outPath = Constants.ASSETS_PATH + File.separator + Preferences.getDexDir() + File.separator;
+        if(!new File(outPath).exists()) {
+            new File(outPath).mkdir();
+        }
         if (name.matches("classes\\.dex")) {
             outPath += Preferences.getDexPrefix() + "1" + Preferences.getDexSuffix();
+
         } else {
             outPath += Preferences.getDexPrefix() + name.replaceFirst(".+(\\d+).+", "$1") + Preferences.getDexSuffix();
         }

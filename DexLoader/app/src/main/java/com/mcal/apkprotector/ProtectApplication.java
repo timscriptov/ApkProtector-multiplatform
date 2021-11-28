@@ -19,11 +19,11 @@ public class ProtectApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        //try {
-        //    new Security(this, Const.DATA);
-        //} finally {
+        try {
+            new Security(this, Const.DATA);
+        } finally {
             MultiDex.install(this);
-        //}
+        }
     }
 
     @Override

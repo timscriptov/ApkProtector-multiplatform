@@ -19,6 +19,18 @@ public class FastZipOutputStream extends ZipOutputStream {
         super(out);
     }
 
+    public static long calcCrc32(File file) throws IOException {
+        try (InputStream inputStream = new FileInputStream(file)) {
+            final byte[] buf = new byte[1024 * 4];
+            final CRC32 crc32 = new CRC32();
+            int len;
+            while ((len = inputStream.read(buf, 0, buf.length)) != -1) {
+                crc32.update(buf, 0, len);
+            }
+            return crc32.getValue();
+        }
+    }
+
     public void copyZipEntry(ZipEntry zipEntry, final ZipFile zipFile) {
         try {
             ZipEntry newEntry = new ZipEntry(zipEntry.getName());
@@ -44,18 +56,6 @@ public class FastZipOutputStream extends ZipOutputStream {
             closeEntry();
         } catch (IOException e) {
             System.out.println(" " + e);
-        }
-    }
-
-    public static long calcCrc32(File file) throws IOException {
-        try (InputStream inputStream = new FileInputStream(file)) {
-            final byte[] buf = new byte[1024 * 4];
-            final CRC32 crc32 = new CRC32();
-            int len;
-            while ((len = inputStream.read(buf, 0, buf.length)) != -1) {
-                crc32.update(buf, 0, len);
-            }
-            return crc32.getValue();
         }
     }
 }

@@ -1,14 +1,14 @@
 package bin.xml.decode;
 
+import bin.io.ZInput;
+import bin.io.ZOutput;
+import bin.util.StringDecoder;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-
-import bin.io.ZInput;
-import bin.io.ZOutput;
-import bin.util.StringDecoder;
 
 public class AXmlDecoder {
     private static final int AXML_CHUNK_TYPE = 0x00080003;

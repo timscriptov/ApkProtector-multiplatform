@@ -1,5 +1,8 @@
 package bin.util;
 
+import bin.io.ZInput;
+import bin.io.ZOutput;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -7,9 +10,6 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.List;
-
-import bin.io.ZInput;
-import bin.io.ZOutput;
 
 public class StringDecoder {
     public static final int IS_UTF8 = 0x100;

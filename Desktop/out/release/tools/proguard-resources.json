@@ -1,0 +1,17 @@
+{
+    "keepRoot" : false,
+    "mappingFile" : "name.json",
+    "whiteList" : [
+        "R.color.*"
+    ],
+    "commpressFilePattern" : [
+        "*.arsc",
+        "*.png",
+        "*.jpg",
+        "*.jpeg",
+        "*.gif",
+        "*.ogg",
+        "*.mp3",
+        "*.mp4"
+    ]
+}

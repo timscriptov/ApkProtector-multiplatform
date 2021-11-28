@@ -23,9 +23,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class SignatureCheck {
+    private static final String sign = "c9f118716f9c23da05096efe5d9a83d3";
     @SuppressLint("StaticFieldLeak")
     public static Context context;
-    private static final String sign = "c9f118716f9c23da05096efe5d9a83d3";
 
     public static boolean start(Context context) {
         if (Objects.equals(stringToMD5(getApkSignInfo(context)), sign) || BuildConfig.DEBUG) {

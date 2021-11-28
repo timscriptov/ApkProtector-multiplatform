@@ -3,6 +3,8 @@ package com.mcal.dexprotect.utils.file;
 import android.os.Build;
 import android.os.Environment;
 
+import androidx.annotation.NonNull;
+
 import com.mcal.dexprotect.App;
 
 import java.io.File;
@@ -20,6 +22,7 @@ public class ScopedStorage {
         return Environment.getExternalStorageDirectory();
     }
 
+    @NonNull
     public static String getFilesDir() {
         return App.getContext().getFilesDir().getAbsolutePath();
     }

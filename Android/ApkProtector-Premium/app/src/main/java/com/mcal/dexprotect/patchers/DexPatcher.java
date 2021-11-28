@@ -1,16 +1,19 @@
 package com.mcal.dexprotect.patchers;
 
+import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplication;
+import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplicationName;
+import static com.mcal.dexprotect.patchers.ManifestPatcher.packageName;
+
 import android.content.Context;
 
-import com.mcal.dexprotect.App;
-import com.mcal.dexprotect.BuildConfig;
+import androidx.annotation.NonNull;
+
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.task.Security;
 import com.mcal.dexprotect.utils.CommonUtils;
 import com.mcal.dexprotect.utils.LoggerUtils;
 import com.mcal.dexprotect.utils.file.FileUtils;
-import com.mcal.dexprotect.utils.security.SecurityUtils;
 
 import org.jf.baksmali.Baksmali;
 import org.jf.baksmali.BaksmaliOptions;
@@ -29,17 +32,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplication;
-import static com.mcal.dexprotect.patchers.ManifestPatcher.customApplicationName;
-import static com.mcal.dexprotect.patchers.ManifestPatcher.packageName;
-
 public class DexPatcher {
+    @NonNull
     public static byte[] processDex(Context context) throws IOException {
         FileUtils.inputStreamAssets(context, "dexloader.dex", Constants.OUTPUT_PATH + File.separator + "dexloader.dex");
 
         DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Preferences.getDexLoader())));
 
         File output = new File(Constants.SMALI_PATH);
+        if (!output.exists()) {
+            output.mkdir();
+        }
         if (!Baksmali.disassembleDexFile(dex, output, Runtime.getRuntime().availableProcessors(), new BaksmaliOptions())) {
             System.out.println("Failed dex decompile");
             FileUtils.delete(output);
@@ -53,19 +56,19 @@ public class DexPatcher {
             while (matcher.find()) {
                 smaliData = smaliData.replaceFirst(matcher.group(), Preferences.getPackageName().replace(".", matcher.group(1)));
             }
-            if(SecurityUtils.isVerifyInstaller() || BuildConfig.DEBUG) {
-                smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
-                        .replace("$DEX_DIR", enc(Preferences.getFolderDexesName()))
-                        .replace("$DEX_PREFIX", enc(Preferences.getPrefixDexesName()))
-                        .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
-                        .replace("$DEX_SUFIX", enc(Preferences.getSuffixDexesName()));
-            } else {
-                smaliData = smaliData.replace("$PROTECT_KEY", CommonUtils.encryptStrings(Preferences.getProtectKey(), 1))
-                        .replace("$DEX_DIR", CommonUtils.encryptStrings(Preferences.getFolderDexesName(), 1))
-                        .replace("$DEX_PREFIX", CommonUtils.encryptStrings(Preferences.getPrefixDexesName(), 1))
-                        .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 1))
-                        .replace("$DEX_SUFIX", CommonUtils.encryptStrings(Preferences.getSuffixDexesName(), 1));
-            }
+            smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
+                    .replace("$DEX_DIR", enc(Preferences.getFolderDexesName()))
+                    .replace("$DEX_PREFIX", enc(Preferences.getPrefixDexesName()))
+                    .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
+                    .replace("$APP_NAME", "")
+                    .replace("$DEX_SUFIX", enc(Preferences.getSuffixDexesName()))
+
+                    .replace("$SECONDARY_DEXES", "SECONDARY_DEXES")
+                    .replace("$MULTIDEX_LOCK", "MULTIDEX_LOCK")
+                    .replace("$CLASSES", "CLASSES")
+                    .replace("$ZIP", "ZIP")
+                    .replace("$CODE_CACHE", "CODE_CACHE");
+
             if (customApplication) {
                 LoggerUtils.writeLog("Custom application detected");
                 if (customApplicationName.startsWith(".")) {
@@ -77,7 +80,9 @@ public class DexPatcher {
                     customApplicationName = packageName + customApplicationName;
                 }
                 smaliData = smaliData.replace("$APPLICATION", customApplicationName);
-            } else smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
+            } else {
+                smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
+            }
             FileUtils.writeString(smali, smaliData);
         }
         File outputDex = new File(Constants.OUTPUT_PATH, "classes.dex");
@@ -100,6 +105,7 @@ public class DexPatcher {
         return dexBytes;
     }
 
+    @NonNull
     private static String enc(String text) {
         String str = CommonUtils.encryptStrings(text, 2);
         byte[] charset = str.getBytes(StandardCharsets.UTF_8);

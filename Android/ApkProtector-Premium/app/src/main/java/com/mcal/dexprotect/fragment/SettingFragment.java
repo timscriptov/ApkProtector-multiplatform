@@ -23,7 +23,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements SecureP
         addPreferencesFromResource(R.xml.preferences);
 
         EditTextPreference protectKeyString = findPreference("protectKeyString");
-        protectKeyString.setText(Preferences.isProtectKeyString(Utils.sealing(Utils.buildID())));
+        protectKeyString.setText(Preferences.setProtectKeyString(Utils.sealing(Utils.buildID())));
 
         EditTextPreference customPackageName = findPreference("customPackageName");
         customPackageName.setText(Preferences.getPackageName());

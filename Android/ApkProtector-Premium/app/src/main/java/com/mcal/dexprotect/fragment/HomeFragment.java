@@ -4,7 +4,6 @@ import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import androidx.annotation.RequiresApi;
@@ -59,26 +57,26 @@ public class HomeFragment extends Fragment {
                 Preferences.setDexProtectBoolean(true);
                 Preferences.setEncryptResourcesBoolean(false);
                 Preferences.setSignApkBoolean(false);
-                Preferences.setObfuscateApkBoolean(false);
+                //Preferences.setObfuscateApkBoolean(false);
                 break;
             case R.id.encrypt_resources:
                 Preferences.setDexProtectBoolean(false);
                 Preferences.setEncryptResourcesBoolean(true);
                 Preferences.setSignApkBoolean(false);
-                Preferences.setObfuscateApkBoolean(false);
+                //Preferences.setObfuscateApkBoolean(false);
                 break;
             case R.id.sign_apk:
                 Preferences.setDexProtectBoolean(false);
                 Preferences.setEncryptResourcesBoolean(false);
                 Preferences.setSignApkBoolean(true);
-                Preferences.setObfuscateApkBoolean(false);
+                //Preferences.setObfuscateApkBoolean(false);
                 break;
-            case R.id.obfuscate_apk:
+            /*case R.id.obfuscate_apk:
                 Preferences.setDexProtectBoolean(false);
                 Preferences.setEncryptResourcesBoolean(false);
                 Preferences.setSignApkBoolean(false);
                 Preferences.setObfuscateApkBoolean(true);
-                break;
+                break;*/
 
             default:
                 break;
@@ -247,55 +245,55 @@ public class HomeFragment extends Fragment {
         checkluckyPatcher = mView.findViewById(R.id.lucky_patcher_check);
         checkluckyPatcher.setChecked(Preferences.isLuckyPatcherCheckBoolean());
         checkluckyPatcher.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isLuckyPatcherCheckBoolean(p2);
+            Preferences.setLuckyPatcherCheckBoolean(p2);
         });
 
         checkSignature = mView.findViewById(R.id.signature_check);
         checkSignature.setChecked(Preferences.isSignatureCheckBoolean());
         checkSignature.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isSignatureCheckBoolean(p2);
+            Preferences.setSignatureCheckBoolean(p2);
         });
 
         checkRoot = mView.findViewById(R.id.root_check);
         checkRoot.setChecked(Preferences.isRootCheckBoolean());
         checkRoot.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isRootCheckBoolean(p2);
+            Preferences.setRootCheckBoolean(p2);
         });
 
         checkMagisk = mView.findViewById(R.id.magisk_check);
         checkMagisk.setChecked(Preferences.isMagiskCheckBoolean());
         checkMagisk.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isMagiskCheckBoolean(p2);
+            Preferences.setMagiskCheckBoolean(p2);
         });
 
         checkXposed = mView.findViewById(R.id.xposedCheck);
         checkXposed.setChecked(Preferences.isXposedCheckBoolean());
         checkXposed.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isXposedCheckBoolean(p2);
+            Preferences.setXposedCheckBoolean(p2);
         });
 
         checkVending = mView.findViewById(R.id.playstore_check);
         checkVending.setChecked(Preferences.isPlaystoreCheckBoolean());
         checkVending.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isPlaystoreCheckBoolean(p2);
+            Preferences.setPlaystoreCheckBoolean(p2);
         });
 
         checkEmulator = mView.findViewById(R.id.emulator_check);
         checkEmulator.setChecked(Preferences.isEmulatorCheckBoolean());
         checkEmulator.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isEmulatorCheckBoolean(p2);
+            Preferences.setEmulatorCheckBoolean(p2);
         });
 
         checkClone = mView.findViewById(R.id.clone_check);
         checkClone.setChecked(Preferences.isCloneCheckBoolean());
         checkClone.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isCloneCheckBoolean(p2);
+            Preferences.setCloneCheckBoolean(p2);
         });
 
         checkHook = mView.findViewById(R.id.hook_check);
         checkHook.setChecked(Preferences.isHookCheckBoolean());
         checkHook.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isHookCheckBoolean(p2);
+            Preferences.setHookCheckBoolean(p2);
             if (checkHook.isChecked()) {
                 checkHook();
             }
@@ -304,7 +302,7 @@ public class HomeFragment extends Fragment {
         checkIllegalCode = mView.findViewById(R.id.illegal_code_check);
         checkIllegalCode.setChecked(Preferences.isIllegalCodeCheckBoolean());
         checkIllegalCode.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isIllegalCodeCheckBoolean(p2);
+            Preferences.setIllegalCodeCheckBoolean(p2);
             if (checkIllegalCode.isChecked()) {
                 checkIllegalCode();
             }
@@ -313,13 +311,13 @@ public class HomeFragment extends Fragment {
         checkVpnProxy = mView.findViewById(R.id.check_vpn);
         checkVpnProxy.setChecked(Preferences.isCheckVPNBoolean());
         checkVpnProxy.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isCheckVPNBoolean(p2);
+            Preferences.setCheckVPNBoolean(p2);
         });
 
         checkDebug = mView.findViewById(R.id.debug_check);
         checkDebug.setChecked(Preferences.isDebugCheckBoolean());
         checkDebug.setOnCheckedChangeListener((p1, p2) -> {
-            Preferences.isDebugCheckBoolean(p2);
+            Preferences.setDebugCheckBoolean(p2);
         });
 
         dexProtect = mView.findViewById(R.id.dex_protect);
@@ -334,7 +332,7 @@ public class HomeFragment extends Fragment {
         shrinkResources.setOnCheckedChangeListener((p1, p2) -> {
             Preferences.setEncryptResourcesBoolean(p2);
             updateView();
-            if(shrinkResources.isChecked()) {
+            if (shrinkResources.isChecked()) {
                 resGuardView();
             }
         });
@@ -346,12 +344,12 @@ public class HomeFragment extends Fragment {
             updateView();
         });
 
-        obfuscateApk = mView.findViewById(R.id.obfuscate_apk);
+        /*obfuscateApk = mView.findViewById(R.id.obfuscate_apk);
         obfuscateApk.setChecked(Preferences.getObfuscateApkBoolean());
         obfuscateApk.setOnCheckedChangeListener((p1, p2) -> {
             Preferences.setObfuscateApkBoolean(p2);
             updateView();
-        });
+        });*/
 
         return mView;
     }
@@ -387,10 +385,10 @@ public class HomeFragment extends Fragment {
                 .setTitle("Add class name")
                 .setView(ll)
                 .setPositiveButton(R.string.save, (p1, p2) -> {
-                    Preferences.isIllegalCodeCheckString(enterClassname.getText().toString());
+                    Preferences.setIllegalCodeCheckString(enterClassname.getText().toString());
                 })
                 .setNegativeButton(R.string.cancel, (p1, p2) -> {
-                    Preferences.isIllegalCodeCheckBoolean(false);
+                    Preferences.setIllegalCodeCheckBoolean(false);
                     checkIllegalCode.setChecked(false);
                 })
                 .create().show();
@@ -456,10 +454,10 @@ public class HomeFragment extends Fragment {
                 .setTitle("Hook")
                 .setView(ll)
                 .setPositiveButton(R.string.save, (p1, p2) -> {
-                    Preferences.isHookCheckString(enterPackageName.getText().toString());
+                    Preferences.setHookCheckString(enterPackageName.getText().toString());
                 })
                 .setNegativeButton(R.string.cancel, (p1, p2) -> {
-                    Preferences.isHookCheckBoolean(false);
+                    Preferences.setHookCheckBoolean(false);
                     checkHook.setChecked(false);
                 })
                 .create().show();
