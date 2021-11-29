@@ -62,11 +62,11 @@ public class StringUtils {
     /**
      * 解析一个字符串为整数；
      */
-    public final static int toInt(String value) {
+    public static int toInt(String value) {
         return toInt(value, 0);
     }
 
-    public final static int toInt(String value, int defaultValue) {
+    public static int toInt(String value, int defaultValue) {
         try {
             return Integer.parseInt(value);
         } catch (Exception e) {
