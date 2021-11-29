@@ -1,5 +1,7 @@
 package com.mcal.apkprotector.utils;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
@@ -26,11 +28,11 @@ public class ManifestModify {
     private String cApplication;
     private Resources mResources;
 
-    public ManifestModify(/*Context context, String mPackageName,*/ String cApplication) {
+    public ManifestModify(Context context, String mPackageName, String cApplication) {
         try {
             this.cApplication = cApplication;
-            /*PackageManager pm = context.getPackageManager();
-            mResources = pm.getResourcesForApplication(mPackageName);*/
+            PackageManager pm = context.getPackageManager();
+            mResources = pm.getResourcesForApplication(mPackageName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,7 +40,7 @@ public class ManifestModify {
 
     @NotNull
     private static List<Node> findLauncherActivityNodes(Axml axml) {
-        List<Node> launcherActivityNodes = new ArrayList();
+        List<Node> launcherActivityNodes = new ArrayList<>();
         Node applicationNode = findNodeByName(axml, "manifest.application", new String[0]);
         if (applicationNode != null) {
             addLauncherActivityNodes(findNodesByName(applicationNode, "activity"), launcherActivityNodes);
@@ -300,7 +302,7 @@ public class ManifestModify {
             if (applicationNode != null) {
                 // application
                 removeAttribute(applicationNode, "name");
-                applicationNode.attr(NS_ANDROID, Preferences.getProtectManifest() ? CommonUtils.encryptStrings("name", 2) : "name", android.R.attr.name, 3, cApplication);
+                applicationNode.attr(NS_ANDROID, Preferences.isProtectManifest() ? CommonUtils.encryptStrings("name", 2) : "name", android.R.attr.name, 3, cApplication);
 
                 /*Preferences.setTempAxml(getAttributeValue_NotInt(applicationNode, "icon"));
                 removeAttribute(applicationNode, "icon");
@@ -309,7 +311,7 @@ public class ManifestModify {
                 Preferences.setTempAxml(getAttributeValue_NotInt(applicationNode, "theme"));
                 removeAttribute(applicationNode, "theme");
                 applicationNode.attr(NS_ANDROID, CommonUtils.encryptStrings("theme", 2), android.R.attr.theme, 1, Integer.valueOf(Preferences.getTempAxml()));
-
+                                                                                                                                      
                 Preferences.setTempAxml(getAttributeValue_NotInt(applicationNode, "label"));
                 removeAttribute(applicationNode, "label");
                 applicationNode.attr(NS_ANDROID, CommonUtils.encryptStrings("label", 2), android.R.attr.label, 1, Integer.valueOf(Preferences.getTempAxml()));

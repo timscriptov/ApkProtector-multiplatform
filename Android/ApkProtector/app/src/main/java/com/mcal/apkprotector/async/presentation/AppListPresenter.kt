@@ -45,6 +45,7 @@ class AppListPresenter : CoroutineScope {
         this.interactor = interactor
     }
 
+    @DelicateCoroutinesApi
     private suspend fun doInBackground(): ArrayList<PackageInfoHolder?>? =
         withContext(Dispatchers.IO) {
             onProgressUpdate("Retrieving installed application")
@@ -100,6 +101,7 @@ class AppListPresenter : CoroutineScope {
         }
     }
 
+    @DelicateCoroutinesApi
     private fun getInstalledApps(context: Context): ArrayList<PackageInfoHolder?>? {
         val res = ArrayList<PackageInfoHolder?>()
         val packages = context.packageManager.getInstalledPackages(0)
@@ -130,7 +132,10 @@ class AppListPresenter : CoroutineScope {
             }
         }
         val appNameComparator = Comparator { o1: PackageInfoHolder, o2: PackageInfoHolder ->
-            o1.getPackageLabel().toLowerCase().compareTo(o2.getPackageLabel().toLowerCase())
+            o1.getPackageLabel().lowercase(Locale.getDefault()).compareTo(
+                o2.getPackageLabel()
+                    .lowercase(Locale.getDefault())
+            )
         }
         Collections.sort(res, appNameComparator)
         return res

@@ -1,7 +1,7 @@
 package com.mcal.apkprotector.fragment;
 
-import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
@@ -24,7 +25,6 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
-import com.blankj.utilcode.BuildConfig;
 import com.developer.filepicker.model.DialogConfigs;
 import com.developer.filepicker.model.DialogProperties;
 import com.developer.filepicker.view.FilePickerDialog;
@@ -34,9 +34,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mcal.apkprotector.App;
+import com.mcal.apkprotector.BuildConfig;
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.activities.HomeActivity;
 import com.mcal.apkprotector.async.ProtectAsyncListener;
@@ -44,7 +44,6 @@ import com.mcal.apkprotector.async.presentation.ProtectAsync;
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.AdmobHelper;
-import com.mcal.apkprotector.utils.AdsAdmob;
 import com.mcal.apkprotector.utils.MyAppInfo;
 import com.mcal.apkprotector.utils.Utils;
 import com.mcal.apkprotector.utils.file.ScopedStorage;
@@ -70,8 +69,6 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
     private AppCompatRadioButton shrinkResources;
     private AppCompatRadioButton signApk;
     private AdmobHelper admobHelper;
-    private RewardedVideoAd mAd;
-
     View.OnClickListener radioButtonClickListener = v -> {
         AppCompatRadioButton rb = (AppCompatRadioButton) v;
         switch (rb.getId()) {
@@ -98,7 +95,7 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
                 break;
         }
     };
-
+    private RewardedVideoAd mAd;
     private final ProtectAsyncListener listener = new ProtectAsyncListener() {
 
         @Override
@@ -154,7 +151,7 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         AppCompatRadioButton blueRadioButton = mView.findViewById(R.id.sign_apk);
         blueRadioButton.setOnClickListener(radioButtonClickListener);
 
-        apkPath.setText(Preferences.isApkPath());
+        apkPath.setText(Preferences.getApkPath());
         apkPath.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -187,19 +184,19 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
             /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
                 showScopedStorageDialog();
             } else {*/
-                AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                adb.setTitle(R.string.choose_method_title);
-                adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
-                    switch (p2) {
-                        case 0:
-                            selectApkFromSdcard();
-                            break;
-                        case 1:
-                            new AppListDialog(getActivity(), apkPath);
-                            break;
-                    }
-                });
-                adb.create().show();
+            AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+            adb.setTitle(R.string.choose_method_title);
+            adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
+                switch (p2) {
+                    case 0:
+                        selectApkFromSdcard();
+                        break;
+                    case 1:
+                        new AppListDialog(getActivity(), apkPath);
+                        break;
+                }
+            });
+            adb.create().show();
             //}
         });
 
@@ -221,22 +218,26 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         });
 
         dexProtect = mView.findViewById(R.id.dex_protect);
-        dexProtect.setChecked(Preferences.getDexProtectBoolean());
+        dexProtect.setChecked(Preferences.isDexProtectBoolean());
         dexProtect.setOnCheckedChangeListener((p1, p2) -> {
             Preferences.setDexProtectBoolean(p2);
         });
 
         shrinkResources = mView.findViewById(R.id.encrypt_resources);
-        shrinkResources.setChecked(Preferences.getEncryptResourcesBoolean());
+        shrinkResources.setChecked(Preferences.isEncryptResourcesBoolean());
         shrinkResources.setOnCheckedChangeListener((p1, p2) -> {
             Preferences.setEncryptResourcesBoolean(p2);
+            if (shrinkResources.isChecked()) {
+                resGuardView();
+            }
         });
 
         signApk = mView.findViewById(R.id.sign_apk);
-        signApk.setChecked(Preferences.getSignApkBoolean());
+        signApk.setChecked(Preferences.isSignApkBoolean());
         signApk.setOnCheckedChangeListener((p1, p2) -> {
             Preferences.setSignApkBoolean(p2);
         });
+
         initVideoAds();
         return mView;
     }
@@ -251,6 +252,24 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         }
     }
 
+    private void resGuardView() {
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_resguard, null);
+        AppCompatEditText resNameArsc = view.findViewById(R.id.fixedResName);
+        resNameArsc.setText(Preferences.getResNameArscString());
+        //AppCompatCheckBox rootDir = view.findViewById(R.id.rootDir);
+        //rootDir.setChecked(Preferences.getResNameArscBoolean());
+        new AlertDialog.Builder(getActivity())
+                .setTitle("ResGuard")
+                .setView(view)
+                .setPositiveButton(R.string.save, (p1, p2) -> {
+                    //Preferences.setResNameArscBoolean(rootDir.isChecked());
+                    Preferences.setResNameArscString(resNameArsc.getText().toString());
+                })
+                .create().show();
+    }
+
+    @Nullable
     private Function0<Unit> start(File apk) {
         final File sourceDir = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + MyAppInfo.getPackage() + "");
         if (sourceDir.exists()) {

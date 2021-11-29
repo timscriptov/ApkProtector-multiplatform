@@ -15,8 +15,6 @@ import com.mcal.apkprotector.view.CenteredToolBar;
 
 public class ExceptionActivity extends AppCompatActivity {
 
-    private CenteredToolBar toolbar;
-
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle bundle) {
@@ -27,7 +25,7 @@ public class ExceptionActivity extends AppCompatActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setLayoutParams(layoutParams);
         setContentView(linearLayout);
-        toolbar = new CenteredToolBar(this);
+        CenteredToolBar toolbar = new CenteredToolBar(this);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Application Error");
         toolbar.setBackgroundColor(Color.parseColor(getString(R.color.colorPrimaryDark)));

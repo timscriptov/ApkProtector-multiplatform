@@ -1,8 +1,12 @@
 package com.mcal.apkprotector.patchers;
 
+import androidx.annotation.NonNull;
+
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.LoggerUtils;
+
+import org.jetbrains.annotations.Contract;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,6 +23,7 @@ public class ManifestPatcher {
     public static String customApplicationName = "";
     public static String packageName = "";
 
+    @NonNull
     public static byte[] parseManifest() throws IOException {
         FileInputStream fis = new FileInputStream(Constants.MANIFEST_PATH);
         AXmlDecoder axml = AXmlDecoder.decode(fis);
@@ -110,29 +115,16 @@ public class ManifestPatcher {
         return baos.toByteArray();
     }
 
-    private static void writeInt(byte[] data, int off, int value) {
+    private static void writeInt(@NonNull byte[] data, int off, int value) {
         data[off++] = (byte) (value & 0xFF);
         data[off++] = (byte) ((value >>> 8) & 0xFF);
         data[off++] = (byte) ((value >>> 16) & 0xFF);
         data[off] = (byte) ((value >>> 24) & 0xFF);
     }
 
-    private static int readInt(byte[] data, int off) {
+    @Contract(pure = true)
+    private static int readInt(@NonNull byte[] data, int off) {
         return data[off + 3] << 24 | (data[off + 2] & 0xFF) << 16 | (data[off + 1] & 0xFF) << 8
                 | data[off] & 0xFF;
     }
-    /*public static boolean manifestPatch(String manifestPath) {
-        try {
-            parseManifest(manifestPath, new BufferedInputStream(new FileInputStream(manifestPath)));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public static void parseManifest(String manifestPath, InputStream is) throws IOException {
-        byte[] data = FileUtils.toByteArray(is);
-        ManifestModify mm = new ManifestModify(Preferences.getApplicationName());
-        FileUtils.writeByteArrayToFile(new File(manifestPath), mm.modifyAxml(data));
-    }*/
 }

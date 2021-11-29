@@ -1,0 +1,627 @@
+com/android/apksig/internal/apk/v1/V1SchemeSigner.java
+ com.android.apksig.internal.apk.v1.V1SchemeSigner
+ com.android.apksig.internal.apk.v1.V1SchemeSigner$1
+ com.android.apksig.internal.apk.v1.V1SchemeSigner$OutputManifestFile
+ com.android.apksig.internal.apk.v1.V1SchemeSigner$SignerConfig
+android/sun/security/ec/NamedCurve.java
+ android.sun.security.ec.NamedCurve
+android/sun/security/x509/SubjectInfoAccessExtension.java
+ android.sun.security.x509.SubjectInfoAccessExtension
+android/sun/security/x509/AlgorithmId.java
+ android.sun.security.x509.AlgorithmId
+com/android/apksig/internal/util/X509CertificateUtils.java
+ com.android.apksig.internal.util.X509CertificateUtils
+com/android/apksig/internal/x509/RelativeDistinguishedName.java
+ com.android.apksig.internal.x509.RelativeDistinguishedName
+com/android/apksig/zip/ZipFormatException.java
+ com.android.apksig.zip.ZipFormatException
+android/sun/security/x509/RDN.java
+ android.sun.security.x509.AVAComparator
+ android.sun.security.x509.RDN
+com/android/apksigner/PasswordRetriever.java
+ com.android.apksigner.PasswordRetriever
+android/sun/security/x509/X509AttributeName.java
+ android.sun.security.x509.X509AttributeName
+android/sun/security/provider/KeyProtector.java
+ android.sun.security.provider.KeyProtector
+android/sun/security/provider/certpath/X509CertificatePair.java
+ android.sun.security.provider.certpath.X509CertificatePair
+android/sun/security/util/Cache.java
+ android.sun.security.util.Cache
+ android.sun.security.util.Cache$CacheVisitor
+ android.sun.security.util.Cache$EqualByteArray
+ android.sun.security.util.MemoryCache
+ android.sun.security.util.MemoryCache$CacheEntry
+ android.sun.security.util.MemoryCache$HardCacheEntry
+ android.sun.security.util.MemoryCache$SoftCacheEntry
+ android.sun.security.util.NullCache
+android/sun/misc/CharacterEncoder.java
+ android.sun.misc.CharacterEncoder
+com/android/apksigner/ParameterException.java
+ com.android.apksigner.ParameterException
+com/android/apksig/internal/x509/AttributeTypeAndValue.java
+ com.android.apksig.internal.x509.AttributeTypeAndValue
+com/android/apksig/internal/pkcs7/AlgorithmIdentifier.java
+ com.android.apksig.internal.pkcs7.AlgorithmIdentifier
+ com.android.apksig.internal.pkcs7.AlgorithmIdentifier$1
+android/sun/security/x509/GeneralSubtrees.java
+ android.sun.security.x509.GeneralSubtrees
+android/sun/misc/HexDumpEncoder.java
+ android.sun.misc.HexDumpEncoder
+android/sun/security/x509/IssuerAlternativeNameExtension.java
+ android.sun.security.x509.IssuerAlternativeNameExtension
+android/sun/security/x509/CertificateAlgorithmId.java
+ android.sun.security.x509.CertificateAlgorithmId
+android/sun/security/provider/JavaKeyStoreProvider.java
+ android.sun.security.provider.JavaKeyStoreProvider
+android/sun/security/x509/DNSName.java
+ android.sun.security.x509.DNSName
+com/android/apksig/internal/asn1/Asn1TagClass.java
+ com.android.apksig.internal.asn1.Asn1TagClass
+android/sun/security/pkcs/SigningCertificateInfo.java
+ android.sun.security.pkcs.ESSCertId
+ android.sun.security.pkcs.SigningCertificateInfo
+android/sun/security/x509/X509CertImpl.java
+ android.sun.security.x509.X509CertImpl
+android/sun/security/x509/Extension.java
+ android.sun.security.x509.Extension
+com/android/apksig/internal/apk/SignatureInfo.java
+ com.android.apksig.internal.apk.SignatureInfo
+android/sun/security/x509/CertificateSubjectName.java
+ android.sun.security.x509.CertificateSubjectName
+com/android/apksig/internal/pkcs7/ContentInfo.java
+ com.android.apksig.internal.pkcs7.ContentInfo
+com/mcal/apksigner/BuildConfig.java
+ com.mcal.apksigner.BuildConfig
+android/sun/misc/BASE64Decoder.java
+ android.sun.misc.BASE64Decoder
+com/android/apksig/internal/jar/SignatureFileWriter.java
+ com.android.apksig.internal.jar.SignatureFileWriter
+com/android/apksig/apk/ApkSigningBlockNotFoundException.java
+ com.android.apksig.apk.ApkSigningBlockNotFoundException
+android/sun/misc/BASE64Encoder.java
+ android.sun.misc.BASE64Encoder
+android/sun/security/x509/SubjectAlternativeNameExtension.java
+ android.sun.security.x509.SubjectAlternativeNameExtension
+com/android/apksig/internal/util/ByteBufferSink.java
+ com.android.apksig.internal.util.ByteBufferSink
+android/sun/security/x509/OIDMap.java
+ android.sun.security.x509.OIDMap
+ android.sun.security.x509.OIDMap$OIDInfo
+com/android/apksig/internal/asn1/ber/InputStreamBerDataValueReader.java
+ com.android.apksig.internal.asn1.ber.InputStreamBerDataValueReader
+ com.android.apksig.internal.asn1.ber.InputStreamBerDataValueReader$1
+ com.android.apksig.internal.asn1.ber.InputStreamBerDataValueReader$RecordingInputStream
+android/sun/security/x509/IPAddressName.java
+ android.sun.security.x509.IPAddressName
+com/android/apksig/internal/asn1/ber/BerDataValueFormatException.java
+ com.android.apksig.internal.asn1.ber.BerDataValueFormatException
+android/sun/security/pkcs/PKCS10Attribute.java
+ android.sun.security.pkcs.PKCS10Attribute
+android/sun/security/x509/AuthorityInfoAccessExtension.java
+ android.sun.security.x509.AuthorityInfoAccessExtension
+com/android/apksig/internal/asn1/Asn1DerEncoder.java
+ com.android.apksig.internal.asn1.Asn1DerEncoder
+ com.android.apksig.internal.asn1.Asn1DerEncoder$1
+ com.android.apksig.internal.asn1.Asn1DerEncoder$AnnotatedField
+ com.android.apksig.internal.asn1.Asn1DerEncoder$ByteArrayLexicographicComparator
+ com.android.apksig.internal.asn1.Asn1DerEncoder$JavaToDerConverter
+android/sun/security/pkcs/PKCS10Attributes.java
+ android.sun.security.pkcs.PKCS10Attributes
+com/android/apksig/internal/util/RandomAccessFileDataSink.java
+ com.android.apksig.internal.util.RandomAccessFileDataSink
+com/android/apksig/util/DataSinks.java
+ com.android.apksig.util.DataSinks
+android/sun/security/action/GetBooleanAction.java
+ android.sun.security.action.GetBooleanAction
+android/sun/security/x509/CertificateIssuerUniqueIdentity.java
+ android.sun.security.x509.CertificateIssuerUniqueIdentity
+com/android/apksig/internal/apk/stamp/V2SourceStampSigner.java
+ com.android.apksig.internal.apk.stamp.V2SourceStampSigner
+ com.android.apksig.internal.apk.stamp.V2SourceStampSigner$1
+ com.android.apksig.internal.apk.stamp.V2SourceStampSigner$SourceStampBlock
+com/android/apksig/internal/util/InclusiveIntRange.java
+ com.android.apksig.internal.util.InclusiveIntRange
+com/android/apksig/util/DataSource.java
+ com.android.apksig.util.DataSource
+android/sun/misc/CEStreamExhausted.java
+ android.sun.misc.CEStreamExhausted
+com/android/apksig/internal/apk/stamp/V1SourceStampVerifier.java
+ com.android.apksig.internal.apk.stamp.V1SourceStampVerifier
+android/sun/misc/CharacterDecoder.java
+ android.sun.misc.CharacterDecoder
+com/android/apksig/internal/asn1/ber/BerDataValueReader.java
+ com.android.apksig.internal.asn1.ber.BerDataValueReader
+android/sun/security/util/ObjectIdentifier.java
+ android.sun.security.util.ObjectIdentifier
+ android.sun.security.util.ObjectIdentifier$HugeOidNotSupportedByOldJDK
+com/android/apksig/internal/apk/v1/V1SchemeVerifier.java
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$1
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$NamedDigest
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$ObjectIdentifierChoice
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$OctetStringChoice
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$Result
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$Result$SignerInfo
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$SignedAttributes
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$Signer
+ com.android.apksig.internal.apk.v1.V1SchemeVerifier$Signers
+com/android/apksig/internal/oid/OidConstants.java
+ com.android.apksig.internal.oid.OidConstants
+ com.android.apksig.internal.oid.OidConstants$OidToUserFriendlyNameMapper
+com/android/apksig/internal/pkcs7/SignerIdentifier.java
+ com.android.apksig.internal.pkcs7.SignerIdentifier
+android/sun/security/x509/GeneralSubtree.java
+ android.sun.security.x509.GeneralSubtree
+android/sun/security/util/DerInputStream.java
+ android.sun.security.util.DerInputStream
+com/android/apksig/internal/asn1/ber/BerEncoding.java
+ com.android.apksig.internal.asn1.ber.BerEncoding
+ com.android.apksig.internal.asn1.ber.BerEncoding$1
+com/android/apksig/internal/util/MessageDigestSink.java
+ com.android.apksig.internal.util.MessageDigestSink
+com/android/apksig/internal/util/FileChannelDataSource.java
+ com.android.apksig.internal.util.FileChannelDataSource
+android/sun/security/pkcs12/MacData.java
+ android.sun.security.pkcs12.MacData
+android/sun/security/x509/IssuingDistributionPointExtension.java
+ android.sun.security.x509.IssuingDistributionPointExtension
+android/sun/security/x509/CertificateSubjectUniqueIdentity.java
+ android.sun.security.x509.CertificateSubjectUniqueIdentity
+com/android/apksig/util/DataSink.java
+ com.android.apksig.util.DataSink
+com/android/apksig/internal/apk/v4/V4Signature.java
+ com.android.apksig.internal.apk.v4.V4Signature
+ com.android.apksig.internal.apk.v4.V4Signature$HashingInfo
+ com.android.apksig.internal.apk.v4.V4Signature$SigningInfo
+android/sun/security/x509/SubjectKeyIdentifierExtension.java
+ android.sun.security.x509.SubjectKeyIdentifierExtension
+com/android/apksig/ApkVerifier.java
+ com.android.apksig.ApkVerifier
+ com.android.apksig.ApkVerifier$1
+ com.android.apksig.ApkVerifier$Builder
+ com.android.apksig.ApkVerifier$ByteArray
+ com.android.apksig.ApkVerifier$Issue
+ com.android.apksig.ApkVerifier$IssueWithParams
+ com.android.apksig.ApkVerifier$Result
+ com.android.apksig.ApkVerifier$Result$SourceStampInfo
+ com.android.apksig.ApkVerifier$Result$V1SchemeSignerInfo
+ com.android.apksig.ApkVerifier$Result$V2SchemeSignerInfo
+ com.android.apksig.ApkVerifier$Result$V3SchemeSignerInfo
+ com.android.apksig.ApkVerifier$Result$V4SchemeSignerInfo
+android/sun/security/x509/UniqueIdentity.java
+ android.sun.security.x509.UniqueIdentity
+com/android/apksig/internal/asn1/ber/BerDataValue.java
+ com.android.apksig.internal.asn1.ber.BerDataValue
+ com.android.apksig.internal.asn1.ber.BerDataValue$ParsedValueReader
+com/android/apksig/internal/util/ByteStreams.java
+ com.android.apksig.internal.util.ByteStreams
+com/android/apksig/internal/pkcs7/IssuerAndSerialNumber.java
+ com.android.apksig.internal.pkcs7.IssuerAndSerialNumber
+android/sun/security/ec/ECParameters.java
+ android.sun.security.ec.ECParameters
+com/android/apksig/internal/util/GuaranteedEncodedFormX509Certificate.java
+ com.android.apksig.internal.util.GuaranteedEncodedFormX509Certificate
+android/sun/security/x509/CertificatePoliciesExtension.java
+ android.sun.security.x509.CertificatePoliciesExtension
+com/android/apksig/internal/jar/ManifestParser.java
+ com.android.apksig.internal.jar.ManifestParser
+ com.android.apksig.internal.jar.ManifestParser$Attribute
+ com.android.apksig.internal.jar.ManifestParser$Section
+android/sun/security/x509/OCSPNoCheckExtension.java
+ android.sun.security.x509.OCSPNoCheckExtension
+com/android/apksig/SigningCertificateLineage.java
+ com.android.apksig.SigningCertificateLineage
+ com.android.apksig.SigningCertificateLineage$1
+ com.android.apksig.SigningCertificateLineage$Builder
+ com.android.apksig.SigningCertificateLineage$SignerCapabilities
+ com.android.apksig.SigningCertificateLineage$SignerCapabilities$Builder
+ com.android.apksig.SigningCertificateLineage$SignerConfig
+ com.android.apksig.SigningCertificateLineage$SignerConfig$Builder
+android/sun/security/x509/X509CertInfo.java
+ android.sun.security.x509.X509CertInfo
+com/android/apksig/internal/util/Pair.java
+ com.android.apksig.internal.util.Pair
+android/sun/security/x509/PKIXExtensions.java
+ android.sun.security.x509.PKIXExtensions
+android/sun/security/x509/AlgIdDSA.java
+ android.sun.security.x509.AlgIdDSA
+com/android/apksig/Hints.java
+ com.android.apksig.Hints
+ com.android.apksig.Hints$ByteRange
+ com.android.apksig.Hints$PatternWithRange
+android/sun/security/util/DerIndefLenConverter.java
+ android.sun.security.util.DerIndefLenConverter
+android/sun/security/x509/KeyUsageExtension.java
+ android.sun.security.x509.KeyUsageExtension
+com/android/apksig/DefaultApkSignerEngine.java
+ com.android.apksig.DefaultApkSignerEngine
+ com.android.apksig.DefaultApkSignerEngine$1
+ com.android.apksig.DefaultApkSignerEngine$Builder
+ com.android.apksig.DefaultApkSignerEngine$CompoundInspectJarEntryRequest
+ com.android.apksig.DefaultApkSignerEngine$GetJarEntryDataDigestRequest
+ com.android.apksig.DefaultApkSignerEngine$GetJarEntryDataRequest
+ com.android.apksig.DefaultApkSignerEngine$OutputApkSigningBlockRequestImpl
+ com.android.apksig.DefaultApkSignerEngine$OutputJarSignatureRequestImpl
+ com.android.apksig.DefaultApkSignerEngine$SignerConfig
+ com.android.apksig.DefaultApkSignerEngine$SignerConfig$Builder
+android/sun/security/x509/DistributionPoint.java
+ android.sun.security.x509.DistributionPoint
+android/sun/security/pkcs/ContentInfo.java
+ android.sun.security.pkcs.ContentInfo
+android/sun/security/pkcs/PKCS8Key.java
+ android.sun.security.pkcs.PKCS8Key
+com/android/apksig/internal/util/DelegatingX509Certificate.java
+ com.android.apksig.internal.util.DelegatingX509Certificate
+android/sun/security/x509/RFC822Name.java
+ android.sun.security.x509.RFC822Name
+android/sun/security/x509/SerialNumber.java
+ android.sun.security.x509.SerialNumber
+com/android/apksig/internal/asn1/Asn1Field.java
+ com.android.apksig.internal.asn1.Asn1Field
+com/android/apksig/internal/pkcs7/Pkcs7Constants.java
+ com.android.apksig.internal.pkcs7.Pkcs7Constants
+android/sun/security/x509/AccessDescription.java
+ android.sun.security.x509.AccessDescription
+android/sun/security/util/DerEncoder.java
+ android.sun.security.util.DerEncoder
+android/sun/security/x509/AuthorityKeyIdentifierExtension.java
+ android.sun.security.x509.AuthorityKeyIdentifierExtension
+com/android/apksig/internal/util/ByteBufferDataSource.java
+ com.android.apksig.internal.util.ByteBufferDataSource
+android/sun/security/pkcs/ParsingException.java
+ android.sun.security.pkcs.ParsingException
+com/android/apksig/internal/asn1/ber/ByteBufferBerDataValueReader.java
+ com.android.apksig.internal.asn1.ber.ByteBufferBerDataValueReader
+com/android/apksig/internal/apk/v4/V4SchemeVerifier.java
+ com.android.apksig.internal.apk.v4.V4SchemeVerifier
+com/android/apksig/internal/apk/ContentDigestAlgorithm.java
+ com.android.apksig.internal.apk.ContentDigestAlgorithm
+com/android/apksig/internal/zip/EocdRecord.java
+ com.android.apksig.internal.zip.EocdRecord
+com/android/apksig/internal/util/ChainedDataSource.java
+ com.android.apksig.internal.util.ChainedDataSource
+com/android/apksig/apk/MinSdkVersionException.java
+ com.android.apksig.apk.MinSdkVersionException
+android/sun/security/x509/X400Address.java
+ android.sun.security.x509.X400Address
+android/sun/security/x509/CertAttrSet.java
+ android.sun.security.x509.CertAttrSet
+com/android/apksig/internal/asn1/Asn1Type.java
+ com.android.apksig.internal.asn1.Asn1Type
+com/android/apksig/internal/pkcs7/EncapsulatedContentInfo.java
+ com.android.apksig.internal.pkcs7.EncapsulatedContentInfo
+com/android/apksig/internal/x509/SubjectPublicKeyInfo.java
+ com.android.apksig.internal.x509.SubjectPublicKeyInfo
+android/sun/security/util/ByteArrayLexOrder.java
+ android.sun.security.util.ByteArrayLexOrder
+com/android/apksig/internal/zip/LocalFileRecord.java
+ com.android.apksig.internal.zip.LocalFileRecord
+ com.android.apksig.internal.zip.LocalFileRecord$1
+ com.android.apksig.internal.zip.LocalFileRecord$InflateSinkAdapter
+android/sun/security/x509/InhibitAnyPolicyExtension.java
+ android.sun.security.x509.InhibitAnyPolicyExtension
+com/android/apksig/internal/x509/RSAPublicKey.java
+ com.android.apksig.internal.x509.RSAPublicKey
+com/android/apksig/internal/apk/v3/V3SchemeSigner.java
+ com.android.apksig.internal.apk.v3.V3SchemeSigner
+ com.android.apksig.internal.apk.v3.V3SchemeSigner$1
+ com.android.apksig.internal.apk.v3.V3SchemeSigner$V3SignatureSchemeBlock
+ com.android.apksig.internal.apk.v3.V3SchemeSigner$V3SignatureSchemeBlock$SignedData
+ com.android.apksig.internal.apk.v3.V3SchemeSigner$V3SignatureSchemeBlock$Signer
+com/android/apksig/internal/apk/stamp/V1SourceStampSigner.java
+ com.android.apksig.internal.apk.stamp.V1SourceStampSigner
+ com.android.apksig.internal.apk.stamp.V1SourceStampSigner$1
+ com.android.apksig.internal.apk.stamp.V1SourceStampSigner$SourceStampBlock
+android/sun/security/action/GetPropertyAction.java
+ android.sun.security.action.GetPropertyAction
+com/android/apksig/internal/apk/v3/V3SchemeVerifier.java
+ com.android.apksig.internal.apk.v3.V3SchemeVerifier
+com/android/apksig/internal/asn1/Asn1OpaqueObject.java
+ com.android.apksig.internal.asn1.Asn1OpaqueObject
+android/sun/security/x509/DeltaCRLIndicatorExtension.java
+ android.sun.security.x509.DeltaCRLIndicatorExtension
+com/android/apksig/internal/asn1/Asn1DecodingException.java
+ com.android.apksig.internal.asn1.Asn1DecodingException
+com/android/apksig/util/RunnablesExecutor.java
+ com.android.apksig.util.RunnablesExecutor
+ com.android.apksig.util.RunnablesExecutor$1
+com/android/apksig/internal/asn1/Asn1EncodingException.java
+ com.android.apksig.internal.asn1.Asn1EncodingException
+com/android/apksig/internal/x509/Name.java
+ com.android.apksig.internal.x509.Name
+android/sun/security/x509/ExtendedKeyUsageExtension.java
+ android.sun.security.x509.ExtendedKeyUsageExtension
+android/sun/security/x509/CRLExtensions.java
+ android.sun.security.x509.CRLExtensions
+com/android/apksig/internal/asn1/Asn1Class.java
+ com.android.apksig.internal.asn1.Asn1Class
+android/sun/security/util/BitArray.java
+ android.sun.security.util.BitArray
+android/sun/security/x509/CertParseError.java
+ android.sun.security.x509.CertParseError
+android/sun/security/provider/certpath/X509CertPath.java
+ android.sun.security.provider.certpath.X509CertPath
+com/android/apksig/internal/util/TeeDataSink.java
+ com.android.apksig.internal.util.TeeDataSink
+com/android/apksigner/utils/FileUtils.java
+ com.android.apksigner.utils.FileUtils
+com/android/apksig/apk/CodenameMinSdkVersionException.java
+ com.android.apksig.apk.CodenameMinSdkVersionException
+com/android/apksig/internal/apk/stamp/V2SourceStampVerifier.java
+ com.android.apksig.internal.apk.stamp.V2SourceStampVerifier
+android/sun/security/x509/PolicyInformation.java
+ android.sun.security.x509.PolicyInformation
+android/sun/security/x509/CertificateExtensions.java
+ android.sun.security.x509.CertificateExtensions
+ android.sun.security.x509.UnparseableExtension
+android/sun/security/x509/PolicyMappingsExtension.java
+ android.sun.security.x509.PolicyMappingsExtension
+android/sun/security/pkcs/PKCS9Attribute.java
+ android.sun.security.pkcs.PKCS9Attribute
+com/android/apksig/internal/util/SupplierCompat.java
+ com.android.apksig.internal.util.SupplierCompat
+com/android/apksig/internal/apk/v4/V4SchemeSigner.java
+ com.android.apksig.internal.apk.v4.V4SchemeSigner
+ com.android.apksig.internal.apk.v4.V4SchemeSigner$1
+android/sun/security/provider/X509Factory.java
+ android.sun.security.provider.X509Factory
+com/android/apksig/internal/apk/stamp/SourceStampVerifier.java
+ com.android.apksig.internal.apk.stamp.SourceStampVerifier
+android/sun/security/x509/OIDName.java
+ android.sun.security.x509.OIDName
+android/sun/security/pkcs/PKCS7.java
+ android.sun.security.pkcs.PKCS7
+android/sun/security/pkcs/SignerInfo.java
+ android.sun.security.pkcs.SignerInfo
+android/sun/security/x509/NetscapeCertTypeExtension.java
+ android.sun.security.x509.NetscapeCertTypeExtension
+ android.sun.security.x509.NetscapeCertTypeExtension$MapEntry
+com/android/apksig/internal/util/MathCompat.java
+ com.android.apksig.internal.util.MathCompat
+android/sun/security/x509/CertificatePolicySet.java
+ android.sun.security.x509.CertificatePolicySet
+com/android/apksig/internal/zip/ZipUtils.java
+ com.android.apksig.internal.zip.ZipUtils
+ com.android.apksig.internal.zip.ZipUtils$DeflateResult
+android/sun/security/x509/CertificateSerialNumber.java
+ android.sun.security.x509.CertificateSerialNumber
+android/sun/misc/CEFormatException.java
+ android.sun.misc.CEFormatException
+android/sun/security/util/Debug.java
+ android.sun.security.util.Debug
+android/sun/security/ec/ECPrivateKeyImpl.java
+ android.sun.security.ec.ECPrivateKeyImpl
+com/android/apksig/internal/pkcs7/Pkcs7DecodingException.java
+ com.android.apksig.internal.pkcs7.Pkcs7DecodingException
+android/sun/security/util/DerInputBuffer.java
+ android.sun.security.util.DerInputBuffer
+android/sun/security/x509/PolicyConstraintsExtension.java
+ android.sun.security.x509.PolicyConstraintsExtension
+android/sun/security/x509/ReasonFlags.java
+ android.sun.security.x509.ReasonFlags
+com/android/apksig/internal/apk/AndroidBinXmlParser.java
+ com.android.apksig.internal.apk.AndroidBinXmlParser
+ com.android.apksig.internal.apk.AndroidBinXmlParser$1
+ com.android.apksig.internal.apk.AndroidBinXmlParser$Attribute
+ com.android.apksig.internal.apk.AndroidBinXmlParser$Chunk
+ com.android.apksig.internal.apk.AndroidBinXmlParser$ResourceMap
+ com.android.apksig.internal.apk.AndroidBinXmlParser$StringPool
+ com.android.apksig.internal.apk.AndroidBinXmlParser$XmlParserException
+com/android/apksig/internal/pkcs7/SignedData.java
+ com.android.apksig.internal.pkcs7.SignedData
+com/android/apksig/internal/asn1/Asn1Tagging.java
+ com.android.apksig.internal.asn1.Asn1Tagging
+android/sun/security/pkcs/PKCS9Attributes.java
+ android.sun.security.pkcs.PKCS9Attributes
+android/sun/security/x509/CRLDistributionPointsExtension.java
+ android.sun.security.x509.CRLDistributionPointsExtension
+com/android/apksig/internal/x509/Time.java
+ com.android.apksig.internal.x509.Time
+com/android/apksig/internal/apk/v3/V3SigningCertificateLineage.java
+ com.android.apksig.internal.apk.v3.V3SigningCertificateLineage
+ com.android.apksig.internal.apk.v3.V3SigningCertificateLineage$SigningCertificateNode
+com/android/apksig/internal/pkcs7/Attribute.java
+ com.android.apksig.internal.pkcs7.Attribute
+com/android/apksig/apk/ApkUtils.java
+ com.android.apksig.apk.ApkUtils
+ com.android.apksig.apk.ApkUtils$1
+ com.android.apksig.apk.ApkUtils$ApkSigningBlock
+ com.android.apksig.apk.ApkUtils$CodenamesLazyInitializer
+ com.android.apksig.apk.ApkUtils$CodenamesLazyInitializer$ByFirstComparator
+ com.android.apksig.apk.ApkUtils$ZipSections
+com/android/apksig/ApkSignerEngine.java
+ com.android.apksig.ApkSignerEngine
+ com.android.apksig.ApkSignerEngine$InputJarEntryInstructions
+ com.android.apksig.ApkSignerEngine$InputJarEntryInstructions$OutputPolicy
+ com.android.apksig.ApkSignerEngine$InspectJarEntryRequest
+ com.android.apksig.ApkSignerEngine$OutputApkSigningBlockRequest
+ com.android.apksig.ApkSignerEngine$OutputApkSigningBlockRequest2
+ com.android.apksig.ApkSignerEngine$OutputJarSignatureRequest
+ com.android.apksig.ApkSignerEngine$OutputJarSignatureRequest$JarEntry
+android/sun/security/x509/DistributionPointName.java
+ android.sun.security.x509.DistributionPointName
+com/android/apksig/internal/util/AndroidSdkVersion.java
+ com.android.apksig.internal.util.AndroidSdkVersion
+android/sun/security/util/DerValue.java
+ android.sun.security.util.DerValue
+android/sun/security/x509/CRLNumberExtension.java
+ android.sun.security.x509.CRLNumberExtension
+android/sun/security/x509/GeneralNameInterface.java
+ android.sun.security.x509.GeneralNameInterface
+com/android/apksig/internal/apk/v2/V2SchemeSigner.java
+ com.android.apksig.internal.apk.v2.V2SchemeSigner
+ com.android.apksig.internal.apk.v2.V2SchemeSigner$1
+ com.android.apksig.internal.apk.v2.V2SchemeSigner$V2SignatureSchemeBlock
+ com.android.apksig.internal.apk.v2.V2SchemeSigner$V2SignatureSchemeBlock$SignedData
+ com.android.apksig.internal.apk.v2.V2SchemeSigner$V2SignatureSchemeBlock$Signer
+com/android/apksig/internal/x509/Certificate.java
+ com.android.apksig.internal.x509.Certificate
+android/sun/security/x509/CertificateValidity.java
+ android.sun.security.x509.CertificateValidity
+com/android/apksigner/SignerParams.java
+ com.android.apksigner.SignerParams
+android/sun/security/x509/KeyIdentifier.java
+ android.sun.security.x509.KeyIdentifier
+com/android/apksig/apk/ApkFormatException.java
+ com.android.apksig.apk.ApkFormatException
+com/android/apksigner/OptionsParser.java
+ com.android.apksigner.OptionsParser
+ com.android.apksigner.OptionsParser$OptionsException
+com/android/apksig/internal/util/ClassCompat.java
+ com.android.apksig.internal.util.ClassCompat
+com/android/apksig/internal/apk/ApkSigningBlockUtils.java
+ com.android.apksig.internal.apk.ApkSigningBlockUtils
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$1
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$ChunkDigester
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$ChunkDigests
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$ChunkSupplier
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$ChunkSupplier$Chunk
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$NoSupportedSignaturesException
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$Result
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$Result$SignerInfo
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$Result$SignerInfo$AdditionalAttribute
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$Result$SignerInfo$ContentDigest
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$Result$SignerInfo$Signature
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$SignatureNotFoundException
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$SignerConfig
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$SigningSchemeBlockAndDigests
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$SupportedSignature
+ com.android.apksig.internal.apk.ApkSigningBlockUtils$VerityTreeAndDigest
+android/sun/security/x509/InvalidityDateExtension.java
+ android.sun.security.x509.InvalidityDateExtension
+android/sun/security/x509/CertificatePolicyId.java
+ android.sun.security.x509.CertificatePolicyId
+android/sun/security/ec/ECPublicKeyImpl.java
+ android.sun.security.ec.ECPublicKeyImpl
+com/android/apksig/internal/pkcs7/SignerInfo.java
+ com.android.apksig.internal.pkcs7.SignerInfo
+com/android/apksig/internal/util/ByteArrayDataSink.java
+ com.android.apksig.internal.util.ByteArrayDataSink
+ com.android.apksig.internal.util.ByteArrayDataSink$1
+ com.android.apksig.internal.util.ByteArrayDataSink$SliceDataSource
+android/sun/security/x509/CertificateIssuerExtension.java
+ android.sun.security.x509.CertificateIssuerExtension
+com/android/apksigner/HexEncoding.java
+ com.android.apksigner.HexEncoding
+com/android/apksigner/ApkSignerTool.java
+ com.android.apksigner.ApkSignerTool
+ com.android.apksigner.ApkSignerTool$1
+ com.android.apksigner.ApkSignerTool$ProviderInstallSpec
+android/sun/security/x509/X509CRLEntryImpl.java
+ android.sun.security.x509.X509CRLEntryImpl
+com/android/apksig/internal/apk/v1/DigestAlgorithm.java
+ com.android.apksig.internal.apk.v1.DigestAlgorithm
+ com.android.apksig.internal.apk.v1.DigestAlgorithm$1
+ com.android.apksig.internal.apk.v1.DigestAlgorithm$StrengthComparator
+android/sun/security/x509/FreshestCRLExtension.java
+ android.sun.security.x509.FreshestCRLExtension
+android/sun/security/util/DerOutputStream.java
+ android.sun.security.util.DerOutputStream
+android/sun/security/x509/X500Name.java
+ android.sun.security.x509.X500Name
+android/sun/security/pkcs12/PKCS12KeyStore.java
+ android.sun.security.pkcs12.PKCS12KeyStore
+ android.sun.security.pkcs12.PKCS12KeyStore$1
+ android.sun.security.pkcs12.PKCS12KeyStore$CertEntry
+ android.sun.security.pkcs12.PKCS12KeyStore$KeyEntry
+android/sun/security/x509/GeneralName.java
+ android.sun.security.x509.GeneralName
+android/sun/security/x509/NameConstraintsExtension.java
+ android.sun.security.x509.NameConstraintsExtension
+android/sun/security/x509/CertificateX509Key.java
+ android.sun.security.x509.CertificateX509Key
+android/sun/security/pkcs/EncryptedPrivateKeyInfo.java
+ android.sun.security.pkcs.EncryptedPrivateKeyInfo
+android/sun/security/x509/BasicConstraintsExtension.java
+ android.sun.security.x509.BasicConstraintsExtension
+com/android/apksig/internal/x509/Extension.java
+ com.android.apksig.internal.x509.Extension
+android/sun/security/x509/CRLReasonCodeExtension.java
+ android.sun.security.x509.CRLReasonCodeExtension
+android/sun/security/x509/X509Key.java
+ android.sun.security.x509.X509Key
+android/sun/security/x509/CertificateVersion.java
+ android.sun.security.x509.CertificateVersion
+android/sun/security/x509/CertificateIssuerName.java
+ android.sun.security.x509.CertificateIssuerName
+com/android/apksig/internal/apk/v2/V2SchemeVerifier.java
+ com.android.apksig.internal.apk.v2.V2SchemeVerifier
+com/android/apksig/internal/x509/TBSCertificate.java
+ com.android.apksig.internal.x509.TBSCertificate
+android/sun/security/x509/EDIPartyName.java
+ android.sun.security.x509.EDIPartyName
+com/android/apksig/ApkSigner.java
+ com.android.apksig.ApkSigner
+ com.android.apksig.ApkSigner$1
+ com.android.apksig.ApkSigner$Builder
+ com.android.apksig.ApkSigner$OutputSizeAndDataOffset
+ com.android.apksig.ApkSigner$SignerConfig
+ com.android.apksig.ApkSigner$SignerConfig$Builder
+com/android/apksig/util/RunnablesProvider.java
+ com.android.apksig.util.RunnablesProvider
+com/android/apksig/internal/zip/CentralDirectoryRecord.java
+ com.android.apksig.internal.zip.CentralDirectoryRecord
+ com.android.apksig.internal.zip.CentralDirectoryRecord$1
+ com.android.apksig.internal.zip.CentralDirectoryRecord$ByLocalFileHeaderOffsetComparator
+android/sun/security/x509/CertificatePolicyMap.java
+ android.sun.security.x509.CertificatePolicyMap
+android/sun/security/x509/AVA.java
+ android.sun.security.x509.AVA
+ android.sun.security.x509.AVAKeyword
+android/sun/security/x509/URIName.java
+ android.sun.security.x509.URIName
+com/android/apksig/internal/util/OutputStreamDataSink.java
+ com.android.apksig.internal.util.OutputStreamDataSink
+com/android/apksig/util/ReadableDataSink.java
+ com.android.apksig.util.ReadableDataSink
+com/android/apksig/internal/apk/SignatureAlgorithm.java
+ com.android.apksig.internal.apk.SignatureAlgorithm
+android/sun/security/x509/GeneralNames.java
+ android.sun.security.x509.GeneralNames
+com/android/apksig/internal/x509/Validity.java
+ com.android.apksig.internal.x509.Validity
+android/sun/security/provider/JavaKeyStore.java
+ android.sun.security.provider.JavaKeyStore
+ android.sun.security.provider.JavaKeyStore$1
+ android.sun.security.provider.JavaKeyStore$CaseExactJKS
+ android.sun.security.provider.JavaKeyStore$JKS
+ android.sun.security.provider.JavaKeyStore$KeyEntry
+ android.sun.security.provider.JavaKeyStore$TrustedCertEntry
+android/sun/security/ec/ECKeyFactory.java
+ android.sun.security.ec.ECKeyFactory
+ android.sun.security.ec.ECKeyFactory$1
+ android.sun.security.ec.ECKeyFactory$2
+com/android/apksig/internal/asn1/Asn1BerParser.java
+ com.android.apksig.internal.asn1.Asn1BerParser
+ com.android.apksig.internal.asn1.Asn1BerParser$1
+ com.android.apksig.internal.asn1.Asn1BerParser$AnnotatedField
+ com.android.apksig.internal.asn1.Asn1BerParser$Asn1UnexpectedTagException
+ com.android.apksig.internal.asn1.Asn1BerParser$BerToJavaConverter
+com/android/apksig/internal/jar/ManifestWriter.java
+ com.android.apksig.internal.jar.ManifestWriter
+android/sun/security/x509/PrivateKeyUsageExtension.java
+ android.sun.security.x509.PrivateKeyUsageExtension
+android/sun/security/x509/X509CRLImpl.java
+ android.sun.security.x509.X509CRLImpl
+ android.sun.security.x509.X509CRLImpl$X509IssuerSerial
+com/android/apksig/internal/util/VerityTreeBuilder.java
+ com.android.apksig.internal.util.VerityTreeBuilder
+com/android/apksig/internal/util/ByteBufferUtils.java
+ com.android.apksig.internal.util.ByteBufferUtils
+android/sun/security/x509/CertAndKeyGen.java
+ android.sun.security.x509.CertAndKeyGen
+android/sun/security/pkcs/PKCS10.java
+ android.sun.security.pkcs.PKCS10
+android/sun/misc/IOUtils.java
+ android.sun.misc.IOUtils
+android/sun/security/util/ByteArrayTagOrder.java
+ android.sun.security.util.ByteArrayTagOrder
+android/sun/security/x509/AttributeNameEnumeration.java
+ android.sun.security.x509.AttributeNameEnumeration
+android/sun/security/x509/OtherName.java
+ android.sun.security.x509.OtherName
+android/sun/security/x509/CertException.java
+ android.sun.security.x509.CertException
+com/android/apksig/util/DataSources.java
+ com.android.apksig.util.DataSources

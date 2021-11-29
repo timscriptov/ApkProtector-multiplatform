@@ -113,5 +113,6 @@
     <string name="pref_title_category_dexer">Dexer</string>
     <string name="pref_title_category_zipaligner">ZipAligner</string>
     <string name="licenses">Licenses</string>
+    <string name="arsc">New arsc resource name</string>
 
 </resources>

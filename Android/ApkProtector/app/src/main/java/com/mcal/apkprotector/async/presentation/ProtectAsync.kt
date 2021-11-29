@@ -10,20 +10,18 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import com.mcal.apkprotector.App
-import com.mcal.apkprotector.App.Companion.getContext
 import com.mcal.apkprotector.BuildConfig
 import com.mcal.apkprotector.async.ProtectAsyncListener
 import com.mcal.apkprotector.data.Constants
 import com.mcal.apkprotector.data.Preferences
 import com.mcal.apkprotector.fastzip.FastZip
 import com.mcal.apkprotector.patchers.ManifestPatcher
-import com.mcal.apkprotector.signer.SignatureTool
+import com.mcal.apkprotector.signer.ApkSigner
 import com.mcal.apkprotector.task.AndResGuard
 import com.mcal.apkprotector.task.DexCrypto
 import com.mcal.apkprotector.utils.*
 import com.mcal.apkprotector.utils.file.FileUtils
 import com.mcal.apkprotector.utils.file.ScopedStorage
-import com.mcal.apkprotector.zipalign.ZipAlign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -120,12 +118,9 @@ class ProtectAsync(
 
         val time = System.currentTimeMillis()
 
-        if (Preferences.getDexProtectBoolean()) {
+        if (Preferences.isDexProtectBoolean()) {
             try {
-                val smaliPath = Constants.SMALI_PATH + File.separator + "ProtectApplication.smali"
-                FileUtils.inputStreamAssets(getContext(), "application.smali", smaliPath)
-
-                if(Preferences.getTypeHideApkProtector().equals("2")) {
+                if (Preferences.getTypeHideApkProtector().equals("2")) {
                     generateRandom()
                 }
                 doProgress("Decompiling…")
@@ -150,129 +145,66 @@ class ProtectAsync(
                 DexCrypto.encodeDexes()
                 LoggerUtils.writeLog("Dex files successful encrypted")
                 doProgress("Compiling…")
-                FastZip.repack(p1[0], Constants.UNSIGNED_PATH)
+                FastZip.repack(context, p1[0], Constants.UNSIGNED_PATH)
                 LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH)
                 SourceInfo.initialise("$path/output", mi!!)
                 doProgress("Signing Apk…")
-                if (Preferences.getZipAlignerBoolean()) {
-                    doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess(Constants.UNSIGNED_PATH, "$xpath/output/aligned.apk")) {
-                        LoggerUtils.writeLog("APK aligned")
-                        doProgress("Signing Apk…")
-                        if (SignatureTool.sign(
-                                context,
-                                File("$xpath/output/aligned.apk"),
-                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                            )
-                        ) {
-                            LoggerUtils.writeLog("APK signed")
-                            doProgress("Done")
-                            t = true
-                        }
-                    }
-                } else {
-                    doProgress("Signing Apk…")
-                    if (SignatureTool.sign(
-                            context,
-                            File(Constants.UNSIGNED_PATH),
-                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                        )
-                    ) {
-                        LoggerUtils.writeLog("APK signed")
-                        doProgress("Done")
-                        t = true
-                    }
+                if (ApkSigner().apksigner(
+                        Constants.UNSIGNED_PATH,
+                        path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"
+                    )
+                ) {
+                    LoggerUtils.writeLog("APK signed")
+                    doProgress("Done")
+                    t = true
                 }
             } catch (e: Exception) {
                 LoggerUtils.writeLog("$e")
             }
         }
-        if (Preferences.getEncryptResourcesBoolean()) {
+        if (Preferences.isEncryptResourcesBoolean()) {
             doProgress("Copying apk…")
             val rules = path + File.separator + "proguard-resources.json"
-            if(!File(rules).exists()) {
-                FileUtils.inputStreamAssets(getContext(), "proguard-resources.json", rules)
+            if (!File(rules).exists()) {
+                FileUtils.inputStreamAssets(context, "proguard-resources.json", rules)
             }
-            val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
-            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
+            val encryptedApk = Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"
 
-            if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
-                doProgress("Encrypting Resources…")
-                AndResGuard.proguard2(
-                    File(tmpApk),
-                    File(path + "/output/" + MyAppInfo.getPackage() + "/"),
-                    File(path),
-                    MyAppInfo.getPackage()
+            doProgress("Encrypting Resources…")
+            AndResGuard.proguard2(
+                File(p1[0]),
+                File(path + "/output/" + MyAppInfo.getPackage() + "/"),
+                File(path),
+                MyAppInfo.getPackage()
+            )
+            LoggerUtils.writeLog("Encrypted Resources")
+            SourceInfo.initialise("$path/output", mi!!)
+            doProgress("Signing Apk…")
+            if (ApkSigner().apksigner(
+                    encryptedApk,
+                    path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"
                 )
-                LoggerUtils.writeLog("Encrypted Resources")
-                SourceInfo.initialise("$path/output", mi!!)
-                if (Preferences.getZipAlignerBoolean()) {
-                    doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
-                        LoggerUtils.writeLog("Apk Aligned")
-                        doProgress("Signing Apk…")
-                        if (SignatureTool.sign(
-                                context,
-                                File(alignedApk),
-                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                            )
-                        ) {
-                            LoggerUtils.writeLog("Apk Signed")
-                            doProgress("Done")
-                            t = true
-                        }
-                    }
-
-                } else {
-                    doProgress("Signing Apk…")
-                    if (SignatureTool.sign(
-                            context,
-                            File(tmpApk),
-                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                        )
-                    ) {
-                        LoggerUtils.writeLog("Apk Signed")
-                        doProgress("Done")
-                        t = true
-                    }
-                }
+            ) {
+                LoggerUtils.writeLog("Apk Signed")
+                doProgress("Done")
+                t = true
             }
         }
-        if (Preferences.getSignApkBoolean()) {
+        if (Preferences.isSignApkBoolean()) {
             doProgress("Copying apk…")
             val tmpApk = Constants.RELEASE_PATH + File.separator + "app-temp.apk"
-            val alignedApk = Constants.RELEASE_PATH + File.separator + "app-aligned.apk";
 
             if (FileUtils.copyFileStream(File(p1[0]), File(tmpApk))) {
                 SourceInfo.initialise("$path/output", mi!!)
-                if (Preferences.getZipAlignerBoolean()) {
-                    doProgress("Aligning Apk…")
-                    if (ZipAlign.runProcess(tmpApk, alignedApk)) {
-                        LoggerUtils.writeLog("Apk Aligned")
-                        doProgress("Signing Apk…")
-                        if (SignatureTool.sign(
-                                context,
-                                File(alignedApk),
-                                File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                            )
-                        ) {
-                            LoggerUtils.writeLog("Apk Signed")
-                            doProgress("Done")
-                            t = true
-                        }
-                    }
-                } else {
-                    doProgress("Signing Apk…")
-                    if (SignatureTool.sign(
-                            context,
-                            File(tmpApk),
-                            File(path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk")
-                        )
-                    ) {
-                        LoggerUtils.writeLog("Apk Signed")
-                        doProgress("Done")
-                        t = true
-                    }
+                doProgress("Signing Apk…")
+                if (ApkSigner().apksigner(
+                        tmpApk,
+                        path + "/output/" + MyAppInfo.getPackage() + "/" + MyAppInfo.getAppName() + ".apk"
+                    )
+                ) {
+                    LoggerUtils.writeLog("Apk Signed")
+                    doProgress("Done")
+                    t = true
                 }
             }
         }
@@ -330,11 +262,6 @@ class ProtectAsync(
         return LinearLayout(ctx).apply {
             gravity = Gravity.CENTER_HORIZONTAL
             orientation = LinearLayout.VERTICAL
-            /*addView(TextView(ctx).apply {
-                layoutParams = ViewGroup.LayoutParams(dp96, dp96)
-                text = Preferences.getTempAxml()
-                setPadding(dp16, dp16, dp16, dp16)
-            })*/
             addView(ProgressBar(ctx).apply {
                 layoutParams = ViewGroup.LayoutParams(dp96, dp96)
                 isIndeterminate = false

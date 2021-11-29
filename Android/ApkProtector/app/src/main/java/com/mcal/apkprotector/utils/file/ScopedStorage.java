@@ -3,6 +3,8 @@ package com.mcal.apkprotector.utils.file;
 import android.os.Build;
 import android.os.Environment;
 
+import androidx.annotation.NonNull;
+
 import com.mcal.apkprotector.App;
 
 import java.io.File;
@@ -20,7 +22,8 @@ public class ScopedStorage {
         return Environment.getExternalStorageDirectory();
     }
 
-    public static String getWorkPath() {
+    @NonNull
+    public static String getFilesDir() {
         return App.getContext().getFilesDir().getAbsolutePath();
     }
 }

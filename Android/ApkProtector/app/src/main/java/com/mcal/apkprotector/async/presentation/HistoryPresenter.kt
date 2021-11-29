@@ -73,7 +73,11 @@ class HistoryPresenter : CoroutineScope {
                 }
             }
             val AppNameComparator = Comparator { o1: SourceInfo, o2: SourceInfo ->
-                o1.packageLabel.toLowerCase().compareTo(o2.packageLabel.toLowerCase())
+                o1.packageLabel.lowercase(Locale.getDefault()).compareTo(
+                    o2.packageLabel.lowercase(
+                        Locale.getDefault()
+                    )
+                )
             }
             Collections.sort(historyItems, AppNameComparator)
             return@withContext historyItems

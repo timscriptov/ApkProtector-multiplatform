@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class AppListDialog implements AppInteractor {
-    private Context mContext;
-    private AppCompatEditText mEdit;
+    private final Context mContext;
+    private final AppCompatEditText mEdit;
     private AlertDialog adx;
 
     public AppListDialog(Context c, AppCompatEditText e) {

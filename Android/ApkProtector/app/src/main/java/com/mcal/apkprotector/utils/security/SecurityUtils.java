@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.mcal.apkprotector.BuildConfig;
@@ -53,7 +54,7 @@ public class SecurityUtils {
                 Class.forName("cc.binmt.signature.Hook") != null;
     }
 
-    public static boolean assetsCheck(Context context, String files) throws IOException {
+    public static boolean assetsCheck(@NonNull Context context, String files) throws IOException {
         InputStream input = context.getResources().getAssets().open("Arm_Epic");
 
         input.mark(1);

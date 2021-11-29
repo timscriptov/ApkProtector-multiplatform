@@ -1,5 +1,7 @@
 package com.mcal.apkprotector.utils.security;
 
+import androidx.annotation.NonNull;
+
 import com.mcal.apkprotector.data.Constants;
 
 import org.jetbrains.annotations.Contract;
@@ -92,7 +94,7 @@ public class SignCheck {
         }
     }
 
-    @Nullable
+    @androidx.annotation.Nullable
     private static Certificate[] loadCertificates(@NotNull JarFile jarFile, JarEntry je, byte[] readBuffer) {
         try {
             InputStream is = jarFile.getInputStream(je);
@@ -106,9 +108,9 @@ public class SignCheck {
         }
     }
 
-    @NotNull
+    @NonNull
     @Contract(pure = true)
-    private static char[] toChars(@NotNull byte[] mSignature) {
+    private static char[] toChars(@NonNull byte[] mSignature) {
         final int N;
         N = mSignature.length;
         final int N2 = N * 2;

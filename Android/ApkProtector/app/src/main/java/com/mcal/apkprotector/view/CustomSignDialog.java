@@ -14,7 +14,6 @@ import com.developer.filepicker.model.DialogConfigs;
 import com.developer.filepicker.model.DialogProperties;
 import com.developer.filepicker.view.FilePickerDialog;
 import com.google.android.material.textfield.TextInputEditText;
-import com.mcal.apkprotector.App;
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.utils.file.ScopedStorage;
@@ -24,9 +23,9 @@ import org.jetbrains.annotations.Contract;
 import java.io.File;
 
 public class CustomSignDialog implements DialogInterface.OnClickListener {
+    private final DialogInterface.OnClickListener listener;
     private TextInputEditText keyStorePath;
     private FilePickerDialog pickerDialog;
-    private DialogInterface.OnClickListener listener;
 
     @Contract(pure = true)
     public CustomSignDialog(DialogInterface.OnClickListener listener) {
@@ -49,7 +48,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
         TextInputEditText keyStorePass = view.findViewById(R.id.keystore_pass);
         TextInputEditText certPassword = view.findViewById(R.id.cert_password);
 
-        keyStorePath.setText(Preferences.isSignaturePath());
+        keyStorePath.setText(Preferences.getSignaturePath());
         keyStorePath.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -61,11 +60,11 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable p1) {
-                App.getPreferences().edit().putString("signaturePath", p1.toString()).apply();
+                Preferences.setSignaturePath(p1.toString());
             }
         });
 
-        keyStoreAlias.setText(Preferences.isSignatureAlias());
+        keyStoreAlias.setText(Preferences.getSignatureAlias());
         keyStoreAlias.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -77,11 +76,11 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable p1) {
-                App.getPreferences().edit().putString("signatureAlias", p1.toString()).apply();
+                Preferences.setSignatureAlias(p1.toString());
             }
         });
 
-        keyStorePass.setText(Preferences.isSignaturePassword());
+        keyStorePass.setText(Preferences.getSignaturePassword());
         keyStorePass.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -93,11 +92,11 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable p1) {
-                App.getPreferences().edit().putString("signaturePassword", p1.toString()).apply();
+                Preferences.setSignaturePassword(p1.toString());
             }
         });
 
-        certPassword.setText(Preferences.isCertPassword());
+        certPassword.setText(Preferences.getCertPassword());
         certPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
@@ -109,7 +108,7 @@ public class CustomSignDialog implements DialogInterface.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable p1) {
-                App.getPreferences().edit().putString("certPassword", p1.toString()).apply();
+                Preferences.setCertPassword(p1.toString());
             }
         });
 

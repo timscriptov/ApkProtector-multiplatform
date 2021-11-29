@@ -8,7 +8,6 @@ import android.util.ArrayMap;
 
 import com.mcal.apkprotector.data.Const;
 import com.mcal.apkprotector.multidex.MultiDex;
-import com.mcal.apkprotector.security.Security;
 import com.mcal.apkprotector.utils.Reflect;
 
 import java.util.ArrayList;
@@ -19,11 +18,12 @@ public class ProtectApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        try {
+        MultiDex.install(this);
+        /*try {
             new Security(this, Const.DATA);
         } finally {
             MultiDex.install(this);
-        }
+        }*/
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ProtectApplication extends Application {
     }
 
     private Application changeTopApplication() {
-        // Определенть наличие Applicaiton
+        // Определяем наличие Applicaiton
         Object currentActivityThread = Reflect.invokeMethod("android.app.ActivityThread", null, "currentActivityThread", new Object[]{}, null);
         Object mBoundApplication = Reflect.getFieldValue(
                 "android.app.ActivityThread", currentActivityThread,

@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.utils.security.SignCheck;
@@ -21,7 +22,10 @@ import java.util.Random;
 public class CommonUtils {
     @Keep
     private static final String OBF = "KEEP-TEST";
-    public static String generateRandomString(String str) {
+
+    @NonNull
+    @Contract("_ -> new")
+    public static String generateRandomString(@NonNull String str) {
         Random random = new Random();
         char[] arr = str.toCharArray();
         for (int i = 0; i < str.length(); i++) {
@@ -99,7 +103,7 @@ public class CommonUtils {
         }
     }
 
-    @NotNull
+    @NonNull
     @Contract(value = "_ -> new", pure = true)
     private static char[] a(int i) {
         switch (i) {
@@ -129,6 +133,7 @@ public class CommonUtils {
         }
     }
 
+    @NonNull
     public static String getRandomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";//#
         Random random = new Random();

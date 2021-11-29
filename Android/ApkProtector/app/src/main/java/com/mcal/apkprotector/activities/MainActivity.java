@@ -28,8 +28,8 @@ import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.data.dto.main.ViewPagerAdapter;
 import com.mcal.apkprotector.fragment.HomeFragment;
-import com.mcal.apkprotector.utils.Dialogs;
 import com.mcal.apkprotector.utils.CommonUtils;
+import com.mcal.apkprotector.utils.Dialogs;
 import com.mcal.apkprotector.utils.ExceptionHandler;
 import com.mcal.apkprotector.utils.Utils;
 import com.mcal.apkprotector.utils.security.SecurityUtils;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) header.findViewById(R.id.version)).setText(CommonUtils.versionName(this));
 
         try {
-            String[] files = new String[] {"Hook_apk", "libjiagu.so", "libjiagu_a64.so", "libjiagu_x64.so",
+            String[] files = new String[]{"Hook_apk", "libjiagu.so", "libjiagu_a64.so", "libjiagu_x64.so",
                     "libjiagu_x86.so", "arm", "hook.apk", "Arm_Epic", "App_dex/classes.dex",
                     "App_dex/Modex.txt", "Hook_so/arm64-v8a/libIOHook.so",
                     "Hook_so/arm64-v8a/libmocls.so", "Hook_so/arm64-v8a/libsandhook.so",
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             File xpath = this.getDir("libs", Context.MODE_PRIVATE);
 
-            String[] files = new String[] {xpath + "/App_dex/classes.dex",
+            String[] files = new String[]{xpath + "/App_dex/classes.dex",
                     xpath + "/App_dex/Modex.txt", xpath + "/arm64-v8a/libIOHook.so",
                     xpath + "/arm64-v8a/libmock.so", xpath + "/arm64-v8a/libsandhook.so",
                     xpath + "/armeabi-v7a/libIOHook.so", xpath + "/armeabi-v7a/libmock.so",
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             File xpath = new File(this.getApplicationInfo().nativeLibraryDir);
 
-            String[] files = new String[] {xpath + "/libfuck.so", xpath + "/libarm.so",
+            String[] files = new String[]{xpath + "/libfuck.so", xpath + "/libarm.so",
                     xpath + "/libarm_signer.so", xpath + "/libsandhook.so",
                     xpath + "/libsandhook-native.so", xpath + "/libarm_classes.so",
                     xpath + "/libArmEpic.so", xpath + "/libEpic.so"};

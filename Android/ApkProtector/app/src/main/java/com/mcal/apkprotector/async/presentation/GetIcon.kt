@@ -126,6 +126,7 @@ enum class GetIcon {
         }
     }
 
+    @DelicateCoroutinesApi
     fun backgroundLoadIcon(filePath: String, imageView: ImageView, fileType: FileType) {
         getIcon(true, filePath, filePath, imageView)
         RetrieveFileIcon(filePath, imageView, fileType).execute()
@@ -149,6 +150,7 @@ enum class GetIcon {
         allowThumbnails = true
     }
 
+    @DelicateCoroutinesApi
     fun resolve(filePath: String, holderView: ImageView) {
         holderView.tag = filePath
         val fileExt = PathF.getExt(filePath)
@@ -161,6 +163,7 @@ enum class GetIcon {
         backgroundLoadIcon(filePath, holderView, fileType)
     }
 
+    @DelicateCoroutinesApi
     private fun getIcon(
         curDirNull: Boolean,
         fileName: String?,

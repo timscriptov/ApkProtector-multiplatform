@@ -1,72 +1,72 @@
 package com.mcal.apkprotector.task;
 
-import com.blankj.utilcode.util.FileIOUtils;
-import com.blankj.utilcode.util.FileUtils;
-import com.blankj.utilcode.util.JsonUtils;
-import com.mcal.resguard.resourceproguard.InputParam;
-import com.mcal.resguard.resourceproguard.Main;
-import com.mcal.resguard.util.TypedValue;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.mcal.apkprotector.data.Constants;
+import com.mcal.apkprotector.data.Preferences;
+import com.mcal.apkprotector.data.ResGuard;
+import com.mcal.apkprotector.utils.file.FileUtils;
+import com.tencent.mm.resourceproguard.InputParam;
+import com.tencent.mm.resourceproguard.Main;
+import com.tencent.mm.util.FileOperation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AndResGuard {
-    public static void proguard2(File input, File output, File file, String packageName) throws Throwable {
-        String readFile2String;
+    public static void proguard2(File input, File output, File file, String packageName) {
         InputParam.Builder builder = new InputParam.Builder();
         builder.setWhiteList(new ArrayList<>());
         builder.setCompressFilePattern(new ArrayList<>());
         File rules = new File(file, "proguard-resources.json");
-        if (rules.exists() && rules.isFile() && (readFile2String = FileIOUtils.readFile2String(rules)) != null && readFile2String.trim().length() != 0) {
+        if (rules.exists() && rules.isFile()) {
             try {
-                JSONObject jSONObject = new JSONObject(readFile2String);
-                builder.setKeepRoot(JsonUtils.getBoolean(jSONObject, "keepRoot", false));
-                String string = JsonUtils.getString(jSONObject, "fixedResName", null);
-                if (string != null && string.length() > 0) {
-                    builder.setFixedResName(string);
+                builder.setKeepRoot(ResGuard.resguardFile(rules).getKeepRoot());
+                String fixedResName = Preferences.getResNameArscString();//ResGuard.resguardFile(rules).getFixedResName();
+                if (fixedResName != null && fixedResName.length() > 0) {
+                    builder.setFixedResName(fixedResName);
                 }
-                String string2 = JsonUtils.getString(jSONObject, "mappingFile", null);
-                if (string2 != null) {
-                    File file3 = new File(file, string2);
+                String mappingFile = ResGuard.resguardFile(rules).getMappingFile();
+                if (mappingFile != null) {
+                    File file3 = new File(file, mappingFile);
                     if (file3.exists() && file3.isFile()) {
-                        builder.setMappingFile(file3);
+                        builder.setMappingFile(new File(mappingFile));
                     }
                 }
-                JSONArray jSONArray = JsonUtils.getJSONArray(jSONObject, "whiteList", null);
-                if (jSONArray != null) {
-                    ArrayList arrayList = new ArrayList();
-                    for (int i = 0; i < jSONArray.length(); i++) {
-                        arrayList.add(packageName + "." + jSONArray.getString(i));
+                List<String> whiteList = ResGuard.resguardFile(rules).getWhiteList();
+                if (whiteList != null) {
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    for (int i = 0; i < whiteList.get(0).length(); i++) {
+                        arrayList.add(packageName + "." + whiteList.get(i));
                     }
                     builder.setWhiteList(arrayList);
                 }
-                JSONArray jSONArray2 = JsonUtils.getJSONArray(jSONObject, "compressFilePattern", null);
-                if (jSONArray2 != null) {
-                    ArrayList arrayList2 = new ArrayList();
-                    for (int i2 = 0; i2 < jSONArray2.length(); i2++) {
-                        arrayList2.add(jSONArray2.getString(i2));
+                List<String> commpressFilePattern = ResGuard.resguardFile(rules).getCommpressFilePattern();
+                if (commpressFilePattern != null) {
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    for (int i = 0; i < commpressFilePattern.get(0).length(); i++) {
+                        arrayList.add(commpressFilePattern.get(i));
                     }
-                    builder.setCompressFilePattern(arrayList2);
+                    builder.setCompressFilePattern(arrayList);
                 }
-            } catch (JSONException e) {
-                throw new JSONException("Error parsing JSON, please check if JSON is wrong!пјљ\n" + e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        File file4 = new File(output, "resources.apk");
-        FileUtils.copy(input, file4);
-        builder.setApkPath(file4.getAbsolutePath());
-        File file5 = new File(output, "andresguard");// РџР°РїРєР° СЃ mapping
-        builder.setOutBuilder(file5.getAbsolutePath());
-        Main.gradleRun(builder.create());
-        File file6 = new File(file5, "resources_unsigned.apk");
-        if (file6.exists()) {
-            FileUtils.move(file6.getAbsolutePath(), input.getAbsolutePath());
+        File tmpApk = new File(Constants.RELEASE_PATH + File.separator + "app-temp.apk");
+        if (FileUtils.copyFileStream(input, tmpApk)) {
+            builder.setApkPath(tmpApk.getAbsolutePath());
+            File folderMapping = new File(output, "andresguard");
+            builder.setOutBuilder(folderMapping.getAbsolutePath());
+            Main.gradleRun(builder.create());
+            File outputApk = new File(folderMapping, "app-temp_unsigned.apk");
+            if (outputApk.exists()) {
+                //outputApk.renameTo(new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
+                FileOperation.copyFileUsingStream(outputApk, new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
+                for (File f : folderMapping.listFiles()) {
+                    if (f.getName().endsWith(".txt")) continue;
+                    FileUtils.delete(f);
+                }
+            }
         }
-        FileUtils.delete(file4);
-        FileUtils.deleteFilesInDirWithFilter(file5, file1 -> !file1.getName().endsWith(TypedValue.TXT_FILE));
     }
 }

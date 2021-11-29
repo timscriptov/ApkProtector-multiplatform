@@ -8,12 +8,14 @@ import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.mcal.apkprotector.data.Preferences
+import com.mcal.apkprotector.utils.file.Environment
 import org.jetbrains.annotations.Nullable
 
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this
+        Environment(context).init()
         if (Preferences.isNightModeEnabled()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {

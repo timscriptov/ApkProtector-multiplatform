@@ -18,7 +18,6 @@ import androidx.cardview.widget.CardView;
 
 import com.mcal.apkprotector.R;
 import com.mcal.apkprotector.async.presentation.GetIcon;
-import com.mcal.apkprotector.databinding.ApkInfoBinding;
 import com.mcal.apkprotector.utils.CommonUtils;
 import com.mcal.apkprotector.utils.InstallProvider;
 import com.mcal.apkprotector.utils.MyAppInfo;

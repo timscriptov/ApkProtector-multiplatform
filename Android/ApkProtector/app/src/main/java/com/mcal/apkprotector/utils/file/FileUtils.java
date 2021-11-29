@@ -2,34 +2,109 @@ package com.mcal.apkprotector.utils.file;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.mcal.apkprotector.utils.LoggerUtils;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtils {
-    public static void writeInt(byte[] data, int off, int value) {
+    @NonNull
+    public static List<File> getFiles(@NonNull File[] files) {
+        List<File> list = new ArrayList<>();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                list.addAll(getFiles(file.listFiles()));
+            } else {
+                list.add(file);
+            }
+        }
+        return list;
+    }
+
+    public static void writeString(File file, String str) throws IOException {
+        BufferedWriter out = new BufferedWriter(new FileWriter(file));
+        try {
+            out.write(str);
+        } catch (IOException e) {
+            System.out.println("Exception " + e);
+        } finally {
+            out.close();
+        }
+    }
+
+    public static void writeFile(File path, String content) {
+        try {
+            File f = path;
+            if (!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
+            }
+
+            if (!f.exists()) {
+                f.createNewFile();
+                f = path;
+            }
+
+            FileWriter fw = new FileWriter(f, true);
+            if (content != null && !"".equals(content)) {
+                fw.write(content);
+                fw.flush();
+            }
+
+            fw.close();
+        } catch (Exception var5) {
+            var5.printStackTrace();
+        }
+    }
+
+    @NonNull
+    public static String readFile(String path, Charset encoding) throws IOException {
+        byte[] encoded = readAllBytes(new FileInputStream(path));
+        return new String(encoded, encoding);
+    }
+
+    @NonNull
+    public static byte[] readAllBytes(@NonNull InputStream is) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[2048];
+        int len = 0;
+        while ((len = is.read(buffer)) > 0)
+            bos.write(buffer, 0, len);
+        is.close();
+        return bos.toByteArray();
+    }
+
+    public static void writeInt(@NonNull byte[] data, int off, int value) {
         data[off++] = (byte) (value & 0xFF);
         data[off++] = (byte) ((value >>> 8) & 0xFF);
         data[off++] = (byte) ((value >>> 16) & 0xFF);
         data[off] = (byte) ((value >>> 24) & 0xFF);
     }
 
-    public static int readInt(byte[] data, int off) {
+    @Contract(pure = true)
+    public static int readInt(@NonNull byte[] data, int off) {
         return data[off + 3] << 24 | (data[off + 2] & 0xFF) << 16 | (data[off + 1] & 0xFF) << 8
                 | data[off] & 0xFF;
     }
 
-    public static byte[] toByteArray(InputStream is) throws IOException {
+    @NonNull
+    public static byte[] toByteArray(@NonNull InputStream is) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
         byte[] data = new byte[16384];
@@ -45,7 +120,7 @@ public class FileUtils {
         fos.close();
     }
 
-    public static void inputStreamRaw(Context context, Integer i, String targetFile) {
+    public static void inputStreamRaw(@NonNull Context context, Integer i, String targetFile) {
         try {
             InputStream initialStream = context.getResources().openRawResource(i);
 
@@ -59,7 +134,7 @@ public class FileUtils {
         }
     }
 
-    public static void inputStreamAssets(Context context, String name, String targetFile) {
+    public static void inputStreamAssets(@NonNull Context context, String name, String targetFile) {
         try {
             InputStream initialStream = context.getResources().getAssets().open(name);
 
@@ -94,7 +169,7 @@ public class FileUtils {
         }
     }
 
-    public static void copyFile(InputStream source, String dest) throws IOException {
+    public static void copyFile(@NonNull InputStream source, String dest) throws IOException {
         OutputStream os = null;
         try {
             os = new FileOutputStream(new File(dest));
@@ -122,7 +197,7 @@ public class FileUtils {
         }
     }
 
-    public static boolean deleteDir(File directoryToBeDeleted) {
+    public static boolean deleteDir(@NonNull File directoryToBeDeleted) {
         File[] allContents = directoryToBeDeleted.listFiles();
         if (allContents != null) {
             for (File file : allContents) {
@@ -132,6 +207,7 @@ public class FileUtils {
         return directoryToBeDeleted.delete();
     }
 
+    @NonNull
     public static String readFileToString(File file) throws IOException {
         StringBuilder text = new StringBuilder();
         FileInputStream fileStream = new FileInputStream(file);

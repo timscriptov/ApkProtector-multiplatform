@@ -1,5 +1,9 @@
 package com.mcal.apkprotector.fastzip;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
 import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.Preferences;
 import com.mcal.apkprotector.patchers.DexPatcher;
@@ -16,13 +20,15 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class FastZip {
+    private static final String[] n = {"resources.arsc", ".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
 
-    public static void extract(File zip, File extractDir) throws IOException {
+    public static void extract(File zip, @NonNull File extractDir) throws IOException {
         extractDir.mkdirs();
         ZipFile apk = new ZipFile(zip);
-        Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) apk.entries();
+        Enumeration<? extends ZipEntry> entries = apk.entries();
         LoggerUtils.writeLog("\n************ APK EXTRACTING ***********");
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
@@ -52,9 +58,9 @@ public class FastZip {
         extract(new File(zipPath), new File(extractDirPath));
     }
 
-    public static void repack(File inZip, File outZip) throws Exception {
+    public static void repack(Context context, File inZip, File outZip) throws Exception {
         ZipFile zipFile = new ZipFile(inZip);
-        Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zipFile.entries();
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
         FastZipOutputStream fzos = new FastZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZip)));
         LoggerUtils.writeLog("\n************ APK REPACKING ***********");
 
@@ -104,6 +110,16 @@ public class FastZip {
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             String name = entry.getName();
+
+            if (name.startsWith("META-INF/")) continue;
+            for (String endsWith : n) {
+                if (name.equals(endsWith) || name.equals("resources.arsc") && !entry.isDirectory()) {
+                    fzos.setLevel(ZipOutputStream.STORED);
+                } else {
+                    fzos.setLevel(ZipOutputStream.DEFLATED);
+                }
+            }
+
             if (name.equals("AndroidManifest.xml")
                     || name.matches("classes\\.dex")
                     || name.matches("classes\\d+\\.dex")
@@ -112,7 +128,7 @@ public class FastZip {
             }
 
             for (String file1 : files) {
-                file1 = file1.replace(ScopedStorage.getWorkPath() + File.separator, "");
+                file1 = file1.replace(ScopedStorage.getFilesDir() + File.separator, "");
                 if (file1.equals(name)) continue;
             }
             LoggerUtils.writeLog("Entry: " + entry.getName());
@@ -122,7 +138,7 @@ public class FastZip {
         //pack dexloader
         LoggerUtils.writeLog("Entry: classes.dex");
 
-        byte[] dexData = DexPatcher.processDex();
+        byte[] dexData = DexPatcher.processDex(context);
         ByteArrayInputStream bis = new ByteArrayInputStream(dexData);
         byte[] buffer = new byte[2048];
         int len = 0;
@@ -135,7 +151,7 @@ public class FastZip {
         fzos.close();
     }
 
-    public static void repack(String inZip, String outZip) throws Exception {
-        repack(new File(inZip), new File(outZip));
+    public static void repack(Context context, String inZip, String outZip) throws Exception {
+        repack(context, new File(inZip), new File(outZip));
     }
 }

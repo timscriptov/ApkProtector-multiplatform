@@ -9,14 +9,16 @@ import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class LuckyPatcherCheck {
     private static final String TAG = "Package Parser";
 
-    private static String[] metaData = new String[]{"xposedmodule", "xposeddescription"};
-    private static String[] receivers = new String[]{"com.ui.widgets.AppDisablerWidget", "com.ui.widgets.BinderWidget", "com.ui.widgets.AndroidPatchWidget"};
-    private static String[] services = new String[]{"com.chelpus.TransferFilesService", "com.chelpus.RootlessInstallService"};
+    private static final String[] metaData = new String[]{"xposedmodule", "xposeddescription"};
+    private static final String[] receivers = new String[]{"com.ui.widgets.AppDisablerWidget", "com.ui.widgets.BinderWidget", "com.ui.widgets.AndroidPatchWidget"};
+    private static final String[] services = new String[]{"com.chelpus.TransferFilesService", "com.chelpus.RootlessInstallService"};
 
     public static boolean isLucky(Context context) {
         try {
@@ -37,7 +39,7 @@ public class LuckyPatcherCheck {
         return false;
     }
 
-    public static boolean isXposedModule(ApplicationInfo appInfo) {
+    public static boolean isXposedModule(@NonNull ApplicationInfo appInfo) {
         Bundle bundle = appInfo.metaData;
 
         try {
@@ -55,7 +57,7 @@ public class LuckyPatcherCheck {
         return false;
     }
 
-    public static boolean detectServices(PackageInfo packInfo) {
+    public static boolean detectServices(@NonNull PackageInfo packInfo) {
         ServiceInfo[] serviceInfoArr = packInfo.services;
 
         try {
@@ -73,7 +75,7 @@ public class LuckyPatcherCheck {
         return false;
     }
 
-    public static boolean detectReceivers(PackageInfo packInfo) {
+    public static boolean detectReceivers(@NonNull PackageInfo packInfo) {
         ActivityInfo[] receiverArr = packInfo.receivers;
 
         try {

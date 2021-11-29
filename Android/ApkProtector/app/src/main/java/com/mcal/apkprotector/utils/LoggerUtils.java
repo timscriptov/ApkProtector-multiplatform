@@ -1,10 +1,8 @@
 package com.mcal.apkprotector.utils;
 
-import com.mcal.apkprotector.data.Preferences;
-import com.mcal.apkprotector.utils.file.ScopedStorage;
+import com.mcal.apkprotector.data.Constants;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -13,11 +11,10 @@ public class LoggerUtils {
         BufferedWriter bw = null;
         FileWriter fw = null;
         try {
-            fw = new FileWriter(ScopedStorage.getStorageDirectory() + File.separator + "ApkProtect" + File.separator + "Log.txt", true);
+            fw = new FileWriter(Constants.LOG_PATH, true);
             bw = new BufferedWriter(fw);
             bw.write(info);
             bw.write("\n");
-            Preferences.setTempAxml(info);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

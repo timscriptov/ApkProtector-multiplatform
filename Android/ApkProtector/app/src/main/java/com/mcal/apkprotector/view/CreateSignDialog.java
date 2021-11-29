@@ -20,7 +20,7 @@ import kellinwood.security.zipsigner.optional.CertCreator;
 import kellinwood.security.zipsigner.optional.DistinguishedNameValues;
 
 public class CreateSignDialog {
-    private Context context;
+    private final Context context;
     private TextInputEditText keystoreAlias;
     private TextInputEditText keystorePassword;
     private TextInputEditText keystoreCommonName;

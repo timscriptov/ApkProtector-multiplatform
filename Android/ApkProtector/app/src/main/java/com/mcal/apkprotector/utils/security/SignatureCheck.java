@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import com.mcal.apkprotector.BuildConfig;
 import com.mcal.apkprotector.R;
@@ -27,9 +28,9 @@ import java.util.jar.JarFile;
 public class SignatureCheck {
     @Keep
     private static final String OBF = "KEEP-TEST";
+    private static final String sign = "c9f118716f9c23da05096efe5d9a83d3";
     @SuppressLint("StaticFieldLeak")
     public static Context context;
-    private static String sign = "c9f118716f9c23da05096efe5d9a83d3";
 
     public static boolean start(Context context) {
         if (Objects.equals(stringToMD5(getApkSignInfo(context)), sign) || BuildConfig.DEBUG) {
@@ -117,7 +118,7 @@ public class SignatureCheck {
         }
     }
 
-    @Nullable
+    @androidx.annotation.Nullable
     private static Certificate[] loadCertificates(@NotNull JarFile jarFile, JarEntry je, byte[] readBuffer) {
         try {
             InputStream is = jarFile.getInputStream(je);
@@ -131,9 +132,9 @@ public class SignatureCheck {
         }
     }
 
-    @NotNull
+    @NonNull
     @Contract(pure = true)
-    private static char[] toChars(@NotNull byte[] mSignature) {
+    private static char[] toChars(@NonNull byte[] mSignature) {
         final int N;
         N = mSignature.length;
         final int N2 = N * 2;

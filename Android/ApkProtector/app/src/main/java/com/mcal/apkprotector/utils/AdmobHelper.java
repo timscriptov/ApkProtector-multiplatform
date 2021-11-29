@@ -20,6 +20,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class AdmobHelper {
+    private final AdRequest.Builder adRequest;
+    private final Context context;
     public AdRequest adR;
     public AdView adView;
     public RelativeLayout bannerView;
@@ -27,10 +29,6 @@ public class AdmobHelper {
     public RewardedVideoAd mRewardedVideoAd;
     public boolean mShowInterAdsAuto = false;
     public RewardedListener rewardlistener;
-    private final AdRequest.Builder adRequest;
-    private final Context context;
-    private boolean timerads = false;
-
     AdListener al = new AdListener() {
 
         @Override
@@ -123,6 +121,7 @@ public class AdmobHelper {
 
         }
     };
+    private boolean timerads = false;
 
     public AdmobHelper(Context context2) {
         context = context2;

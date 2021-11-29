@@ -3,5 +3,5 @@
 -dontshrink
 -dontoptimize
 
-
--repackageclasses com.mcal.apkprotector
+-keep class com.mcal.apkprotector.R.*
+-keep class com.mcal.apkprotector.BuildConfig.*
