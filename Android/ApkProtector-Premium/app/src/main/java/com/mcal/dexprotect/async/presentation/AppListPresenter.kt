@@ -100,7 +100,8 @@ class AppListPresenter : CoroutineScope {
         }
     }
 
-    private fun getInstalledApps(context: Context): ArrayList<PackageInfoHolder?>? {
+    @DelicateCoroutinesApi
+    private fun getInstalledApps(context: Context): ArrayList<PackageInfoHolder?> {
         val res = ArrayList<PackageInfoHolder?>()
         val packages = context.packageManager.getInstalledPackages(0)
         val totalPackages = packages.size
@@ -130,7 +131,8 @@ class AppListPresenter : CoroutineScope {
             }
         }
         val appNameComparator = Comparator { o1: PackageInfoHolder, o2: PackageInfoHolder ->
-            o1.getPackageLabel().toLowerCase().compareTo(o2.getPackageLabel().toLowerCase())
+            o1.getPackageLabel().lowercase(Locale.getDefault()).compareTo(o2.getPackageLabel()
+                .lowercase(Locale.getDefault()))
         }
         Collections.sort(res, appNameComparator)
         return res

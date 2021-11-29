@@ -27,10 +27,13 @@ public class DexCrypto {
             assets.mkdir();
         }
         try {
-            for (File file : new File(Constants.OUTPUT_PATH).listFiles()) {
-                if (file.getName().endsWith(".dex")) {
-                    LoggerUtils.writeLog("Encrypting: " + file.getName());
-                    encodeSingleDex(file.getName());
+            File[] dexFolder = new File(Constants.OUTPUT_PATH).listFiles();
+            if (dexFolder != null) {
+                for (File file : dexFolder) {
+                    if (file.getName().endsWith(".dex")) {
+                        LoggerUtils.writeLog("Encrypting: " + file.getName());
+                        encodeSingleDex(file.getName());
+                    }
                 }
             }
         } catch (Exception e) {

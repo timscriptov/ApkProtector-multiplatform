@@ -62,9 +62,12 @@ public class AndResGuard {
             if (outputApk.exists()) {
                 //outputApk.renameTo(new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
                 FileOperation.copyFileUsingStream(outputApk, new File(Constants.RELEASE_PATH + File.separator + "app-temp-encrypted.apk"));
-                for (File f : folderMapping.listFiles()) {
-                    if (f.getName().endsWith(".txt")) continue;
-                    FileUtils.delete(f);
+                File[] folderMappingList = folderMapping.listFiles();
+                if (folderMappingList != null) {
+                    for (File value : folderMappingList) {
+                        if (value.getName().endsWith(".txt")) continue;
+                        FileUtils.delete(value);
+                    }
                 }
             }
         }

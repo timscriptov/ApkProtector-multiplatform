@@ -161,6 +161,7 @@ enum class GetIcon {
         backgroundLoadIcon(filePath, holderView, fileType)
     }
 
+    @DelicateCoroutinesApi
     private fun getIcon(
         curDirNull: Boolean,
         fileName: String?,
@@ -189,7 +190,8 @@ enum class GetIcon {
                 return
             } else {
                 val mimeTypeFromExtension =
-                    mime.getMimeTypeFromExtension(PathF.getExt(fileName).toLowerCase())
+                    mime.getMimeTypeFromExtension(PathF.getExt(fileName)
+                        .lowercase(Locale.getDefault()))
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(Uri.fromFile(File(fileName)), mimeTypeFromExtension)
                 val queryIntentActivities: List<*> =

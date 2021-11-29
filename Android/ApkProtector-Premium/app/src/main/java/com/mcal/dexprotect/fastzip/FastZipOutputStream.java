@@ -1,5 +1,7 @@
 package com.mcal.dexprotect.fastzip;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +33,7 @@ public class FastZipOutputStream extends ZipOutputStream {
         }
     }
 
-    public void copyZipEntry(ZipEntry zipEntry, final ZipFile zipFile) {
+    public void copyZipEntry(@NonNull ZipEntry zipEntry, final ZipFile zipFile) {
         try {
             ZipEntry newEntry = new ZipEntry(zipEntry.getName());
 
