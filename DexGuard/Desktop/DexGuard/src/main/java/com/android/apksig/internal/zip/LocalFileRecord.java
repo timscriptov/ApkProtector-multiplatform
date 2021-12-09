@@ -20,6 +20,7 @@ import com.android.apksig.internal.util.ByteBufferSink;
 import com.android.apksig.util.DataSink;
 import com.android.apksig.util.DataSource;
 import com.android.apksig.zip.ZipFormatException;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -130,7 +131,7 @@ public class LocalFileRecord {
                 cdStartOffset,
                 true, // obtain extra field contents
                 true // include Data Descriptor (if present)
-                );
+        );
     }
 
     /**
@@ -346,7 +347,7 @@ public class LocalFileRecord {
         ByteBuffer result = ByteBuffer.allocate(recordSize);
         result.order(ByteOrder.LITTLE_ENDIAN);
         result.putInt(RECORD_SIGNATURE);
-        ZipUtils.putUnsignedInt16(result,  0x14); // Minimum version needed to extract
+        ZipUtils.putUnsignedInt16(result, 0x14); // Minimum version needed to extract
         result.putShort(ZipUtils.GP_FLAG_EFS); // General purpose flag: UTF-8 encoded name
         result.putShort(ZipUtils.COMPRESSION_METHOD_DEFLATED);
         ZipUtils.putUnsignedInt16(result, lastModifiedTime);
@@ -403,7 +404,7 @@ public class LocalFileRecord {
         } catch (IOException e) {
             throw new IOException(
                     "Failed to read data of " + ((mDataCompressed) ? "compressed" : "uncompressed")
-                        + " entry " + mName,
+                            + " entry " + mName,
                     e);
         }
         // Interestingly, Android doesn't check that uncompressed data's CRC-32 is as expected. We
@@ -430,7 +431,7 @@ public class LocalFileRecord {
                         cdStartOffsetInArchive,
                         false, // don't care about the extra field
                         false // don't read the Data Descriptor
-                        );
+                );
         lfhRecord.outputUncompressedData(source, sink);
     }
 

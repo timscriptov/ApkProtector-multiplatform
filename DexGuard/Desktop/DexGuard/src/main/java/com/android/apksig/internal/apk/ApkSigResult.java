@@ -27,7 +27,9 @@ import java.util.List;
 public class ApkSigResult {
     public final int signatureSchemeVersion;
 
-    /** Whether the APK's Signature Scheme signature verifies. */
+    /**
+     * Whether the APK's Signature Scheme signature verifies.
+     */
     public boolean verified;
 
     public final List<ApkSignerInfo> mSigners = new ArrayList<>();

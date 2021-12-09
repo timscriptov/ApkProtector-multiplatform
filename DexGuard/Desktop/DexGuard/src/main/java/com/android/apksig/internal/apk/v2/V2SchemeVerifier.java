@@ -28,6 +28,7 @@ import com.android.apksig.internal.util.X509CertificateUtils;
 import com.android.apksig.internal.util.GuaranteedEncodedFormX509Certificate;
 import com.android.apksig.util.DataSource;
 import com.android.apksig.util.RunnablesExecutor;
+
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -61,8 +62,11 @@ import java.util.Set;
  * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature Scheme v2</a>
  */
 public abstract class V2SchemeVerifier {
-    /** Hidden constructor to prevent instantiation. */
-    private V2SchemeVerifier() {}
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private V2SchemeVerifier() {
+    }
 
     /**
      * Verifies the provided APK's APK Signature Scheme v2 signatures and returns the result of
@@ -77,12 +81,12 @@ public abstract class V2SchemeVerifier {
      * this method returns a result with one or more errors and whose
      * {@code Result.verified == false}, or this method throws an exception.
      *
-     * @throws ApkFormatException if the APK is malformed
-     * @throws NoSuchAlgorithmException if the APK's signatures cannot be verified because a
-     *         required cryptographic algorithm implementation is missing
+     * @throws ApkFormatException                              if the APK is malformed
+     * @throws NoSuchAlgorithmException                        if the APK's signatures cannot be verified because a
+     *                                                         required cryptographic algorithm implementation is missing
      * @throws ApkSigningBlockUtils.SignatureNotFoundException if no APK Signature Scheme v2
-     * signatures are found
-     * @throws IOException if an I/O error occurs when reading the APK
+     *                                                         signatures are found
+     * @throws IOException                                     if an I/O error occurs when reading the APK
      */
     public static ApkSigningBlockUtils.Result verify(
             RunnablesExecutor executor,
@@ -98,7 +102,7 @@ public abstract class V2SchemeVerifier {
                 ApkSigningBlockUtils.VERSION_APK_SIGNATURE_SCHEME_V2);
         SignatureInfo signatureInfo =
                 ApkSigningBlockUtils.findSignature(apk, zipSections,
-                        V2SchemeConstants.APK_SIGNATURE_SCHEME_V2_BLOCK_ID , result);
+                        V2SchemeConstants.APK_SIGNATURE_SCHEME_V2_BLOCK_ID, result);
 
         DataSource beforeApkSigningBlock = apk.slice(0, signatureInfo.apkSigningBlockOffset);
         DataSource centralDir =
@@ -127,7 +131,7 @@ public abstract class V2SchemeVerifier {
      * Set, int, int)} for more information about the contract of this method.
      *
      * @param result result populated by this method with interesting information about the APK,
-     *        such as information about signers, and verification errors and warnings.
+     *               such as information about signers, and verification errors and warnings.
      */
     private static void verify(
             RunnablesExecutor executor,

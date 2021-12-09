@@ -39,12 +39,12 @@ public class DexCrypto {
     }
 
     public static void op(Context context, String str) throws Exception {
-        File file = new File(context.getDir(Const.DEXGUARD_DEX, 0), str);
+        File file = new File(context.getDir("app_dex", 0), str);
         if (!file.exists()) {
             file.mkdirs();
         }
 
-        decDex(context, context.getAssets().open(Const.DP_LIB + "/" + str), file);
+        decDex(context.getAssets().open(Const.DP_LIB + "/" + str), file);
         mDexFiles.add(file);
     }
 
@@ -57,7 +57,7 @@ public class DexCrypto {
         }
     }
 
-    public static void decDex(Context context, InputStream is, File file) {
+    public static void decDex(InputStream is, File file) {
         OutputStream os = null;
         File file2 = file.getParentFile();
         if (!file2.exists() && file2.isDirectory()) {
@@ -68,7 +68,7 @@ public class DexCrypto {
         }
         try {
             os = new FileOutputStream(file);
-            decrypt(context, is, os);
+            decrypt(is, os);
             a(os);
             a(is);
         } catch (Exception e) {
@@ -79,26 +79,26 @@ public class DexCrypto {
         }
     }
 
-    public static void decrypt(Context context, InputStream input, OutputStream output) throws Exception {
+    public static void decrypt(InputStream input, OutputStream output) throws Exception {
         InflaterInputStream is = new InflaterInputStream(input);
         InflaterOutputStream os = new InflaterOutputStream(output);
 
-        exfr(context, is, os);
+        exfr(is, os);
         os.close();
         is.close();
     }
 
-    public static void encrypt(Context context, InputStream input, OutputStream output) throws Exception {
+    public static void encrypt(InputStream input, OutputStream output) throws Exception {
         DeflaterInputStream is = new DeflaterInputStream(input);
         DeflaterOutputStream os = new DeflaterOutputStream(output);
 
-        exfr(context, is, os);
+        exfr(is, os);
         os.close();
         is.close();
     }
 
-    private static void exfr(Context context, InputStream inputStream, OutputStream outputStream) throws Exception {
-        char[] key = Preferences.protectKey(context).toCharArray();
+    private static void exfr(InputStream inputStream, OutputStream outputStream) throws Exception {
+        char[] key = Const.PROTECT_KEY.toCharArray();
         int[] iArr = new int[4];
         int i = 1;
         int i2 = i + 1;

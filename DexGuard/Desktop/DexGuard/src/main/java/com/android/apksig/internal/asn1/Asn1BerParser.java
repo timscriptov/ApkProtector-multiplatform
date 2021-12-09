@@ -38,24 +38,24 @@ import java.util.List;
  * containing fields annotated with {@link Asn1Field}.
  */
 public final class Asn1BerParser {
-    private Asn1BerParser() {}
+    private Asn1BerParser() {
+    }
 
     /**
      * Returns the ASN.1 structure contained in the BER encoded input.
      *
-     * @param encoded encoded input. If the decoding operation succeeds, the position of this buffer
-     *        is advanced to the first position following the end of the consumed structure.
+     * @param encoded        encoded input. If the decoding operation succeeds, the position of this buffer
+     *                       is advanced to the first position following the end of the consumed structure.
      * @param containerClass class describing the structure of the input. The class must meet the
-     *        following requirements:
-     *        <ul>
-     *        <li>The class must be annotated with {@link Asn1Class}.</li>
-     *        <li>The class must expose a public no-arg constructor.</li>
-     *        <li>Member fields of the class which are populated with parsed input must be
-     *            annotated with {@link Asn1Field} and be public and non-final.</li>
-     *        </ul>
-     *
+     *                       following requirements:
+     *                       <ul>
+     *                       <li>The class must be annotated with {@link Asn1Class}.</li>
+     *                       <li>The class must expose a public no-arg constructor.</li>
+     *                       <li>Member fields of the class which are populated with parsed input must be
+     *                           annotated with {@link Asn1Field} and be public and non-final.</li>
+     *                       </ul>
      * @throws Asn1DecodingException if the input could not be decoded into the specified Java
-     *         object
+     *                               object
      */
     public static <T> T parse(ByteBuffer encoded, Class<T> containerClass)
             throws Asn1DecodingException {
@@ -79,19 +79,18 @@ public final class Asn1BerParser {
      * <p>Note: The returned type is {@link List} rather than {@link java.util.Set} because ASN.1
      * SET may contain duplicate elements.
      *
-     * @param encoded encoded input. If the decoding operation succeeds, the position of this buffer
-     *        is advanced to the first position following the end of the consumed structure.
+     * @param encoded      encoded input. If the decoding operation succeeds, the position of this buffer
+     *                     is advanced to the first position following the end of the consumed structure.
      * @param elementClass class describing the structure of the values/elements contained in this
-     *        container. The class must meet the following requirements:
-     *        <ul>
-     *        <li>The class must be annotated with {@link Asn1Class}.</li>
-     *        <li>The class must expose a public no-arg constructor.</li>
-     *        <li>Member fields of the class which are populated with parsed input must be
-     *            annotated with {@link Asn1Field} and be public and non-final.</li>
-     *        </ul>
-     *
+     *                     container. The class must meet the following requirements:
+     *                     <ul>
+     *                     <li>The class must be annotated with {@link Asn1Class}.</li>
+     *                     <li>The class must expose a public no-arg constructor.</li>
+     *                     <li>Member fields of the class which are populated with parsed input must be
+     *                         annotated with {@link Asn1Field} and be public and non-final.</li>
+     *                     </ul>
      * @throws Asn1DecodingException if the input could not be decoded into the specified Java
-     *         object
+     *                               object
      */
     public static <T> List<T> parseImplicitSetOf(ByteBuffer encoded, Class<T> elementClass)
             throws Asn1DecodingException {
@@ -121,8 +120,7 @@ public final class Asn1BerParser {
             case CHOICE:
                 return parseChoice(container, containerClass);
 
-            case SEQUENCE:
-            {
+            case SEQUENCE: {
                 int expectedTagClass = BerEncoding.TAG_CLASS_UNIVERSAL;
                 int expectedTagNumber = BerEncoding.getTagNumber(dataType);
                 if ((container.getTagClass() != expectedTagClass)
@@ -198,7 +196,7 @@ public final class Asn1BerParser {
     }
 
     private static <T> T parseSequence(BerDataValue container, Class<T> containerClass,
-            boolean isUnencodedContainer) throws Asn1DecodingException {
+                                       boolean isUnencodedContainer) throws Asn1DecodingException {
         List<AnnotatedField> fields = getAnnotatedFields(containerClass);
         Collections.sort(
                 fields, (f1, f2) -> f1.getAnnotation().index() - f2.getAnnotation().index());
@@ -333,7 +331,7 @@ public final class Asn1BerParser {
     private static Class<?> getElementType(Field field)
             throws Asn1DecodingException, ClassNotFoundException {
         String type = field.getGenericType().getTypeName();
-        int delimiterIndex =  type.indexOf('<');
+        int delimiterIndex = type.indexOf('<');
         if (delimiterIndex == -1) {
             throw new Asn1DecodingException("Not a container type: " + field.getGenericType());
         }
@@ -420,17 +418,17 @@ public final class Asn1BerParser {
                 if ((readTagClass != mBerTagClass) || (readTagNumber != mBerTagNumber)) {
                     throw new Asn1UnexpectedTagException(
                             "Tag mismatch. Expected: "
-                            + BerEncoding.tagClassAndNumberToString(mBerTagClass, mBerTagNumber)
-                            + ", but found "
-                            + BerEncoding.tagClassAndNumberToString(readTagClass, readTagNumber));
+                                    + BerEncoding.tagClassAndNumberToString(mBerTagClass, mBerTagNumber)
+                                    + ", but found "
+                                    + BerEncoding.tagClassAndNumberToString(readTagClass, readTagNumber));
                 }
             } else {
                 if (readTagClass != mBerTagClass) {
                     throw new Asn1UnexpectedTagException(
                             "Tag mismatch. Expected class: "
-                            + BerEncoding.tagClassToString(mBerTagClass)
-                            + ", but found "
-                            + BerEncoding.tagClassToString(readTagClass));
+                                    + BerEncoding.tagClassToString(mBerTagClass)
+                                    + ", but found "
+                                    + BerEncoding.tagClassToString(readTagClass));
                 }
             }
 
@@ -508,9 +506,9 @@ public final class Asn1BerParser {
     private static int integerToInt(ByteBuffer encoded) throws Asn1DecodingException {
         BigInteger value = integerToBigInteger(encoded);
         if (value.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) < 0
-            || value.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
+                || value.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
             throw new Asn1DecodingException(
-                String.format("INTEGER cannot be represented as int: %1$d (0x%1$x)", value));
+                    String.format("INTEGER cannot be represented as int: %1$d (0x%1$x)", value));
         }
         return value.intValue();
     }
@@ -520,7 +518,7 @@ public final class Asn1BerParser {
         if (value.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0
                 || value.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
             throw new Asn1DecodingException(
-                String.format("INTEGER cannot be represented as long: %1$d (0x%1$x)", value));
+                    String.format("INTEGER cannot be represented as long: %1$d (0x%1$x)", value));
         }
         return value.longValue();
     }
@@ -555,11 +553,12 @@ public final class Asn1BerParser {
     }
 
     private static final class BerToJavaConverter {
-        private BerToJavaConverter() {}
+        private BerToJavaConverter() {
+        }
 
         public static void setFieldValue(
                 Object obj, Field field, Asn1Type type, BerDataValue dataValue)
-                        throws Asn1DecodingException {
+                throws Asn1DecodingException {
             try {
                 switch (type) {
                     case SET_OF:
@@ -642,8 +641,7 @@ public final class Asn1BerParser {
                         return (T) new Boolean(result);
                     }
                     break;
-                case SEQUENCE:
-                {
+                case SEQUENCE: {
                     Asn1Class containerAnnotation =
                             targetType.getDeclaredAnnotation(Asn1Class.class);
                     if ((containerAnnotation != null)
@@ -652,8 +650,7 @@ public final class Asn1BerParser {
                     }
                     break;
                 }
-                case CHOICE:
-                {
+                case CHOICE: {
                     Asn1Class containerAnnotation =
                             targetType.getDeclaredAnnotation(Asn1Class.class);
                     if ((containerAnnotation != null)

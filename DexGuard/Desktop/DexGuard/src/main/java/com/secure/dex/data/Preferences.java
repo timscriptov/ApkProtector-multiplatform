@@ -5,10 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.secure.dex.data.gson.Config;
 import com.secure.dex.data.gson.ConfigTemp;
 import com.secure.dex.utils.FileUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -97,19 +95,6 @@ public class Preferences {
         return null;
     }
 
-    public static @Nullable String getDexDir() {
-        switch (Preferences.getTypeHideApkProtector()) {
-            case 0: // Disabled
-                return Constants.DEX_DIR;
-            case 1: // Custom
-                return config().hideApkProtector.dexDir;
-            case 2: // Random
-            case 3: // Random
-                return configTemp().dexDir;
-        }
-        return null;
-    }
-
     public static @Nullable String getDexSuffix() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
@@ -119,45 +104,6 @@ public class Preferences {
                 return config().hideApkProtector.dexSuffix;
             case 2: // Random
                 return configTemp().dexSuffix;
-        }
-        return null;
-    }
-
-    public static @Nullable String getDirOpt() {
-        switch (Preferences.getTypeHideApkProtector()) {
-            case 0: // Disabled
-                return Constants.DIR_OPT;
-            case 1: // Custom
-            case 3: // Custom
-                return config().hideApkProtector.dirOpt;
-            case 2: // Random
-                return configTemp().dirOpt;
-        }
-        return null;
-    }
-
-    public static @Nullable String getMRealApp() {
-        switch (Preferences.getTypeHideApkProtector()) {
-            case 0: // Disabled
-                return Constants.REAL_APP;
-            case 1: // Custom
-            case 3: // Custom
-                return config().hideApkProtector.realApp;
-            case 2: // Random
-                return configTemp().realApp;
-        }
-        return null;
-    }
-
-    public static @Nullable String getMProtectKey() {
-        switch (Preferences.getTypeHideApkProtector()) {
-            case 0: // Disabled
-                return Constants.PROTECT_KEY;
-            case 1: // Custom
-            case 3: // Custom
-                return config().hideApkProtector.protectKey;
-            case 2: // Random
-                return configTemp().protectKey;
         }
         return null;
     }

@@ -2,9 +2,12 @@ package com.secure.dex.fastzip;
 
 import com.secure.dex.data.Constants;
 import com.secure.dex.data.Preferences;
+import com.secure.dex.patchers.DexPatcher;
 import com.secure.dex.utils.FileUtils;
 import com.secure.dex.utils.LoggerUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -13,6 +16,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class FastZip {
+
+    public static final String[] n = {".arsc", ".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
 
     public static void extract(File zip, @NotNull File extractDir) throws IOException {
         extractDir.mkdirs();
@@ -23,6 +28,7 @@ public class FastZip {
             ZipEntry entry = entries.nextElement();
             LoggerUtils.writeLog("Entry: " + entry.getName());
             String name = entry.getName();
+
             //extract only manifest and dex files
             if (name.equals("AndroidManifest.xml")
                     || name.matches("classes\\.dex")
@@ -38,6 +44,7 @@ public class FastZip {
                 while ((len = bis.read(buffer)) > 0) {
                     fos.write(buffer, 0, len);
                 }
+                fos.close();
                 LoggerUtils.writeLog("Success extract: " + extractDir.getAbsolutePath() + File.separator + entry.getName());
             }
         }
@@ -56,7 +63,7 @@ public class FastZip {
         //pack other patched files
         String[] files = new File(Constants.OUTPUT_PATH).list();
 
-        for (String file: files) {
+        for (String file : files) {
             if (file.endsWith("assets") || file.endsWith(".dex")) continue;
             file = file.replace(Constants.OUTPUT_PATH + File.separator, "");
             LoggerUtils.writeLog("Entry: " + file);
@@ -65,6 +72,7 @@ public class FastZip {
             int len = 0;
             ZipEntry newEntry =
                     new ZipEntry(file);
+
             fzos.putNextEntry(newEntry);
 
             while ((len = bis.read(buffer)) > 0) {
@@ -75,13 +83,13 @@ public class FastZip {
 
         //pack dexes
         File[] dexes = new File(Constants.ASSETS_PATH).listFiles();
-        for (File f: dexes) {
+        for (File f : dexes) {
             if (f.isDirectory()) continue;
             String file = f.getAbsolutePath();
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-            file = file.replace(Constants.ASSETS_PATH, "assets/dp-lib")
-                    .replace("dp-lib\\", "dp-lib/")
-                    .replace("dp-lib", Preferences.getAssetsDirDex())
+            file = file.replace(Constants.ASSETS_PATH, "assets/protector")
+                    .replace("protector\\", "protector/")
+                    .replace("protector", Preferences.getAssetsDirDex())
                     .replace("classes-v", Preferences.getDexPrefix());
             LoggerUtils.writeLog("Entry: " + file);
             byte[] buffer = new byte[2048];
@@ -98,20 +106,15 @@ public class FastZip {
         //repack files from original apk
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            String name = entry.getName();
 
-            //if (name.startsWith("META-INF/")) continue;
-            if (name.equals("resources.arsc")
-                    || name.endsWith(".png")
-                    || name.endsWith(".jpg")
-                    || name.endsWith(".webp")
-                    || name.endsWith(".ogg")
-                    || name.endsWith(".mp3")
-                    || name.endsWith(".wav")
-                    && !entry.isDirectory()) {
-                fzos.setLevel(ZipOutputStream.STORED);
-            } else {
-                fzos.setLevel(ZipOutputStream.DEFLATED);
+            String name = entry.getName();
+            if (name.startsWith("META-INF/")) continue;
+            for (String endsWith : n) {
+                if (name.equals(endsWith) && !entry.isDirectory()) {
+                    fzos.setLevel(ZipEntry.STORED);
+                } else {
+                    fzos.setLevel(ZipEntry.DEFLATED);
+                }
             }
 
             if (name.equals("AndroidManifest.xml")
@@ -121,7 +124,7 @@ public class FastZip {
                 continue;
             }
 
-            for (String file1: files) {
+            for (String file1 : files) {
                 file1 = file1.replace(FileUtils.getHomePath() + File.separator, "");
                 if (file1.equals(name)) continue;
             }
@@ -131,12 +134,14 @@ public class FastZip {
 
         //pack dexloader
         LoggerUtils.writeLog("Entry: classes.dex");
-        FileInputStream fis = new FileInputStream(Constants.DEXLOADER_PATH);
+        DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Constants.DEXLOADER_PATH)));
+        byte[] dexData = DexPatcher.patchDex(dex);
+        ByteArrayInputStream bis = new ByteArrayInputStream(dexData);
         byte[] buffer = new byte[2048];
         int len = 0;
         fzos.putNextEntry(new ZipEntry("classes.dex"));
-        while ((len = fis.read(buffer)) > 0) {
-             fzos.write(buffer, 0, len);
+        while ((len = bis.read(buffer)) > 0) {
+            fzos.write(buffer, 0, len);
         }
         fzos.closeEntry();
 

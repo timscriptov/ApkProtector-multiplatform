@@ -22,10 +22,14 @@ import java.util.Comparator;
  * Digest algorithm used with JAR signing (aka v1 signing scheme).
  */
 public enum DigestAlgorithm {
-    /** SHA-1 */
+    /**
+     * SHA-1
+     */
     SHA1("SHA-1"),
 
-    /** SHA2-256 */
+    /**
+     * SHA2-256
+     */
     SHA256("SHA-256");
 
     private final String mJcaMessageDigestAlgorithm;

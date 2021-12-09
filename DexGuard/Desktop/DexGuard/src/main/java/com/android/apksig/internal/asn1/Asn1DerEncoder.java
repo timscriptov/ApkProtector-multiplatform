@@ -36,19 +36,19 @@ import java.util.List;
  * containing fields annotated with {@link Asn1Field}.
  */
 public final class Asn1DerEncoder {
-    private Asn1DerEncoder() {}
+    private Asn1DerEncoder() {
+    }
 
     /**
      * Returns the DER-encoded form of the provided ASN.1 structure.
      *
      * @param container container to be encoded. The container's class must meet the following
-     *        requirements:
-     *        <ul>
-     *        <li>The class must be annotated with {@link Asn1Class}.</li>
-     *        <li>Member fields of the class which are to be encoded must be annotated with
-     *            {@link Asn1Field} and be public.</li>
-     *        </ul>
-     *
+     *                  requirements:
+     *                  <ul>
+     *                  <li>The class must be annotated with {@link Asn1Class}.</li>
+     *                  <li>Member fields of the class which are to be encoded must be annotated with
+     *                      {@link Asn1Field} and be public.</li>
+     *                  </ul>
      * @throws Asn1EncodingException if the input could not be encoded
      */
     public static byte[] encode(Object container) throws Asn1EncodingException {
@@ -194,20 +194,20 @@ public final class Asn1DerEncoder {
      * be smaller than the smallest possible value for an element.
      */
     private static class ByteArrayLexicographicComparator implements Comparator<byte[]> {
-            private static final ByteArrayLexicographicComparator INSTANCE =
-                    new ByteArrayLexicographicComparator();
+        private static final ByteArrayLexicographicComparator INSTANCE =
+                new ByteArrayLexicographicComparator();
 
-            @Override
-            public int compare(byte[] arr1, byte[] arr2) {
-                int commonLength = Math.min(arr1.length, arr2.length);
-                for (int i = 0; i < commonLength; i++) {
-                    int diff = (arr1[i] & 0xff) - (arr2[i] & 0xff);
-                    if (diff != 0) {
-                        return diff;
-                    }
+        @Override
+        public int compare(byte[] arr1, byte[] arr2) {
+            int commonLength = Math.min(arr1.length, arr2.length);
+            for (int i = 0; i < commonLength; i++) {
+                int diff = (arr1[i] & 0xff) - (arr2[i] & 0xff);
+                if (diff != 0) {
+                    return diff;
                 }
-                return arr1.length - arr2.length;
             }
+            return arr1.length - arr2.length;
+        }
     }
 
     private static List<AnnotatedField> getAnnotatedFields(Object container)
@@ -497,7 +497,8 @@ public final class Asn1DerEncoder {
     }
 
     private static final class JavaToDerConverter {
-        private JavaToDerConverter() {}
+        private JavaToDerConverter() {
+        }
 
         public static byte[] toDer(Object source, Asn1Type targetType, Asn1Type targetElementType)
                 throws Asn1EncodingException {
@@ -558,8 +559,7 @@ public final class Asn1DerEncoder {
                         return toOid((String) source);
                     }
                     break;
-                case SEQUENCE:
-                {
+                case SEQUENCE: {
                     Asn1Class containerAnnotation =
                             sourceType.getDeclaredAnnotation(Asn1Class.class);
                     if ((containerAnnotation != null)
@@ -568,8 +568,7 @@ public final class Asn1DerEncoder {
                     }
                     break;
                 }
-                case CHOICE:
-                {
+                case CHOICE: {
                     Asn1Class containerAnnotation =
                             sourceType.getDeclaredAnnotation(Asn1Class.class);
                     if ((containerAnnotation != null)
@@ -590,7 +589,10 @@ public final class Asn1DerEncoder {
                     "Unsupported conversion: " + sourceType.getName() + " to ASN.1 " + targetType);
         }
     }
-    /** ASN.1 DER-encoded {@code NULL}. */
+
+    /**
+     * ASN.1 DER-encoded {@code NULL}.
+     */
     public static final Asn1OpaqueObject ASN1_DER_NULL =
-            new Asn1OpaqueObject(new byte[] {BerEncoding.TAG_NUMBER_NULL, 0});
+            new Asn1OpaqueObject(new byte[]{BerEncoding.TAG_NUMBER_NULL, 0});
 }

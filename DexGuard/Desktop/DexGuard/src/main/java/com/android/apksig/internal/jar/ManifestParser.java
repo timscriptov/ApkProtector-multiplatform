@@ -295,8 +295,8 @@ public class ManifestParser {
          * Constructs a new {@code Section}.
          *
          * @param startOffset start offset (in bytes) of the section in the input file
-         * @param sizeBytes size (in bytes) of the section in the input file
-         * @param attrs attributes contained in the section
+         * @param sizeBytes   size (in bytes) of the section in the input file
+         * @param attrs       attributes contained in the section
          */
         public Section(int startOffset, int sizeBytes, List<Attribute> attrs) {
             mStartOffset = startOffset;

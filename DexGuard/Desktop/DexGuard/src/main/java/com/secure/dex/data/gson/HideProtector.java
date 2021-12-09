@@ -21,9 +21,4 @@ public class HideProtector {
     public String dirOpt;
     @SerializedName("assetsDirDex")
     public String assetsDirDex;
-
-    @SerializedName("realApp")
-    public String realApp;
-    @SerializedName("protectKey")
-    public String protectKey;
 }

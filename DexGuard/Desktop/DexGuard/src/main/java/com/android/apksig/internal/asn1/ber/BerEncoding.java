@@ -23,7 +23,8 @@ import com.android.apksig.internal.asn1.Asn1TagClass;
  * ASN.1 Basic Encoding Rules (BER) constants and helper methods. See {@code X.690}.
  */
 public abstract class BerEncoding {
-    private BerEncoding() {}
+    private BerEncoding() {
+    }
 
     /**
      * Constructed vs primitive flag in the first identifier byte.

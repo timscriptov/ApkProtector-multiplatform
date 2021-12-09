@@ -218,8 +218,8 @@ public abstract class V4SchemeVerifier {
     }
 
     private static void verifyRootHashAndTree(DataSource apkContent,
-            ApkSigningBlockUtils.Result.SignerInfo signerInfo, byte[] expectedDigest,
-            byte[] expectedTree) throws IOException, NoSuchAlgorithmException {
+                                              ApkSigningBlockUtils.Result.SignerInfo signerInfo, byte[] expectedDigest,
+                                              byte[] expectedTree) throws IOException, NoSuchAlgorithmException {
         ApkSigningBlockUtils.VerityTreeAndDigest actualContentDigestInfo =
                 ApkSigningBlockUtils.computeChunkVerityTreeAndDigest(apkContent);
 

@@ -846,10 +846,10 @@ public class ApkVerifier {
      * returned.
      */
     private ApkSigningBlockUtils.Result getApkContentDigests(DataSource apk,
-            ApkUtils.ZipSections zipSections, Set<Integer> foundApkSigSchemeIds,
-            Map<Integer, String> supportedSchemeNames,
-            Map<Integer, Map<ContentDigestAlgorithm, byte[]>> sigSchemeApkContentDigests,
-            int apkSigSchemeVersion, int minSdkVersion)
+                                                             ApkUtils.ZipSections zipSections, Set<Integer> foundApkSigSchemeIds,
+                                                             Map<Integer, String> supportedSchemeNames,
+                                                             Map<Integer, Map<ContentDigestAlgorithm, byte[]>> sigSchemeApkContentDigests,
+                                                             int apkSigSchemeVersion, int minSdkVersion)
             throws IOException, NoSuchAlgorithmException {
         if (!(apkSigSchemeVersion == VERSION_APK_SIGNATURE_SCHEME_V2
                 || apkSigSchemeVersion == VERSION_APK_SIGNATURE_SCHEME_V3)) {
@@ -896,7 +896,7 @@ public class ApkVerifier {
     }
 
     private static void checkV4Certificate(List<X509Certificate> v4Certs,
-            List<X509Certificate> v2v3Certs, Result result) {
+                                           List<X509Certificate> v2v3Certs, Result result) {
         try {
             byte[] v4Cert = v4Certs.get(0).getEncoded();
             byte[] cert = v2v3Certs.get(0).getEncoded();
@@ -1622,17 +1622,29 @@ public class ApkVerifier {
          */
         public static class SourceStampInfo {
             public enum SourceStampVerificationStatus {
-                /** The stamp is present and was successfully verified. */
+                /**
+                 * The stamp is present and was successfully verified.
+                 */
                 STAMP_VERIFIED,
-                /** The stamp is present but failed verification. */
+                /**
+                 * The stamp is present but failed verification.
+                 */
                 STAMP_VERIFICATION_FAILED,
-                /** The expected cert digest did not match the digest in the APK. */
+                /**
+                 * The expected cert digest did not match the digest in the APK.
+                 */
                 CERT_DIGEST_MISMATCH,
-                /** The stamp is not present at all. */
+                /**
+                 * The stamp is not present at all.
+                 */
                 STAMP_MISSING,
-                /** The stamp is at least partially present, but was not able to be verified. */
+                /**
+                 * The stamp is at least partially present, but was not able to be verified.
+                 */
                 STAMP_NOT_VERIFIED,
-                /** The stamp was not able to be verified due to an unexpected error. */
+                /**
+                 * The stamp was not able to be verified due to an unexpected error.
+                 */
                 VERIFICATION_ERROR
             }
 
@@ -1761,7 +1773,9 @@ public class ApkVerifier {
         JAR_SIG_UNNNAMED_SIG_FILE_SECTION(
                 "Malformed %1$s: invidual section #%2$d does not have a name"),
 
-        /** APK is missing the JAR manifest entry (META-INF/MANIFEST.MF). */
+        /**
+         * APK is missing the JAR manifest entry (META-INF/MANIFEST.MF).
+         */
         JAR_SIG_NO_MANIFEST("Missing META-INF/MANIFEST.MF"),
 
         /**
@@ -2689,7 +2703,9 @@ public class ApkVerifier {
                 "Neither the source stamp certificate digest file nor the signature block are "
                         + "present in the APK"),
 
-        /** APK contains SourceStamp file, but does not contain a SourceStamp signature. */
+        /**
+         * APK contains SourceStamp file, but does not contain a SourceStamp signature.
+         */
         SOURCE_STAMP_SIG_MISSING("No SourceStamp signature"),
 
         /**
@@ -2701,7 +2717,9 @@ public class ApkVerifier {
          */
         SOURCE_STAMP_MALFORMED_CERTIFICATE("Malformed certificate: %1$s"),
 
-        /** Failed to parse SourceStamp's signature. */
+        /**
+         * Failed to parse SourceStamp's signature.
+         */
         SOURCE_STAMP_MALFORMED_SIGNATURE("Malformed SourceStamp signature"),
 
         /**
@@ -2732,7 +2750,9 @@ public class ApkVerifier {
          */
         SOURCE_STAMP_DID_NOT_VERIFY("%1$s signature over signed-data did not verify"),
 
-        /** SourceStamp offers no signatures. */
+        /**
+         * SourceStamp offers no signatures.
+         */
         SOURCE_STAMP_NO_SIGNATURE("No signature"),
 
         /**

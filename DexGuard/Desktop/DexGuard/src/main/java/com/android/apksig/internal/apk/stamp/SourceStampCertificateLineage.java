@@ -23,6 +23,7 @@ import com.android.apksig.apk.ApkFormatException;
 import com.android.apksig.internal.apk.ApkSigningBlockUtilsLite;
 import com.android.apksig.internal.apk.SignatureAlgorithm;
 import com.android.apksig.internal.util.GuaranteedEncodedFormX509Certificate;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
@@ -42,7 +43,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-/** Lightweight version of the V3SigningCertificateLineage to be used for source stamps. */
+/**
+ * Lightweight version of the V3SigningCertificateLineage to be used for source stamps.
+ */
 public class SourceStampCertificateLineage {
 
     private final static int FIRST_VERSION = 1;
@@ -128,7 +131,7 @@ public class SourceStampCertificateLineage {
                             + nodeBytes + " when verifying SourceStampCertificateLineage object");
                 }
                 lastCert = (X509Certificate) certFactory.generateCertificate(
-                    new ByteArrayInputStream(encodedCert));
+                        new ByteArrayInputStream(encodedCert));
                 lastCert = new GuaranteedEncodedFormX509Certificate(lastCert, encodedCert);
                 if (certHistorySet.contains(lastCert)) {
                     throw new SecurityException("Encountered duplicate entries in "
@@ -141,14 +144,14 @@ public class SourceStampCertificateLineage {
                         lastCert, SignatureAlgorithm.findById(signedSigAlgorithm),
                         SignatureAlgorithm.findById(sigAlgorithmId), signature, flags));
             }
-        } catch(ApkFormatException | BufferUnderflowException e){
+        } catch (ApkFormatException | BufferUnderflowException e) {
             throw new IOException("Failed to parse SourceStampCertificateLineage object", e);
-        } catch(NoSuchAlgorithmException | InvalidKeyException
-                | InvalidAlgorithmParameterException | SignatureException e){
+        } catch (NoSuchAlgorithmException | InvalidKeyException
+                | InvalidAlgorithmParameterException | SignatureException e) {
             throw new SecurityException(
                     "Failed to verify signature over signed data for certificate #" + nodeCount
                             + " when parsing SourceStampCertificateLineage object", e);
-        } catch(CertificateException e){
+        } catch (CertificateException e) {
             throw new SecurityException("Failed to decode certificate #" + nodeCount
                     + " when parsing SourceStampCertificateLineage object", e);
         }
@@ -196,7 +199,7 @@ public class SourceStampCertificateLineage {
             int result = 1;
             result = prime * result + ((signingCert == null) ? 0 : signingCert.hashCode());
             result = prime * result +
-                ((parentSigAlgorithm == null) ? 0 : parentSigAlgorithm.hashCode());
+                    ((parentSigAlgorithm == null) ? 0 : parentSigAlgorithm.hashCode());
             result = prime * result + ((sigAlgorithm == null) ? 0 : sigAlgorithm.hashCode());
             result = prime * result + Arrays.hashCode(signature);
             result = prime * result + flags;

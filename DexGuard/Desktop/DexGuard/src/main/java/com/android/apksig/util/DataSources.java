@@ -18,6 +18,7 @@ package com.android.apksig.util;
 
 import com.android.apksig.internal.util.ByteBufferDataSource;
 import com.android.apksig.internal.util.FileChannelDataSource;
+
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -26,7 +27,8 @@ import java.nio.channels.FileChannel;
  * Utility methods for working with {@link DataSource} abstraction.
  */
 public abstract class DataSources {
-    private DataSources() {}
+    private DataSources() {
+    }
 
     /**
      * Returns a {@link DataSource} backed by the provided {@link ByteBuffer}. The data source

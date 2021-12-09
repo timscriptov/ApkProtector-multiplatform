@@ -5,6 +5,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+/**
+ * 反射相关的工具类
+ *
+ * @author linchaolong
+ */
 public class Reflect {
 
     /**
@@ -33,7 +38,6 @@ public class Reflect {
         }
         throw new NoSuchFieldException("Field " + name + " not found in " + instance.getClass());
     }
-
 
     /**
      * 反射获得 指定对象(当前-》父类-》父类...)中的 函数
@@ -80,7 +84,7 @@ public class Reflect {
             method.setAccessible(true); // 暴力反射
             // 调用方法并返回结果
             return method.invoke(obj, args);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;
@@ -186,23 +190,48 @@ public class Reflect {
             Class<?> clazz = Class.forName(className);
             setFieldValue(clazz, obj, fieldName, value);
             return true;
-        } catch (ClassNotFoundException | IllegalArgumentException e) {
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
         return false;
     }
 
     /**
-     * 根据类名实例化一个对象
+     * 设置类的属性（包括私有和保护）
      *
-     * @param className 类名
-     * @return 对象实例，如果实例化失败返回null
+     * @param classname
+     * @param filedName
+     * @param obj
+     * @param filedVaule
      */
-    public static Object newInstance(String className) {
+    public static void setFieldOjbect(String classname, String filedName, Object obj, Object filedVaule) {
         try {
-            Class<?> clazz = Class.forName(className);
-            return clazz.newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            Class<?> obj_class = Class.forName(classname);
+            Field field = obj_class.getDeclaredField(filedName);
+            field.setAccessible(true);
+            field.set(obj, filedVaule);
+        } catch (SecurityException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 反射得到类的属性（包括私有和保护）
+     *
+     * @param class_name
+     * @param obj
+     * @param filedName
+     * @return
+     */
+    public static Object getFieldOjbect(String class_name, Object obj, String filedName) {
+        try {
+            Class<?> obj_class = Class.forName(class_name);
+            Field field = obj_class.getDeclaredField(filedName);
+            field.setAccessible(true);
+            return field.get(obj);
+        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;

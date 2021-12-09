@@ -73,6 +73,7 @@ public class ApkSigner {
 
     public interface LogCallback {
         AtomicInteger errorCount = new AtomicInteger(0);
+
         void onNewLineLogged(String line);
     }
 

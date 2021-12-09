@@ -38,7 +38,8 @@ import java.util.zip.Deflater;
  * order of these buffers is little-endian.
  */
 public abstract class ZipUtils {
-    private ZipUtils() {}
+    private ZipUtils() {
+    }
 
     public static final short COMPRESSION_METHOD_STORED = 0;
     public static final short COMPRESSION_METHOD_DEFLATED = 8;
@@ -111,8 +112,7 @@ public abstract class ZipUtils {
      * Returns the ZIP End of Central Directory record of the provided ZIP file.
      *
      * @return contents of the ZIP End of Central Directory record and the record's offset in the
-     *         file or {@code null} if the file does not contain the record.
-     *
+     * file or {@code null} if the file does not contain the record.
      * @throws IOException if an I/O error occurs while reading the file.
      */
     public static Pair<ByteBuffer, Long> findZipEndOfCentralDirectoryRecord(DataSource zip)
@@ -150,12 +150,10 @@ public abstract class ZipUtils {
      * Returns the ZIP End of Central Directory record of the provided ZIP file.
      *
      * @param maxCommentSize maximum accepted size (in bytes) of EoCD comment field. The permitted
-     *        value is from 0 to 65535 inclusive. The smaller the value, the faster this method
-     *        locates the record, provided its comment field is no longer than this value.
-     *
+     *                       value is from 0 to 65535 inclusive. The smaller the value, the faster this method
+     *                       locates the record, provided its comment field is no longer than this value.
      * @return contents of the ZIP End of Central Directory record and the record's offset in the
-     *         file or {@code null} if the file does not contain the record.
-     *
+     * file or {@code null} if the file does not contain the record.
      * @throws IOException if an I/O error occurs while reading the file.
      */
     private static Pair<ByteBuffer, Long> findZipEndOfCentralDirectoryRecord(
@@ -224,7 +222,7 @@ public abstract class ZipUtils {
         int maxCommentLength = Math.min(archiveSize - ZIP_EOCD_REC_MIN_SIZE, UINT16_MAX_VALUE);
         int eocdWithEmptyCommentStartPosition = archiveSize - ZIP_EOCD_REC_MIN_SIZE;
         for (int expectedCommentLength = 0; expectedCommentLength <= maxCommentLength;
-                expectedCommentLength++) {
+             expectedCommentLength++) {
             int eocdStartPos = eocdWithEmptyCommentStartPosition - expectedCommentLength;
             if (zipContents.getInt(eocdStartPos) == ZIP_EOCD_REC_SIG) {
                 int actualCommentLength =

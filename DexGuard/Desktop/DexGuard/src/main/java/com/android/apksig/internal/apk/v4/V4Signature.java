@@ -72,7 +72,7 @@ public class V4Signature {
         public final byte[] signature;
 
         SigningInfo(byte[] apkDigest, byte[] certificate, byte[] additionalData,
-                byte[] publicKey, int signatureAlgorithmId, byte[] signature) {
+                    byte[] publicKey, int signatureAlgorithmId, byte[] signature) {
             this.apkDigest = apkDigest;
             this.certificate = certificate;
             this.additionalData = additionalData;

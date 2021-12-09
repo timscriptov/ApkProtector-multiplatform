@@ -2,23 +2,20 @@ package com.secure.dex;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.secure.dex.data.gson.ConfigTemp;
 import com.secure.dex.data.Constants;
+import com.secure.dex.data.gson.ConfigTemp;
 import com.secure.dex.fastzip.FastZip;
-import com.secure.dex.patchers.DexPatcher;
+import com.secure.dex.patchers.DexCrypto;
 import com.secure.dex.patchers.ManifestPatcher;
 import com.secure.dex.signer.ApkSigner;
 import com.secure.dex.utils.CommonUtils;
-import com.secure.dex.patchers.DexCrypto;
 import com.secure.dex.utils.FileUtils;
 import com.secure.dex.utils.LoggerUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 public class Main {
     public static void main(String @NotNull ... args) {
@@ -65,19 +62,17 @@ public class Main {
             FastZip.extract(apkPath, Constants.OUTPUT_PATH);
             LoggerUtils.writeLog("Success unpack: " + apkPath);
 
-            ManifestPatcher.parseManifest();
+            ByteArrayInputStream bis = new ByteArrayInputStream(ManifestPatcher.parseManifest());
+            FileOutputStream fos = new FileOutputStream(Constants.MANIFEST_PATH);
+            byte[] buffer = new byte[2048];
+            int len = 0;
+            while ((len = bis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+            fos.close();
+            LoggerUtils.writeLog("Success patch: " + Constants.MANIFEST_PATH);
 
             DexCrypto.encodeDexes();
-            LoggerUtils.writeLog("Dex files successful encrypted");
-
-            try {
-                DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Constants.DEXLOADER_PATH)));
-                byte[] dexData = DexPatcher.patchDex(dex);
-                FileUtils.byteToFile(Constants.OUTPUT_PATH + File.separator + "classes.dex", dexData);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
             LoggerUtils.writeLog("Dex files successful encrypted");
 
             FastZip.repack(apkPath, Constants.UNSIGNED_PATH);
@@ -104,10 +99,8 @@ public class Main {
 
     private static void generateRandom() {
         ConfigTemp config = new ConfigTemp();
-        config.protectKey = CommonUtils.generateRandomString(Constants.PROTECT_KEY);
-        config.realApp = CommonUtils.generateRandomString(Constants.REAL_APP);
         config.packageName = CommonUtils.generateRandomString(Constants.PACKAGE_NAME);
-        config.dexDir = CommonUtils.generateRandomString(Constants.DEX_DIR);
+        config.assetsDirDex = CommonUtils.generateRandomString(Constants.ASSETS_DIR_DEX);
         config.dexPrefix = CommonUtils.generateRandomString(Constants.DEX_PREFIX);
         config.dexSuffix = CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
         config.proxyApp = CommonUtils.generateRandomString(Constants.PROXY_APP);

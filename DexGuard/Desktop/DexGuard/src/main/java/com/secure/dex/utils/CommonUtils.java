@@ -1,12 +1,9 @@
 package com.secure.dex.utils;
 
 import com.secure.dex.data.Preferences;
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class CommonUtils {

@@ -95,13 +95,13 @@ public class VerityTreeBuilder implements AutoCloseable {
 
     /**
      * Returns the root hash of the APK verity tree built from ZIP blocks.
-     *
+     * <p>
      * Specifically, APK verity tree is built from the APK, but as if the APK Signing Block (which
      * must be page aligned) and the "Central Directory offset" field in End of Central Directory
      * are skipped.
      */
     public byte[] generateVerityTreeRootHash(DataSource beforeApkSigningBlock,
-            DataSource centralDir, DataSource eocd) throws IOException {
+                                             DataSource centralDir, DataSource eocd) throws IOException {
         if (beforeApkSigningBlock.size() % CHUNK_SIZE != 0) {
             throw new IllegalStateException("APK Signing Block size not a multiple of " + CHUNK_SIZE
                     + ": " + beforeApkSigningBlock.size());
@@ -118,7 +118,7 @@ public class VerityTreeBuilder implements AutoCloseable {
         ZipUtils.setZipEocdCentralDirectoryOffset(eocdBuf, centralDirOffsetForDigesting);
 
         return generateVerityTreeRootHash(new ChainedDataSource(beforeApkSigningBlock, centralDir,
-                    DataSources.asDataSource(eocdBuf)));
+                DataSources.asDataSource(eocdBuf)));
     }
 
     /**
@@ -131,14 +131,14 @@ public class VerityTreeBuilder implements AutoCloseable {
 
     /**
      * Returns the byte buffer that contains the whole verity tree.
-     *
+     * <p>
      * The tree is built bottom up. The bottom level has 256-bit digest for each 4 KB block in the
      * input file.  If the total size is larger than 4 KB, take this level as input and repeat the
      * same procedure, until the level is within 4 KB.  If salt is given, it will apply to each
      * digestion before the actual data.
-     *
+     * <p>
      * The returned root hash is calculated from the last level of 4 KB chunk, similarly with salt.
-     *
+     * <p>
      * The tree is currently stored only in memory and is never written out.  Nevertheless, it is
      * the actual verity tree format on disk, and is supposed to be re-generated on device.
      */
@@ -250,7 +250,7 @@ public class VerityTreeBuilder implements AutoCloseable {
             Runnable task = () -> {
                 final MessageDigest md = cloneMessageDigest();
                 for (int offset = 0, finish = buffer.capacity(), chunkIndex = readChunkIndex;
-                        offset < finish; offset += CHUNK_SIZE, ++chunkIndex) {
+                     offset < finish; offset += CHUNK_SIZE, ++chunkIndex) {
                     ByteBuffer chunk = slice(buffer, offset, offset + CHUNK_SIZE);
                     hashes[chunkIndex] = saltedDigest(md, chunk);
                 }
@@ -272,7 +272,9 @@ public class VerityTreeBuilder implements AutoCloseable {
         }
     }
 
-    /** Returns the digest of data with salt prepended. */
+    /**
+     * Returns the digest of data with salt prepended.
+     */
     private byte[] saltedDigest(ByteBuffer data) {
         return saltedDigest(mMd, data);
     }
@@ -286,12 +288,16 @@ public class VerityTreeBuilder implements AutoCloseable {
         return md.digest();
     }
 
-    /** Divides a number and round up to the closest integer. */
+    /**
+     * Divides a number and round up to the closest integer.
+     */
     private static long divideRoundup(long dividend, long divisor) {
         return (dividend + divisor - 1) / divisor;
     }
 
-    /** Returns a slice of the buffer with shared the content. */
+    /**
+     * Returns a slice of the buffer with shared the content.
+     */
     private static ByteBuffer slice(ByteBuffer buffer, int begin, int end) {
         ByteBuffer b = buffer.duplicate();
         b.position(0);  // to ensure position <= limit invariant.

@@ -3,6 +3,6 @@
 -dontshrink
 -dontoptimize
 #-dontobfuscate
--obfuscationdictionary g.txt
--packageobfuscationdictionary g.txt
--classobfuscationdictionary g.txt
+#-obfuscationdictionary g.txt
+#-packageobfuscationdictionary g.txt
+#-classobfuscationdictionary g.txt

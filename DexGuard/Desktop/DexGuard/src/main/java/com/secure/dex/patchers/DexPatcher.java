@@ -39,11 +39,9 @@ public class DexPatcher {
             while (matcher.find())
                 smaliData = smaliData.replaceFirst(matcher.group(), Preferences.getPackageName().replace(".", matcher.group(1)));
             smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
-                    .replace("$DIR_DEX", enc(Preferences.getDexDir()))
                     .replace("$ASSETS_DIR_DEX", enc(Preferences.getAssetsDirDex()))
                     .replace("$DEX_SUFFIX", enc(Preferences.getDexSuffix()))
-                    .replace("$DIR_OPT", enc(Preferences.getDirOpt()))
-                    .replace("ProtectApplication", Preferences.getProxyAppName());
+                    .replace("ProxyApplication", Preferences.getProxyAppName());
             if (ManifestPatcher.customApplication) {
                 LoggerUtils.writeLog("Custom application detected");
                 if (ManifestPatcher.customApplicationName.startsWith(".")) {
@@ -54,9 +52,10 @@ public class DexPatcher {
                     }
                     ManifestPatcher.customApplicationName = ManifestPatcher.packageName + ManifestPatcher.customApplicationName;
                 }
-                smaliData = smaliData.replace("$APPLICATION", ManifestPatcher.customApplicationName);
-            } else smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
-            smaliData = smaliData.replace("ProxyApplication", Preferences.getProxyAppName());
+                smaliData = smaliData.replace("$REAL_APP", ManifestPatcher.customApplicationName);
+            } else {
+                smaliData = smaliData.replace("$REAL_APP", "");
+            }
             Files.writeString(Paths.get(smali.getAbsolutePath()), smaliData, StandardOpenOption.WRITE);
         }
         File outputDex = new File(Constants.OUTPUT_PATH, "classes.dex");

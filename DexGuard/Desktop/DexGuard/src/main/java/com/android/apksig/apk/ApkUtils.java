@@ -43,16 +43,19 @@ public abstract class ApkUtils {
      */
     public static final String ANDROID_MANIFEST_ZIP_ENTRY_NAME = "AndroidManifest.xml";
 
-    /** Name of the SourceStamp certificate hash ZIP entry in APKs. */
+    /**
+     * Name of the SourceStamp certificate hash ZIP entry in APKs.
+     */
     public static final String SOURCE_STAMP_CERTIFICATE_HASH_ZIP_ENTRY_NAME =
             SourceStampConstants.SOURCE_STAMP_CERTIFICATE_HASH_ZIP_ENTRY_NAME;
 
-    private ApkUtils() {}
+    private ApkUtils() {
+    }
 
     /**
      * Finds the main ZIP sections of the provided APK.
      *
-     * @throws IOException if an I/O error occurred while reading the APK
+     * @throws IOException        if an I/O error occurred while reading the APK
      * @throws ZipFormatException if the APK is malformed
      */
     public static ZipSections findZipSections(DataSource apk)
@@ -86,8 +89,8 @@ public abstract class ApkUtils {
      * Directory record.
      *
      * @param zipEndOfCentralDirectory APK's ZIP End of Central Directory record
-     * @param offset offset of the ZIP Central Directory relative to the start of the archive. Must
-     *        be between {@code 0} and {@code 2^32 - 1} inclusive.
+     * @param offset                   offset of the ZIP Central Directory relative to the start of the archive. Must
+     *                                 be between {@code 0} and {@code 2^32 - 1} inclusive.
      */
     public static void setZipEocdCentralDirectoryOffset(
             ByteBuffer zipEndOfCentralDirectory, long offset) {
@@ -99,9 +102,8 @@ public abstract class ApkUtils {
     /**
      * Returns the APK Signing Block of the provided APK.
      *
-     * @throws IOException if an I/O error occurs
+     * @throws IOException                      if an I/O error occurs
      * @throws ApkSigningBlockNotFoundException if there is no APK Signing Block in the APK
-     *
      * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature Scheme v2
      * </a>
      */
@@ -120,8 +122,8 @@ public abstract class ApkUtils {
          * Constructs a new {@code ApkSigningBlock}.
          *
          * @param startOffsetInApk start offset (in bytes, relative to start of file) of the APK
-         *        Signing Block inside the APK file
-         * @param contents contents of the APK Signing Block
+         *                         Signing Block inside the APK file
+         * @param contents         contents of the APK Signing Block
          */
         public ApkSigningBlock(long startOffsetInApk, DataSource contents) {
             super(startOffsetInApk, contents);
@@ -131,7 +133,7 @@ public abstract class ApkUtils {
     /**
      * Returns the contents of the APK's {@code AndroidManifest.xml}.
      *
-     * @throws IOException if an I/O error occurs while reading the APK
+     * @throws IOException        if an I/O error occurs while reading the APK
      * @throws ApkFormatException if the APK is malformed
      */
     public static ByteBuffer getAndroidManifest(DataSource apk)
@@ -204,8 +206,7 @@ public abstract class ApkUtils {
      * provided {@code AndroidManifest.xml}.
      *
      * @param androidManifestContents contents of {@code AndroidManifest.xml} in binary Android
-     *        resource format
-     *
+     *                                resource format
      * @throws MinSdkVersionException if an error occurred while determining the API Level
      */
     public static int getMinSdkVersionFromBinaryAndroidManifest(
@@ -278,21 +279,21 @@ public abstract class ApkUtils {
          */
         @SuppressWarnings({"rawtypes", "unchecked"})
         private static final Pair<Character, Integer>[] SORTED_CODENAMES_FIRST_CHAR_TO_API_LEVEL =
-                new Pair[] {
-            Pair.of('C', 2),
-            Pair.of('D', 3),
-            Pair.of('E', 4),
-            Pair.of('F', 7),
-            Pair.of('G', 8),
-            Pair.of('H', 10),
-            Pair.of('I', 13),
-            Pair.of('J', 15),
-            Pair.of('K', 18),
-            Pair.of('L', 20),
-            Pair.of('M', 22),
-            Pair.of('N', 23),
-            Pair.of('O', 25),
-        };
+                new Pair[]{
+                        Pair.of('C', 2),
+                        Pair.of('D', 3),
+                        Pair.of('E', 4),
+                        Pair.of('F', 7),
+                        Pair.of('G', 8),
+                        Pair.of('H', 10),
+                        Pair.of('I', 13),
+                        Pair.of('J', 15),
+                        Pair.of('K', 18),
+                        Pair.of('L', 20),
+                        Pair.of('M', 22),
+                        Pair.of('N', 23),
+                        Pair.of('O', 25),
+                };
 
         private static final Comparator<Pair<Character, Integer>> CODENAME_FIRST_CHAR_COMPARATOR =
                 new ByFirstComparator();
@@ -366,8 +367,7 @@ public abstract class ApkUtils {
      * See the {@code android:debuggable} attribute of the {@code application} element.
      *
      * @param androidManifestContents contents of {@code AndroidManifest.xml} in binary Android
-     *        resource format
-     *
+     *                                resource format
      * @throws ApkFormatException if the manifest is malformed
      */
     public static boolean getDebuggableFromBinaryAndroidManifest(
@@ -443,8 +443,7 @@ public abstract class ApkUtils {
      * {@code manifest} element.
      *
      * @param androidManifestContents contents of {@code AndroidManifest.xml} in binary Android
-     *        resource format
-     *
+     *                                resource format
      * @throws ApkFormatException if the manifest is malformed
      */
     public static String getPackageNameFromBinaryAndroidManifest(

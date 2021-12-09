@@ -33,12 +33,13 @@ import java.security.NoSuchAlgorithmException;
  * functionality.
  */
 public class ApkUtilsLite {
-    private ApkUtilsLite() {}
+    private ApkUtilsLite() {
+    }
 
     /**
      * Finds the main ZIP sections of the provided APK.
      *
-     * @throws IOException if an I/O error occurred while reading the APK
+     * @throws IOException        if an I/O error occurred while reading the APK
      * @throws ZipFormatException if the APK is malformed
      */
     public static ZipSections findZipSections(DataSource apk)
@@ -86,9 +87,8 @@ public class ApkUtilsLite {
     /**
      * Returns the APK Signing Block of the provided APK.
      *
-     * @throws IOException if an I/O error occurs
+     * @throws IOException                      if an I/O error occurs
      * @throws ApkSigningBlockNotFoundException if there is no APK Signing Block in the APK
-     *
      * @see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature Scheme v2
      * </a>
      */
@@ -162,8 +162,8 @@ public class ApkUtilsLite {
          * Constructs a new {@code ApkSigningBlock}.
          *
          * @param startOffsetInApk start offset (in bytes, relative to start of file) of the APK
-         *        Signing Block inside the APK file
-         * @param contents contents of the APK Signing Block
+         *                         Signing Block inside the APK file
+         * @param contents         contents of the APK Signing Block
          */
         public ApkSigningBlock(long startOffsetInApk, DataSource contents) {
             mStartOffsetInApk = startOffsetInApk;
