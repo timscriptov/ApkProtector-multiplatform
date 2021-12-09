@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class LoggerUtils {
-
     public static void writeLog(String info) {
         System.out.println(info);
         FileWriter fw = null;

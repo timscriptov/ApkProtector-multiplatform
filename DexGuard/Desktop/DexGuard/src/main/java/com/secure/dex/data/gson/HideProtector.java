@@ -7,8 +7,8 @@ public class HideProtector {
     public int type;
     @SerializedName("packageName")
     public String packageName;
-    @SerializedName("dexFolder")
-    public String dexFolder;
+    @SerializedName("dexDir")
+    public String dexDir;
     @SerializedName("dexPrefix")
     public String dexPrefix;
     @SerializedName("dexSuffix")
@@ -17,14 +17,13 @@ public class HideProtector {
     public String proxyApp;
     @SerializedName("alphabet")
     public String alphabet;
+    @SerializedName("dirOpt")
+    public String dirOpt;
+    @SerializedName("assetsDirDex")
+    public String assetsDirDex;
 
-    public HideProtector(int type, String packageName, String dexFolder, String dexPrefix, String dexSuffix, String proxyApp, String alphabet) {
-        this.type = type;
-        this.packageName = packageName;
-        this.dexFolder = dexFolder;
-        this.dexPrefix = dexPrefix;
-        this.dexSuffix = dexSuffix;
-        this.proxyApp = proxyApp;
-        this.alphabet = alphabet;
-    }
+    @SerializedName("realApp")
+    public String realApp;
+    @SerializedName("protectKey")
+    public String protectKey;
 }

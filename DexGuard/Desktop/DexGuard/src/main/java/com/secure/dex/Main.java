@@ -5,17 +5,23 @@ import com.google.gson.GsonBuilder;
 import com.secure.dex.data.gson.ConfigTemp;
 import com.secure.dex.data.Constants;
 import com.secure.dex.fastzip.FastZip;
+import com.secure.dex.patchers.DexPatcher;
 import com.secure.dex.patchers.ManifestPatcher;
-import com.secure.dex.signer.SignatureTool;
+import com.secure.dex.signer.ApkSigner;
 import com.secure.dex.utils.CommonUtils;
 import com.secure.dex.patchers.DexCrypto;
 import com.secure.dex.utils.FileUtils;
 import com.secure.dex.utils.LoggerUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 
 public class Main {
-    public static void main(String... args) {
+    public static void main(String @NotNull ... args) {
         generateRandom();
 
         FileUtils.deleteDir(new File(Constants.OUTPUT_PATH));
@@ -64,10 +70,20 @@ public class Main {
             DexCrypto.encodeDexes();
             LoggerUtils.writeLog("Dex files successful encrypted");
 
+            try {
+                DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Constants.DEXLOADER_PATH)));
+                byte[] dexData = DexPatcher.patchDex(dex);
+                FileUtils.byteToFile(Constants.OUTPUT_PATH + File.separator + "classes.dex", dexData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            LoggerUtils.writeLog("Dex files successful encrypted");
+
             FastZip.repack(apkPath, Constants.UNSIGNED_PATH);
             LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH);
 
-            if (!SignatureTool.sign(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {
+            if (!new ApkSigner().apksigner(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {
                 LoggerUtils.writeLog("APK signing error");
                 FileUtils.deleteDir(new File(Constants.OUTPUT_PATH));
                 return;
@@ -88,8 +104,10 @@ public class Main {
 
     private static void generateRandom() {
         ConfigTemp config = new ConfigTemp();
+        config.protectKey = CommonUtils.generateRandomString(Constants.PROTECT_KEY);
+        config.realApp = CommonUtils.generateRandomString(Constants.REAL_APP);
         config.packageName = CommonUtils.generateRandomString(Constants.PACKAGE_NAME);
-        config.dexFolder = CommonUtils.generateRandomString(Constants.DEX_DIR);
+        config.dexDir = CommonUtils.generateRandomString(Constants.DEX_DIR);
         config.dexPrefix = CommonUtils.generateRandomString(Constants.DEX_PREFIX);
         config.dexSuffix = CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
         config.proxyApp = CommonUtils.generateRandomString(Constants.PROXY_APP);

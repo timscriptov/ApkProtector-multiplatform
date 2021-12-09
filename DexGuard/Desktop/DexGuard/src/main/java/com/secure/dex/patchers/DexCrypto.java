@@ -3,6 +3,8 @@ package com.secure.dex.patchers;
 import com.secure.dex.data.Constants;
 import com.secure.dex.data.Preferences;
 import com.secure.dex.utils.LoggerUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.spongycastle.crypto.CryptoException;
 
 import java.io.*;
@@ -30,7 +32,7 @@ public class DexCrypto {
         }
     }
 
-    private static void encodeSingleDex(String name) throws IOException {
+    private static void encodeSingleDex(@NotNull String name) throws IOException {
         String outPath = Constants.ASSETS_PATH + File.separator;
         if (name.matches("classes\\.dex")) {
             outPath += Preferences.getDexPrefix() + "1" + Preferences.getDexSuffix();
@@ -64,7 +66,7 @@ public class DexCrypto {
         is.close();
     }
 
-    private static void exfr(String protectKey, InputStream inputStream, OutputStream outputStream) throws Exception {
+    private static void exfr(@NotNull String protectKey, @NotNull InputStream inputStream, OutputStream outputStream) throws Exception {
         char[] key = protectKey.toCharArray();
         int[] iArr = new int[4];
         int i = 1;
@@ -114,7 +116,8 @@ public class DexCrypto {
         }
     }
 
-    private static int[] FxIjsF(int[] iArr) {
+    @Contract(pure = true)
+    private static int @NotNull [] FxIjsF(int @NotNull [] iArr) {
         int[] iArr2 = new int[27];
         int i = iArr[0];
         iArr2[0] = i;
@@ -127,7 +130,7 @@ public class DexCrypto {
         return iArr2;
     }
 
-    private static void nDnv(int[] iArr, int[] iArr2) {
+    private static void nDnv(int @NotNull [] iArr, int @NotNull [] iArr2) {
         int i = iArr2[0];
         int i2 = iArr2[1];
         i2 = (((i2 >>> 8) | (i2 << 24)) + i) ^ iArr[0];

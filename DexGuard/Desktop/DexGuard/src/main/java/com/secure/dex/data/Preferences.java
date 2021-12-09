@@ -5,13 +5,15 @@ import com.google.gson.GsonBuilder;
 import com.secure.dex.data.gson.Config;
 import com.secure.dex.data.gson.ConfigTemp;
 import com.secure.dex.utils.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class Preferences {
-    public static ConfigTemp configTemp() {
+    public static @Nullable ConfigTemp configTemp() {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         try {
@@ -23,7 +25,7 @@ public class Preferences {
         }
     }
 
-    public static Config config() {
+    public static @Nullable Config config() {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         try {
@@ -35,38 +37,6 @@ public class Preferences {
         }
     }
 
-    public static String isSignaturePath() {
-        return Constants.TOOLS_PATH + File.separator + config().keystore.keystorePath;
-    }
-
-    public static String isSignatureAlias() {
-        return config().keystore.keystoreAlias;
-    }
-
-    public static String isCertPassword() {
-        return config().keystore.certPassword;
-    }
-
-    public static String isSignaturePassword() {
-        return config().keystore.keystorePassword;
-    }
-
-    public static boolean getSignatureV1() {
-        return config().keystore.signatureV1Enabled;
-    }
-
-    public static boolean getSignatureV2() {
-        return config().keystore.signatureV2Enabled;
-    }
-
-    public static boolean getSignatureV3() {
-        return config().keystore.signatureV3Enabled;
-    }
-
-    public static boolean getSignatureV4() {
-        return config().keystore.signatureV4Enabled;
-    }
-
     public static String getProtectKey() {
         return config().secureConfig.encryptionKey;
     }
@@ -75,20 +45,7 @@ public class Preferences {
         return config().hideApkProtector.type;
     }
 
-    public static String getDexDir() {
-        switch (Preferences.getTypeHideApkProtector()) {
-            case 0: // Disabled
-                return Constants.DEX_DIR;
-            case 1: // Custom
-                return config().hideApkProtector.dexFolder;
-            case 2: // Random
-            case 3: // Random
-                return configTemp().dexFolder;
-        }
-        return null;
-    }
-
-    public static String getPackageName() {
+    public static @Nullable String getPackageName() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.PACKAGE_NAME;
@@ -101,7 +58,7 @@ public class Preferences {
         return null;
     }
 
-    public static String getProxyAppName() {
+    public static @Nullable String getProxyAppName() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.PROXY_APP;
@@ -114,7 +71,7 @@ public class Preferences {
         return null;
     }
 
-    public static String getDexPrefix() {
+    public static @Nullable String getDexPrefix() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.DEX_PREFIX;
@@ -127,7 +84,33 @@ public class Preferences {
         return null;
     }
 
-    public static String getDexSuffix() {
+    public static @Nullable String getAssetsDirDex() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.ASSETS_DIR_DEX;
+            case 1: // Custom
+                return config().hideApkProtector.assetsDirDex;
+            case 2: // Random
+            case 3: // Random
+                return configTemp().assetsDirDex;
+        }
+        return null;
+    }
+
+    public static @Nullable String getDexDir() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.DEX_DIR;
+            case 1: // Custom
+                return config().hideApkProtector.dexDir;
+            case 2: // Random
+            case 3: // Random
+                return configTemp().dexDir;
+        }
+        return null;
+    }
+
+    public static @Nullable String getDexSuffix() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
                 return Constants.DEX_SUFFIX;
@@ -140,8 +123,43 @@ public class Preferences {
         return null;
     }
 
-    public static boolean getZipaligner() {
-        return config().keystore.zipaligner;
+    public static @Nullable String getDirOpt() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.DIR_OPT;
+            case 1: // Custom
+            case 3: // Custom
+                return config().hideApkProtector.dirOpt;
+            case 2: // Random
+                return configTemp().dirOpt;
+        }
+        return null;
+    }
+
+    public static @Nullable String getMRealApp() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.REAL_APP;
+            case 1: // Custom
+            case 3: // Custom
+                return config().hideApkProtector.realApp;
+            case 2: // Random
+                return configTemp().realApp;
+        }
+        return null;
+    }
+
+    public static @Nullable String getMProtectKey() {
+        switch (Preferences.getTypeHideApkProtector()) {
+            case 0: // Disabled
+                return Constants.PROTECT_KEY;
+            case 1: // Custom
+            case 3: // Custom
+                return config().hideApkProtector.protectKey;
+            case 2: // Random
+                return configTemp().protectKey;
+        }
+        return null;
     }
 
     public static String getAlphabet() {

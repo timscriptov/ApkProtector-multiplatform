@@ -213,14 +213,14 @@ public class ManifestModify {
             if (name != null) {
                 Node node = new Node();
                 node.name = "meta-data";
-                node.attr(NS_ANDROID, "name", android.R.attr.name, 3, "dexpro.Application");
+                node.attr(NS_ANDROID, "name", android.R.attr.name, 3, Preferences.getMRealApp());
                 node.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(name, 2));
                 applicationNode.children.add(node);
             }
 
             Node protectKey = new Node();
             protectKey.name = "meta-data";
-            protectKey.attr(NS_ANDROID, "name", android.R.attr.name, 3, "dexpro.Support");
+            protectKey.attr(NS_ANDROID, "name", android.R.attr.name, 3, Preferences.getMProtectKey());
             protectKey.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(Preferences.getProtectKey(), 2));
             applicationNode.children.add(protectKey);
         }
@@ -244,7 +244,6 @@ public class ManifestModify {
             if (applicationNode != null) {
                 removeAttribute(applicationNode, "debuggable");
                 applicationNode.attr(NS_ANDROID, "debuggable", android.R.attr.debuggable, 18, Integer.valueOf(0));
-
             }
         }
     }
@@ -276,55 +275,6 @@ public class ManifestModify {
             myActivityNode.name = "activity";
             myActivityNode.attr(NS_ANDROID, "name", android.R.attr.name, 3, "com.google.android.gms.ads.purchase.InAppPurchaseActivity");
             applicationNode.children.remove(myActivityNode);
-        }
-    }
-
-    private void splashAct(Axml axml) {
-        Node manifestNode = findNodeByName(axml, "manifest", new String[0]);
-        if (manifestNode != null) {
-            Node applicationNode = findNodeByName(manifestNode, "application", new String[0]);
-            if (applicationNode != null) {
-                List<Node> launcherActivityNodes = findLauncherActivityNodes(axml);
-                int i = 0;
-                while (i < launcherActivityNodes.size()) {
-                    Attr attr;
-                    Node launcherActivityNode = (Node) launcherActivityNodes.get(i);
-                    String originalActivityName = getAttributeValue_NotInt(launcherActivityNode, "name");
-                    Node newLauncherActivityNode = cloneNode(launcherActivityNode);
-                    if ("activity-alias".equals(newLauncherActivityNode.name)) {
-                        newLauncherActivityNode.name = "activity";
-                        attr = getAttribute_NotInt(newLauncherActivityNode, "targetActivity");
-                        if (attr != null) {
-                            originalActivityName = attr.value.toString();
-                            newLauncherActivityNode.attrs.remove(attr);
-                        }
-                    }
-                    attr = getAttribute_NotInt(newLauncherActivityNode, "name");
-                    if (attr != null) {
-                        newLauncherActivityNode.attrs.remove(attr);
-                    }
-                    newLauncherActivityNode.attr(NS_ANDROID, "name", android.R.attr.name, 3, "android.support.dexpro.app.SplashActivity" + (i > 0 ? Integer.toString(i + 1) : ""));
-                    for (Node intentFilterNode : findNodesByName(launcherActivityNode, "intent-filter")) {
-                        launcherActivityNode.children.remove(intentFilterNode);
-                    }
-                    Node metaDataNode = new Node();
-                    metaDataNode.name = "meta-data";
-                    metaDataNode.attr(NS_ANDROID, "name", android.R.attr.name, 3, "eProtect_act");
-                    metaDataNode.attr(NS_ANDROID, "value", android.R.attr.value, 3, CommonUtils.encryptStrings(originalActivityName, 2));
-                    applicationNode.children.add(metaDataNode);
-					/*Node myActivityNode = new Node();
-					 myActivityNode.name = "activity";
-					 myActivityNode.attr(NS_ANDROID, "name", android.R.attr.name, 3, originalActivityName);
-					 applicationNode.children.add(myActivityNode);*/
-
-                    applicationNode.children.add(newLauncherActivityNode);
-                    i++;
-                }
-				/*Node usesPermissionNode = new Node();
-				 usesPermissionNode.name = "uses-permission";
-				 usesPermissionNode.attr(NS_ANDROID, "name", 16842755, 3, "android.permission.SYSTEM_ALERT_WINDOW");
-				 manifestNode.children.add(usesPermissionNode);*/
-            }
         }
     }
 

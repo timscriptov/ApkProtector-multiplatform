@@ -2,67 +2,16 @@ package com.secure.dex.utils;
 
 import com.secure.dex.data.Preferences;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class CommonUtils {
-    public static String exportMetaFile(String path, String outputPath) throws Exception {
-        System.out.println("Extract META-INF file from " + path + " to " + outputPath);
-        if (FileUtils.isExists(outputPath)) {
-            return outputPath;
-        }
-
-        File ofile = new File(outputPath);
-        ofile.getParentFile().mkdirs();
-
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = IOUtils.toInputStream("/META-INF/" + path, StandardCharsets.UTF_8);
-            os = new FileOutputStream(outputPath);
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = is.read(buffer)) != -1) {
-                os.write(buffer, 0, len);
-                os.flush();
-            }
-            return outputPath;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (os != null) {
-                try {
-                    os.flush();
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
-
-    public static void slientClose(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static String generateRandomString(String str) {
+    @Contract("_ -> new")
+    public static @NotNull String generateRandomString(@NotNull String str) {
         Random random = new Random();
         char[] arr = str.toCharArray();
         for (int i = 0; i < str.length(); i++) {
@@ -80,7 +29,7 @@ public class CommonUtils {
      * @param i   - символы
      * @return
      */
-    public static String encryptStrings(String str, int i) {
+    public static @NotNull String encryptStrings(String str, int i) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             for (int j = 0; j < str.length(); j++) {
@@ -92,7 +41,8 @@ public class CommonUtils {
         }
     }
 
-    public static char[] a(int i) {
+    @Contract(value = "_ -> new", pure = true)
+    public static char @NotNull [] a(int i) {
         switch (i) {
             case 0:
                 return new char[]{37469, 12893, 58265, 34626, 61595, 5235, 30980, 36330, 54953, 54553, 35458, 50593};

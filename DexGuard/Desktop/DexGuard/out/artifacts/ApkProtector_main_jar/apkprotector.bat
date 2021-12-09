@@ -1,1 +1,0 @@
-java -jar %~dp0ApkProtector.jar b %*

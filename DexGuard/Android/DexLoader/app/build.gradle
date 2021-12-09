@@ -5,22 +5,12 @@ android {
     buildToolsVersion = '31.0.0'
 
     defaultConfig {
-        applicationId "com.mcal.dexprotect"
+        applicationId "com.secure.dex"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 119
         versionName "1.1.9"
-        //ndk {
-        //    moduleName "apkprotect"
-        //    abiFilters 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64'
-        //}
     }
-    
-    //externalNativeBuild {
-    //    ndkBuild {
-    //        path 'src/main/jni/Android.mk'
-    //    }
-    //}
 
     buildTypes {
         release {
@@ -33,11 +23,10 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-    //ndkVersion '21.0.6113669'
 }
 
 dependencies {
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'org.jetbrains:annotations:20.1.0'
+    //implementation 'org.jetbrains:annotations:22.0.0'
 }

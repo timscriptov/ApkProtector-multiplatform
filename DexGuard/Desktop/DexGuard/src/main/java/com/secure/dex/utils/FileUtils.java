@@ -10,28 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
-    public static byte[] readAllBytes(InputStream is) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[2048];
-        int len = 0;
-        while ((len = is.read(buffer)) > 0)
-            bos.write(buffer, 0, len);
-        is.close();
-        return bos.toByteArray();
-    }
-
-    public static void writeString(File file, String str) throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(file));
-        try {
-            out.write(str);
-        } catch (IOException e) {
-            System.out.println("Exception " + e);
-        } finally {
-            out.close();
+    public static void byteToFile(String outputFile, byte @NotNull [] bytes) throws IOException {
+        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            outputStream.write(bytes);
         }
     }
 
-    public static List<File> getFiles(File[] files) {
+    public static @NotNull List<File> getFiles(File @NotNull [] files) {
         List<File> list = new ArrayList<>();
         for (File file : files) {
             if (file.isDirectory()) {
@@ -56,7 +41,7 @@ public class FileUtils {
         }
     }
 
-    public static void deleteDir(File file) {
+    public static void deleteDir(@NotNull File file) {
         File[] contents = file.listFiles();
         if (contents != null) {
             for (File f : contents) {
@@ -68,30 +53,13 @@ public class FileUtils {
         file.delete();
     }
 
-    public static String getWorkPath() {
+    public static String getHomePath() {
         return System.getProperty("user.dir");
     }
 
-    public static boolean copyFile(String src, String dest) {
-        try {
-            Files.copy(new File(src).toPath(), new File(dest).toPath());
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static String readFile(String path, Charset encoding) throws IOException {
+    public static @NotNull String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
-    }
-
-    public static void writeInt(byte @NotNull [] data, int off, int value) {
-        data[off++] = (byte) (value & 0xFF);
-        data[off++] = (byte) ((value >>> 8) & 0xFF);
-        data[off++] = (byte) ((value >>> 16) & 0xFF);
-        data[off] = (byte) ((value >>> 24) & 0xFF);
     }
 
     public static int readInt(byte @NotNull [] data, int off) {
@@ -137,50 +105,6 @@ public class FileUtils {
             f.mkdirs();
         }
 
-    }
-
-    public static void copyFolder(File source, File destination) {
-        if (source.isDirectory()) {
-            if (!destination.exists()) {
-                destination.mkdirs();
-            }
-
-            String files[] = source.list();
-
-            for (String file : files) {
-                File srcFile = new File(source, file);
-                File destFile = new File(destination, file);
-
-                copyFolder(srcFile, destFile);
-            }
-        } else {
-            InputStream in = null;
-            OutputStream out = null;
-
-            try {
-                in = new FileInputStream(source);
-                out = new FileOutputStream(destination);
-
-                byte[] buffer = new byte[1024];
-
-                int length;
-                while ((length = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, length);
-                }
-            } catch (Exception e) {
-                try {
-                    in.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-
-                try {
-                    out.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
     }
 
     public static boolean copy(String srcFile, String destFile) {
@@ -230,36 +154,5 @@ public class FileUtils {
 
         }
         return var5;
-    }
-
-    public static String readFileContent(String path) {
-        StringBuffer sb = new StringBuffer();
-        if (!isExists(path)) {
-            return sb.toString();
-        } else {
-            FileInputStream ins = null;
-
-            try {
-                ins = new FileInputStream(new File(path));
-                BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
-                String line = null;
-
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-            } catch (Exception var13) {
-                var13.printStackTrace();
-            } finally {
-                if (ins != null) {
-                    try {
-                        ins.close();
-                    } catch (IOException var12) {
-                        var12.printStackTrace();
-                    }
-                }
-
-            }
-            return sb.toString();
-        }
     }
 }

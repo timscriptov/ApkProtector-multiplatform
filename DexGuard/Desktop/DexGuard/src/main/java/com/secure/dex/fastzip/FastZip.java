@@ -4,6 +4,7 @@ import com.secure.dex.data.Constants;
 import com.secure.dex.data.Preferences;
 import com.secure.dex.utils.FileUtils;
 import com.secure.dex.utils.LoggerUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -13,7 +14,7 @@ import java.util.zip.ZipOutputStream;
 
 public class FastZip {
 
-    public static void extract(File zip, File extractDir) throws IOException {
+    public static void extract(File zip, @NotNull File extractDir) throws IOException {
         extractDir.mkdirs();
         ZipFile apk = new ZipFile(zip);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) apk.entries();
@@ -80,7 +81,7 @@ public class FastZip {
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
             file = file.replace(Constants.ASSETS_PATH, "assets/dp-lib")
                     .replace("dp-lib\\", "dp-lib/")
-                    .replace("dp-lib", Preferences.getDexDir())
+                    .replace("dp-lib", Preferences.getAssetsDirDex())
                     .replace("classes-v", Preferences.getDexPrefix());
             LoggerUtils.writeLog("Entry: " + file);
             byte[] buffer = new byte[2048];
@@ -121,7 +122,7 @@ public class FastZip {
             }
 
             for (String file1: files) {
-                file1 = file1.replace(FileUtils.getWorkPath() + File.separator, "");
+                file1 = file1.replace(FileUtils.getHomePath() + File.separator, "");
                 if (file1.equals(name)) continue;
             }
             LoggerUtils.writeLog("Entry: " + entry.getName());
