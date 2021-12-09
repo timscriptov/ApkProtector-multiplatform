@@ -10,10 +10,10 @@
         "dexFolder": "dp-lib", // 0 - default; 1 - custom; 2,3 - random
         "dexPrefix": "dp.kotlin-v", // 0 - default; 1 - custom; 2,3 - random
         "dexSuffix": ".lua.mph", // 0 - default; 1,3 - custom; 2 - random
-        "proxyApp": "ProxyApplication" // 0 - default; 1, 3 - custom; 2 - random
+        "proxyApp": "ProxyApplication", // 0 - default; 1, 3 - custom; 2 - random
 
-        "dirOpt": "opt" // 0 - default; 1, 3 - custom; 2 - random
-        "assetsDirDex": "dp-lib" // 0 - default; 1, 3 - custom; 2 - random
+        "dirOpt": "opt", // 0 - default; 1, 3 - custom; 2 - random
+        "assetsDirDex": "dp-lib", // 0 - default; 1, 3 - custom; 2 - random
         "realApp": "dexpro.Application", // 0 - default; 1, 3 - custom; 2 - random
         "protectKey": "dexpro.Support" // 0 - default; 1, 3 - custom; 2 - random
     }
