@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ApkDexGuard</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="welcome">Welcome</string>
+    <string name="tap_plus">protect app to begin</string>
+    <string name="errorUserCancelled">The process was cancelled.</string>
+    <string name="errorAlreadyOwned">You already own this item. Please close and re-open the application to load your purchases.</string>
+    <string name="errorItemUnavailable">This item is currently unavailable. Try again later.</string>
+    <string name="errorAccount">There was an error with your account.</string>
+    <string name="errorPayment">An error occurred while processing your payment. Please try again.</string>
+    <string name="errorRequest">An error occurred while processing your request.</string>
+    <string name="proNoAds">No advertisements</string>
+    <string name="proEarlyAccess">Early access to new features</string>
+    <string name="buyNow">Buy Now</string>
+    
+    <string name="cancel_button_label">Cancel</string>
+    <string name="choose_button_label">Select</string>
+    <string name="default_dir" translatable="false">/sdcard</string>
+    <string name="label_parent_directory">Parent Directory</string>
+    <string name="last_edit">Last edited: </string>
+    <string name="error_dir_access">Directory cannot be accessed</string>
+    <string name="label_parent_dir" translatable="false">...</string>
+    <string name="pickFromSdCard">Pick from SD Card</string>
+    <string name="pickInstalled">Pick from installed</string>
+    <string name="tapToRateApp">Tap to rate this app on Play Store</string>
+    <string name="reportBug">Report a bug</string>
+    <string name="rateAndReview">Rate &amp; Review</string>
+    <string name="easeOfUse">Ease of use</string>
+    <string name="helpSupport">Help &amp; Support</string>
+    <string name="reportBugPreferenceSummary">Tap to report any bug (or) issue found in this app</string>
+    <string name="warn_sign_match">The apk and the installed applications signature information is inconsistent, whether to uninstall the application first?</string>
+    <string name="userInterface">User interface</string>
+    <string name="darkMode">Dark mode (Beta)</string>
+    <string name="darkModeSummary">Turn on/off dark mode for the app</string>
+    <string name="themeChangeCloseInfo">Close and re-open app for the theme to take complete effect</string>
+    
+    <string name="preference_category_sdk">SDK</string>
+    <string name="preference_title_sdk">dexprotect.jar file</string>
+    <string name="preference_summary_sdk">Specify the dexprotect.jar file to compile against.</string>
+    <string name="preference_dialog_sdk">Full path of dexprotect.jar file:</string>
+    <string name="preference_title_capp">Custom Application Name</string>
+    <string name="preference_summary_capp">Application Class (e.g xyz.magicph.dexpro.Application)</string>
+    <string name="preference_dialog_capp">Application Class Name</string>
+    
+    <string name="preference_category_apk_sign">APK signing</string>
+    <string name="preference_title_custom_keystore">Custom keystore</string>
+    <string name="preference_summary_custom_keystore">Use a custom keystore file for signing APKs during build.</string>
+    <string name="preference_title_keystore_file">Keystore file</string>
+    <string name="preference_summary_keystore_file">Specify the keystore file used for signing APKs during build.</string>
+    <string name="preference_dialog_keystore_file">Full path of keystore file:</string>
+    <string name="preference_title_create_keystore">Create keystore file</string>
+    <string name="preference_category_dex">Dexer</string>
+    <string name="preference_title_dex">Dexer optimizations</string>
+    <string name="preference_summary_dex">Enable dexer optimizations. This will make the Apps run faster but cause longer build times.</string>
+    <string name="preference_title_ignore">Ignore Classes</string>
+    <string name="preference_summary_ignore">Ignoring common open sourced libraries</string>
+    <string name="preference_title_prokey">DexPro Key</string>
+    <string name="preference_summary_prokey">Dexs custom encryption key</string>
+    
+    <string name="advanced">Advanced</string>
+    <string name="clearSourceHistory">Clear source history</string>
+    <string name="clearSourceHistorySummary">Delete previously decompiled sources</string>
+    <string name="deleteSource">Delete source</string>
+    <string name="deleteSourceHistory">Delete source history</string>
+    <string name="deleteSourceConfirm">Are you sure you want to delete the decompiled source ?</string>
+    <string name="deleteSourceHistoryConfirm">Are you sure you want to delete source history ?</string>
+    <string name="dir_home_name">Internal memory</string>
+    <string name="dir_name">Paste</string>
+	
+</resources>

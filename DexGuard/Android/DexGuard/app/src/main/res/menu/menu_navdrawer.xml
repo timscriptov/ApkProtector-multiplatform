@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+	<item
+		android:icon="@drawable/ic_info"
+        android:id="@+id/about"
+        android:title="About"/>
+    <item
+        android:icon="@drawable/ic_cog"
+        android:id="@+id/setting"
+        android:title="Settings"/>
+	<item
+		android:icon="@drawable/ic_exit_to_app"
+        android:id="@+id/exit"
+        android:title="Exit"/>
+	<group android:id="@+id/extra_group">
+		<item
+            android:icon="@drawable/ic_share"
+            android:id="@+id/share"
+            android:title="Share"/>
+		<item
+            android:icon="@drawable/ic_star"
+            android:id="@+id/rate"
+            android:title="Rate"/>
+        
+	</group>
+</menu>

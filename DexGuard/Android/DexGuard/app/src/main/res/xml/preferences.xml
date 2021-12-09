@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/userInterface">
+
+
+        <SwitchPreference
+            android:key="darkMode"
+            android:defaultValue="false"
+            android:summary="@string/darkModeSummary"
+            android:title="@string/darkMode" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/preference_category_sdk">
+        <EditTextPreference 
+            android:title="@string/preference_title_sdk" 
+            android:key="user_dexprotectjar"
+            android:summary="@string/preference_summary_sdk"
+            android:dialogTitle="@string/preference_dialog_sdk" />
+        <EditTextPreference 
+            android:title="@string/preference_title_capp" 
+            android:key="user_dexclass"
+            android:summary="@string/preference_summary_capp"
+            android:dialogTitle="@string/preference_dialog_capp" />
+        <EditTextPreference 
+            android:title="@string/preference_title_prokey" 
+            android:key="dexpro_key"
+            android:summary="@string/preference_summary_prokey" />
+	</PreferenceCategory>
+    <PreferenceCategory android:title="@string/preference_category_apk_sign">
+        <SwitchPreference
+            android:title="@string/preference_title_custom_keystore"
+            android:key="use_user_keystore"
+            android:summary="@string/preference_summary_custom_keystore"
+            android:defaultValue="false" />
+        <EditTextPreference 
+            android:title="@string/preference_title_keystore_file" 
+            android:key="user_keystore" 
+            android:summary="@string/preference_summary_keystore_file" 
+            android:dependency="use_user_keystore" 
+            android:dialogTitle="@string/preference_dialog_keystore_file" />
+		<EditTextPreference 
+            android:title="Key Alias"
+            android:key="user_keystore_alias"
+            android:summary="" 
+            android:dependency="use_user_keystore"
+            android:dialogTitle="Enter keystore alias" />
+	    <EditTextPreference 
+            android:title="Default password"
+            android:key="user_keystore_pswd_default"
+            android:summary="" 
+            android:dependency="use_user_keystore"
+            android:dialogTitle="Enter default password" />
+        <Preference 
+            android:title="@string/preference_title_create_keystore"
+            android:key="generate_keystore"
+            android:dependency="use_user_keystore" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/preference_category_dex">
+        <!--<SwitchPreference android:title="ADRT debug" android:key="use_adrt" android:summary="To apply the settings, restart the application" android:defaultValue="false" />-->
+        <SwitchPreference 
+            android:title="Encode Class Name" 
+            android:key="encode_class" 
+            android:summary="Encode class name" 
+            android:defaultValue="false" />
+        <EditTextPreference 
+            android:title="Encode Class Name List"
+            android:key="user_encode_classes"
+            android:summary="@string/preference_summary_ignore" 
+            android:dependency="encode_class" />
+        <SwitchPreference 
+            android:title="Fix Multi Dex" 
+            android:key="fix_multi_dex" 
+            android:summary="Fix multiple DEX bugs. If you use multidex, please enable it." 
+            android:defaultValue="false" />
+        <SwitchPreference 
+            android:title="Encrypt All Dex" 
+            android:key="encrypt_all_dex" 
+            android:summary="Encrypt all classes.dex and entire classes content" 
+            android:defaultValue="false" />
+        <!--<SwitchPreference 
+            android:title="@string/preference_title_dex" 
+            android:key="optimize_dex" 
+            android:summary="@string/preference_summary_dex" 
+            android:defaultValue="true" />
+        <EditTextPreference 
+            android:title="@string/preference_title_ignore"
+            android:key="user_ignored_classes"
+            android:summary="@string/preference_summary_ignore" 
+            android:dependency="optimize_dex" />-->
+        <!--<SwitchPreference android:title="@string/proguard_title" android:key="use_proguard" android:summary="@string/proguard_summary" android:defaultValue="false" />-->
+	</PreferenceCategory>
+    <PreferenceCategory android:title="Resources">
+        <SwitchPreference 
+            android:title="Resources protected" 
+            android:key="use_modaapt" 
+            android:summary="Shrink all apk resources" 
+            android:defaultValue="false" />
+	</PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/advanced">
+        <Preference
+            android:key="clearSourceHistory"
+            android:summary="@string/clearSourceHistorySummary"
+            android:title="@string/clearSourceHistory"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/helpSupport">
+        <Preference
+            android:summary="@string/reportBugPreferenceSummary"
+            android:title="@string/reportBug"
+            android:key="report_bug"/>
+        <Preference
+            android:summary="@string/tapToRateApp"
+            android:title="@string/rateAndReview"
+            android:key="rate_us"/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,33 @@
+{
+    "Licenses":[{
+        "Name": "DexProtector",
+        "Creator": "Trunks",
+        "Desc": "DexProtector is the protector and obfuscator for Android platforms. It helps you secure your applications and libraries against unauthorized or illegal use reverse engineering and cracking.",
+        "Version": "1.0",
+        "License": ""
+    },{
+        "Name": "TECHNICAL SUPPORT",
+        "Creator": "",
+        "Desc": "MagicPH Company shall provide technical support at their own discretion without any guarantees or declarations.",
+        "Version": "",
+        "License": ""
+    },{
+        "Name": "OWNERSHIP",
+        "Creator": "",
+        "Desc": "The software is owned and copyrighted by MagicPH Company. Your license confers no title or ownership in the software and should not be construed as a sale of any right in the software.",
+        "Version": "",
+        "License": ""
+    },{
+        "Name": "REVERSE ENGINEERING",
+        "Creator": "",
+        "Desc": "You may not decompile or otherwise reverse-engineer any part of the software.",
+        "Version": "",
+        "License": ""
+    },{
+        "Name": "USE RESTRICTIONS",
+        "Creator": "",
+        "Desc": "You warrant that your use of this software is legal and does not violate any law or regulation to which you are subject.",
+        "Version": "",
+        "License": ""
+    }]
+}

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/drawerLayout"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		
+		<mph.trunksku.apps.dexpro.view.CenteredToolBar
+			android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="?android:windowBackground"
+			android:minHeight="?attr/actionBarSize"
+			/>
+		
+		<RelativeLayout
+			android:id="@+id/layoutHolder"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_above="@+id/ad_view"
+			android:layout_below="@+id/toolbar"
+			android:orientation="vertical">
+
+			<LinearLayout
+				android:id="@+id/welcome_layout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_above="@+id/adView"
+				android:layout_below="@id/toolx"
+				android:layout_marginLeft="8dp"
+				android:layout_marginRight="8dp"
+				android:orientation="vertical"
+				android:gravity="center">
+
+				<LinearLayout
+					android:orientation="vertical"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+
+					<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content">
+
+						<ImageView
+							android:layout_width="50.0dip"
+							android:layout_height="50.0dip"
+							android:layout_marginRight="20.0dip"
+							android:src="@drawable/shape_circle"
+							android:tint="#ffcccccc"
+							android:layout_marginEnd="20.0dip"/>
+
+						<LinearLayout
+							android:orientation="vertical"
+							android:layout_width="fill_parent"
+							android:layout_height="wrap_content">
+
+							<View
+								android:background="#ffcccccc"
+								android:layout_width="70.0dip"
+								android:layout_height="10.0dip"/>
+
+							<View
+								android:background="#ffcccccc"
+								android:layout_width="110.0dip"
+								android:layout_height="10.0dip"
+								android:layout_marginTop="10.0dip"/>
+
+							<View
+								android:background="#ffcccccc"
+								android:layout_width="40.0dip"
+								android:layout_height="10.0dip"
+								android:layout_marginTop="10.0dip"/>
+
+						</LinearLayout>
+
+					</LinearLayout>
+
+					<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="15.0dip">
+
+						<ImageView
+							android:layout_width="50.0dip"
+							android:layout_height="50.0dip"
+							android:layout_marginRight="20.0dip"
+							android:src="@drawable/shape_circle"
+							android:tint="#ffe6e6e6"
+							android:layout_marginEnd="20.0dip"/>
+
+						<LinearLayout
+							android:orientation="vertical"
+							android:layout_width="fill_parent"
+							android:layout_height="wrap_content">
+
+							<View
+								android:background="#ffe6e6e6"
+								android:layout_width="100.0dip"
+								android:layout_height="10.0dip"/>
+
+							<View
+								android:background="#ffe6e6e6"
+								android:layout_width="140.0dip"
+								android:layout_height="10.0dip"
+								android:layout_marginTop="10.0dip"/>
+
+							<View
+								android:background="#ffe6e6e6"
+								android:layout_width="40.0dip"
+								android:layout_height="10.0dip"
+								android:layout_marginTop="10.0dip"/>
+
+						</LinearLayout>
+
+					</LinearLayout>
+
+				</LinearLayout>
+
+				<TextView
+					android:textSize="17.0sp"
+					android:id="@+id/mainNoOpenFilesView"
+					android:background="?android:selectableItemBackgroundBorderless"
+					android:focusable="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="24.0dip"
+					android:text="No Protected APK"/>
+
+			</LinearLayout>
+
+			<TextView
+				android:id="@+id/pickAppText"
+				android:paddingLeft="5.0dip"
+				android:paddingTop="8.0dip"
+				android:paddingRight="5.0dip"
+				android:paddingBottom="6.0dip"
+				android:visibility="gone"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="Pick app to explore"/>
+
+			<android.support.v4.widget.SwipeRefreshLayout
+				android:id="@+id/swipeRefresh"
+				android:layout_width="match_parent"
+				android:layout_below="@+id/pickAppText"
+				android:visibility="gone"
+				android:layout_height="wrap_content">
+
+				<ListView
+					android:id="@+id/history_list"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:divider="@null"
+					android:listSelector="@android:color/transparent"
+					android:scrollbarStyle="outsideOverlay"
+					android:visibility="gone"/>
+
+			</android.support.v4.widget.SwipeRefreshLayout>
+
+		</RelativeLayout>
+
+		<android.support.design.widget.FloatingActionButton
+			android:id="@+id/fab"
+			android:layout_alignBottom="@+id/layoutHolder"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:layout_margin="16dp"
+			android:clickable="true"
+			android:src="@drawable/fab_add"
+			
+			android:layout_alignParentRight="true"/>
+
+		<RelativeLayout
+			android:id="@+id/ad_view"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:gravity="center"/>
+
+	</RelativeLayout>
+
+	<android.support.design.widget.NavigationView
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_gravity="start"
+		android:fitsSystemWindows="true"
+		android:id="@+id/shitstuff"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		android:clickable="true"
+		app:headerLayout="@layout/layout_header"
+		app:menu="@menu/menu_navdrawer"
+		app:itemIconTint="?colorAccent"/>
+
+	</android.support.v4.widget.DrawerLayout>
+

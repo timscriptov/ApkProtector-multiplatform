@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary2</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+         
+    </style>
+	
+    <style name="AppTheme.Black" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="colorPrimary">@color/colorPrimary2</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+	</style>
+	
+	
+	
+    <style name="WindowAnimationDefault">
+    </style>
+    <style name="AppTheme.WithTransition" parent="AppTheme.NoActionBar">
+    </style>
+
+    <style name="AppTheme.WithDrawer" parent="AppTheme.NoActionBar">
+
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="WindowAnimationTransition"><item name="android:windowEnterAnimation">@android:anim/fade_in</item><item name="android:windowExitAnimation">@android:anim/fade_out</item></style>
+    <style name="AppTheme2" parent="@style/Theme.AppCompat.DayNight.DarkActionBar"><item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item><item name="colorAccent">@color/colorAccent</item><item name="colorPrimary">@color/colorPrimary</item><item name="colorPrimaryDark">@color/colorPrimaryDark</item></style>
+	<declare-styleable name="SmartMenu">
+        <attr name="inner_padding" format="dimension" />
+        <attr name="outer_padding" format="dimension" />
+        <attr name="smart_btn_size" format="dimension" />
+        <attr name="vertical_padding" format="dimension" />
+        <attr name="dot_radius" format="dimension" />
+        <attr name="dot_distance" format="dimension" />
+        <attr name="dot_color" format="color|reference" />
+        <attr name="bg_color" format="color|reference" />
+        <attr name="shadow_color" format="color|reference" />
+    </declare-styleable>
+<style name="MenuLabelsStyle">
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MenuButtonsStyle">
+        <item name="fab_size">mini</item>
+        <item name="fab_showAnimation">@anim/jump_from_down</item>
+        <item name="fab_hideAnimation">@anim/jump_to_down</item>
+        <item name="fab_shadowColor">#444</item>
+        <item name="fab_colorNormal">#FFB805</item>
+        <item name="fab_colorPressed">#F2AB00</item>
+        <item name="fab_colorRipple">#D99200</item>
+    </style>
+
+    <style name="MenuButtonsSmall">
+        <item name="fab_size">mini</item>
+        <item name="fab_colorNormal">#1565C0</item>
+        <item name="fab_colorPressed">#2272CD</item>
+        <item name="fab_colorRipple">#62B2FF</item>
+    </style>
+
+    <style name="MenuButtonsSmall.Green">
+        <item name="fab_colorNormal">#43A047</item>
+        <item name="fab_colorPressed">#2E7D32</item>
+        <item name="fab_colorRipple">#1B5E20</item>
+    </style>
+	
+	<style name="TreeNodeStyle">
+        <item name="android:paddingLeft">20dp</item>
+    </style>
+</resources>

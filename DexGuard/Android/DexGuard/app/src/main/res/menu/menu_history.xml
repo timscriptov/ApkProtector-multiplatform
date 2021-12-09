@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:title="App" >
+        <item 
+            android:icon="@drawable/ic_key" 
+            android:id="@+id/install"
+            android:title="Info Rebuild:" />
+        <item 
+            android:icon="@drawable/ic_key" 
+            android:id="@+id/uninstall"
+            android:title="App Cloner Premium\nv" />
+	</group>
+    <group android:title="App 2" >
+        <item 
+            android:icon="@drawable/ic_key" 
+            android:id="@+id/rebuild"
+            android:title="Info Rebuild:" />
+        <item 
+            android:icon="@drawable/ic_key" 
+            android:id="@+id/rebuild_sum"
+            android:title="App Cloner Premium\nv1.5.5(18093015)" />
+	</group>
+</menu>

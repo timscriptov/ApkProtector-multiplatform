@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/toolx"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+
+		<include
+			layout="@layout/toolbar"/>
+
+	</android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingBottom="?actionBarSize"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="35dp"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MaterialX App"
+                android:id="@+id/about_name"/>
+
+            <View
+                android:background="?colorAccent"
+                android:layout_width="120.0dip"
+                android:layout_height="3.0dip"
+                android:layout_marginTop="5.0dip"
+                android:layout_marginBottom="5.0dip"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="15.0dip"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Version"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3.24.0.11.1"
+                    android:id="@+id/about_version"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="15.0dip"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last Update"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="February 2018"
+                    android:id="@+id/about_build_date"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="25.0dip"/>
+
+            <TextView
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="blahhh"
+                android:id="@+id/about_content"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="25.0dip"/>
+
+            <TextView
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Term of services"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+    
+
+</LinearLayout>
+

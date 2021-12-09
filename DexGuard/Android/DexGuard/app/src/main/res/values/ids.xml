@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <item name="fab_label" type="id"/>
+     <item name="ultraviewpager_page_container" type="id" />
+     <item name="node_header" type="id" />
+     <item name="node_items" type="id" />
+     <item name="tree_items" type="id" />
+</resources>

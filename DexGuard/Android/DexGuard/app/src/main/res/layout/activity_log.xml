@@ -1,0 +1,12 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <include
+		layout="@layout/toolbar"/>
+	<fragment
+		android:name="mph.trunksku.apps.dexpro.logger.LogFragment"
+		android:id="@+id/log_window"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+</LinearLayout>

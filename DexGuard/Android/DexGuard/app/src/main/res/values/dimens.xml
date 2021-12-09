@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+    <dimen name="labels_text_size">14sp</dimen>
+ <dimen name="activity_margin">4dp</dimen>
+    <dimen name="checkbox_margin">8dp</dimen>
+    <dimen name="toolbar_image_margin">16dp</dimen>
+    <dimen name="checkbox_dimens">24dp</dimen>
+    <dimen name="textSizeLarge_openSource">20.0sp</dimen>
+    <dimen name="textSizeSmall_openSource">14.0sp</dimen>
+</resources>

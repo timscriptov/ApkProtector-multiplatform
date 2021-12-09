@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimary2">#FF2F2E2E</color>
+    <color name="colorPrimaryDark">#FF126BDA</color>
+    <color name="colorAccent">#ff5091ff</color>
+    <color name="colorAccentDark">#FF2470F1</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#FFFFFF</color>
+    <color name="colorHeader">@color/colorPrimary</color>
+    <color name="warning">#fff7a41e</color>
+    <color name="white">#ffffffff</color>
+    <color name="white_with_alpha">#bfffffff</color>
+    <color name="secondary">#ffc8ced3</color>
+    <color name="secondary2">#ffacaeb1</color>
+    <color name="danger">#fff15659</color>
+    <color name="dark">#ff323641</color>
+    <color name="dark_bg">#ff23262e</color>
+    <color name="dark_striped">#80323641</color>
+    <array name="colors">
+        <item>@color/fab_mini</item>
+        <item>@color/fab_mini</item>
+        <item>@color/fab_mini</item>
+        <item>@color/fab_mini</item>
+        <item>@color/fab_mini</item>
+    </array>
+
+    <array name="white_array">
+        <item>@android:color/white</item>
+        <item>@android:color/white</item>
+        <item>@android:color/white</item>
+        <item>@android:color/white</item>
+        <item>@android:color/white</item>
+    </array>
+
+    <array name="black_array">
+        <item>@android:color/black</item>
+        <item>@android:color/black</item>
+        <item>@android:color/black</item>
+        <item>@android:color/black</item>
+        <item>@android:color/black</item>
+    </array>
+</resources>

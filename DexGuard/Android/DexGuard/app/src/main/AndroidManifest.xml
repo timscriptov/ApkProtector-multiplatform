@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='utf-8'?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mph.dexprotect">
+
+    <!-- modify or delete the contents of your SD card -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- read the contents of your SD card -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- prevent phone from sleeping -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!-- Request the installation of file packages -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
+    <!-- request delete packages -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
+
+
+    <!-- full network access -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+
+    <application
+
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
+        android:name="mph.trunksku.apps.dexpro.MyApp"
+        android:fullBackupContent="true">
+
+        <activity
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:name="mph.trunksku.apps.dexpro.HomeActivity"
+            >
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name="mph.trunksku.apps.dexpro.ExceptionActivity"/>
+
+        <activity android:name="mph.trunksku.apps.dexpro.SettingActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mph.trunksku.apps.dexpro.HomeActivity"/>
+
+        </activity>
+
+        <activity android:name="mph.trunksku.apps.dexpro.MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mph.trunksku.apps.dexpro.HomeActivity"/>
+
+        </activity>
+
+        <activity android:name="mph.trunksku.apps.dexpro.AboutActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mph.trunksku.apps.dexpro.HomeActivity"/>
+
+        </activity>
+
+        <activity android:name="mph.trunksku.apps.dexpro.SDKManager">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mph.trunksku.apps.dexpro.HomeActivity"/>
+
+        </activity>
+
+        <receiver
+            android:name="mph.trunksku.apps.dexpro.receiver.LogCatReceiver"
+            android:enabled="true"
+            android:exported="true"
+            >
+
+            <intent-filter>
+
+                <action android:name="com.pkg.perform.Ruby"/>
+
+            </intent-filter>
+
+        </receiver>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.mph.dexprotect.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+
+        </provider>
+
+		<meta-data
+            android:name="applovin.sdk.key"
+            android:value="nmkZF2DpJ7ZyixPDgFBUeXEacFkZ2RzGN7oB2ocA14NBkuGxWHrMxqXuJ1Q1vDC6FvrhTKmx-skgoFZrKG7TTb"/>
+    </application>
+
+</manifest>

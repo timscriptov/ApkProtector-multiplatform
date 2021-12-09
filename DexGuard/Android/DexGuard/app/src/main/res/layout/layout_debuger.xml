@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:paddingBottom="3.0dip"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<LinearLayout
+				android:gravity="center_vertical"
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+
+				<ImageView
+					android:paddingRight="5.0dip"
+					android:layout_marginLeft="3.0dip"
+					android:src="@drawable/ic_help"
+					android:layout_width="37dp"
+					android:layout_height="37dp"/>
+
+				<TextView
+					android:id="@+id/logcatHeaderText"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="LogCat"
+					android:layout_weight="1.0"/>
+
+				<ImageView
+					android:id="@+id/logcatHeaderMenuButton"
+					android:background="?android:selectableItemBackground"
+					android:focusable="true"
+					android:layout_marginLeft="5.0dip"
+					android:layout_marginRight="5.0dip"
+					android:src="@android:drawable/ic_menu_more"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+			</LinearLayout>
+
+		</LinearLayout>
+
+	</LinearLayout>
+    <mph.trunksku.apps.dexpro.view.CodeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="11sp"
+        android:id="@+id/logs"/>
+    
+	
+	<LinearLayout
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		android:id="@+id/debugLay"/>
+
+</LinearLayout>
+

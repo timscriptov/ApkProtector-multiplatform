@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+	card_view:cardCornerRadius="4dp"
+	card_view:cardElevation="1dp"
+	card_view:cardUseCompatPadding="true"
+	android:id="@+id/openCard">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:padding="6dp"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+
+		<LinearLayout
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:textSize="@dimen/textSizeLarge_openSource"
+				android:textStyle="normal"
+				android:ellipsize="end"
+				android:gravity="start"
+				android:id="@+id/libraryName"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:maxLines="1"
+				android:layout_weight="5"/>
+
+			<TextView
+				android:textSize="@dimen/textSizeSmall_openSource"
+				android:textStyle="normal"
+				android:gravity="end"
+				android:id="@+id/libraryCreator"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="2dp"
+				android:maxLines="2"
+				android:layout_weight="2"/>
+
+		</LinearLayout>
+
+		<View
+			android:id="@+id/libraryDescriptionDivider"
+			android:background="?android:attr/dividerVertical"
+			android:layout_width="fill_parent"
+			android:layout_height="1px"
+			android:layout_marginTop="4dp"/>
+
+		<TextView
+			android:textSize="@dimen/textSizeSmall_openSource"
+			android:textStyle="normal"
+			android:id="@+id/libraryDescription"
+			android:padding="8dp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:maxLines="20"/>
+
+		<View
+			android:id="@+id/libraryBottomDivider"
+			android:background="?android:attr/dividerVertical"
+			android:layout_width="fill_parent"
+			android:layout_height="1px"
+			android:layout_marginTop="4dp"/>
+
+		<LinearLayout
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:id="@+id/libraryBottomContainer"
+			android:paddingLeft="8dp"
+			android:paddingTop="4dp"
+			android:paddingRight="8dp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:textSize="@dimen/textSizeSmall_openSource"
+				android:textStyle="normal"
+				android:gravity="start"
+				android:id="@+id/libraryVersion"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:maxLines="1"
+				android:layout_weight="1"/>
+
+			<TextView
+				android:textSize="@dimen/textSizeSmall_openSource"
+				android:textStyle="normal"
+				android:gravity="end"
+				android:id="@+id/libraryLicense"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:maxLines="1"
+				android:layout_weight="1"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</android.support.v7.widget.CardView>
+
