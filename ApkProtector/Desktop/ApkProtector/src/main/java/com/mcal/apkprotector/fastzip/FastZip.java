@@ -33,7 +33,6 @@ public class FastZip {
             //extract only manifest and dex files
             if (name.equals("AndroidManifest.xml")
                     || name.matches("classes\\.dex")
-                    || name.matches("resources.arsc")
                     || name.matches("classes\\d+\\.dex")
                     && !entry.isDirectory()) {
 

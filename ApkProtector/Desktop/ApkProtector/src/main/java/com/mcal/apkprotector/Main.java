@@ -95,7 +95,7 @@ public class Main {
     private static void generateRandom() {
         ConfigTemp config = new ConfigTemp();
         config.packageName = CommonUtils.generateRandomString(Constants.PACKAGE_NAME);
-        config.dexFolder = CommonUtils.generateRandomString(Constants.DEX_DIR);
+        config.dexFolder = CommonUtils.generateRandomString(Constants.ASSETS_DIR_DEX );
         config.dexPrefix = CommonUtils.generateRandomString(Constants.DEX_PREFIX);
         config.dexSuffix = CommonUtils.generateRandomString(Constants.DEX_SUFFIX);
         config.proxyApp = CommonUtils.generateRandomString(Constants.PROXY_APP);

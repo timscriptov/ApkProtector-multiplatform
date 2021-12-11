@@ -168,7 +168,6 @@ final class MultiDexExtractor implements Closeable {
                 // keep zip entry time since it is the criteria used by Dalvik
                 classesDex.setTime(dexFile.getTime());
                 out.putNextEntry(classesDex);
-                //DexCrypto.decDex(PROTECT_KEY, in, out);
                 DexCrypto.decrypt(PROTECT_KEY, in, out);
                 out.closeEntry();
             } catch (Exception e) {

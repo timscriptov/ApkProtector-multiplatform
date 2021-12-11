@@ -20,10 +20,10 @@ public class Constants {
     public final static String DEXLOADER_PATH = FileUtils.getWorkPath() + File.separator + "tools" + File.separator + "classes.dex";
     public final static String CONFIG_TEMP_PATH = Constants.TOOLS_PATH + File.separator + "config-temp.json";
     public static String PACKAGE_NAME = "com.android.protector";
-    public static String DEX_PREFIX = "protect-v";
-    public static String DEX_SUFFIX = ".enc";
-    public static String DEX_DIR = "protect";
-    public static String PROXY_APP = "App";
+    public static String DEX_PREFIX = "classes-v";
+    public static String DEX_SUFFIX = ".bin";
+    public static String ASSETS_DIR_DEX  = "dexes";
+    public static String PROXY_APP = "MyApplication";
 
     // Others
     public static final String SECONDARY_DEXES = "secondary-dexes";

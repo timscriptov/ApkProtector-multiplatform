@@ -46,7 +46,7 @@ public class DexPatcher {
                     //.replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
                     .replace("$DATA", "")
                     .replace("$APP_NAME", "")
-                    .replace("$DEX_SUFIX", enc(Preferences.getDexSuffix()))
+                    .replace("$DEX_SUFFIX", enc(Preferences.getDexSuffix()))
                     //.replace("ProtectApplication", Preferences.getProxyAppName())
 
                     .replace("$SECONDARY_DEXES", enc(Preferences.SECONDARY_DEXES()))
@@ -65,9 +65,9 @@ public class DexPatcher {
                     }
                     customApplicationName = packageName + customApplicationName;
                 }
-                smaliData = smaliData.replace("$APPLICATION", customApplicationName);
+                smaliData = smaliData.replace("$REAL_APP", customApplicationName);
             } else {
-                smaliData = smaliData.replace("$APPLICATION", "");
+                smaliData = smaliData.replace("$REAL_APP", "android.app.Application");
             }
             //Files.writeString(Paths.get(smali.getAbsolutePath()), smaliData, StandardOpenOption.WRITE);
             FileUtils.givenUsingJava7_whenWritingToFile_thenCorrect(smali.getAbsolutePath(), smaliData);

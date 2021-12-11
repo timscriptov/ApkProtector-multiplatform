@@ -69,7 +69,7 @@ public class Preferences {
     public static @Nullable String getDexDir() {
         switch (Preferences.getTypeHideApkProtector()) {
             case 0: // Disabled
-                return Constants.DEX_DIR;
+                return Constants.ASSETS_DIR_DEX ;
             case 1: // Custom
                 return config().hideApkProtector.dexFolder;
             case 2: // Random

@@ -6,7 +6,7 @@ public class Const {
     public static final String APP_NAME = "$APP_NAME";
 
     // Assets
-    public static final String DEX_SUFFIX = CommonUtils.encryptStrings("$DEX_SUFIX", 2);
+    public static final String DEX_SUFFIX = CommonUtils.encryptStrings("$DEX_SUFFIX", 2);
     public static final String DEX_PREFIX = CommonUtils.encryptStrings("$DEX_PREFIX", 2);
     public static final String DEX_DIR = CommonUtils.encryptStrings("$DEX_DIR", 2);
 
@@ -15,7 +15,7 @@ public class Const {
     public static final String DATA = CommonUtils.encryptStrings("$DATA", 2);
 
     // Real Application
-    public static final String REAL_APPLICATION = "$APPLICATION";
+    public static final String REAL_APPLICATION = "$REAL_APP";
 
     // Others
     public static final String SECONDARY_DEXES = CommonUtils.encryptStrings("$SECONDARY_DEXES", 2); // secondary-dexes

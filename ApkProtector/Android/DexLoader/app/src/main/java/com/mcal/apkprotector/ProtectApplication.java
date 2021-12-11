@@ -29,12 +29,10 @@ public class ProtectApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(!Const.REAL_APPLICATION.equals("")) {
-            Application app = realApplication();
+        Application app = realApplication();
             if (app != null) {
                 app.onCreate();
             }
-        }
     }
 
     private Application realApplication() {
