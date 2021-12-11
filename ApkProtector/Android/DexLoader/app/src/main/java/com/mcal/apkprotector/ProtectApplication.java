@@ -29,13 +29,15 @@ public class ProtectApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Application app = changeTopApplication();
-        if (app != null) {
-            app.onCreate();
+        if(!Const.REAL_APPLICATION.equals("")) {
+            Application app = realApplication();
+            if (app != null) {
+                app.onCreate();
+            }
         }
     }
 
-    private Application changeTopApplication() {
+    private Application realApplication() {
         // Определяем наличие Applicaiton
         Object currentActivityThread = Reflect.invokeMethod("android.app.ActivityThread", null, "currentActivityThread", new Object[]{}, null);
         Object mBoundApplication = Reflect.getFieldValue(

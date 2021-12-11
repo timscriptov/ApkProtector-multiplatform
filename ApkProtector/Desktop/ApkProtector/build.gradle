@@ -5,11 +5,14 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.0"
+        classpath "net.sf.proguard:proguard-gradle:6.2.2"
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
     }
 }
 
 apply plugin: 'kotlin'
+apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'application'
 
 mainClassName = "com.mcal.apkprotector.Main"
@@ -29,12 +32,12 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0'
     implementation 'org.smali:dexlib2:2.5.2'
     implementation 'org.smali:smali:2.5.2'
     implementation 'org.smali:baksmali:2.5.2'
     implementation 'org.smali:util:2.5.2'
-    implementation 'com.google.guava:guava:27.1-android'
+    implementation 'com.google.guava:guava:31.0.1-android'
     implementation 'commons-io:commons-io:2.10.0'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'xmlpull:xmlpull:1.1.3.1'
@@ -43,11 +46,9 @@ dependencies {
 
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
     implementation 'com.madgag.spongycastle:prov:1.58.0.0'
-    implementation 'org.bouncycastle:bcprov-jdk15to18:1.69'
-    //implementation 'org.bouncycastle:bcpkix-jdk15to18:1.69'
 
-    implementation('io.ktor:ktor-server-netty:1.6.3')
-    implementation('io.ktor:ktor-html-builder:1.6.2')
+    implementation("io.ktor:ktor-server-netty:1.5.4")
+    implementation("io.ktor:ktor-html-builder:1.5.4")
     implementation "ch.qos.logback:logback-classic:1.2.3"
     implementation 'org.jetbrains:annotations:22.0.0'
 }

@@ -6,18 +6,12 @@ import com.mcal.apkprotector.data.Constants;
 import com.mcal.apkprotector.data.gson.ConfigTemp;
 import com.mcal.apkprotector.fastzip.FastZip;
 import com.mcal.apkprotector.patchers.DexCrypto;
-import com.mcal.apkprotector.patchers.DexPatcher;
 import com.mcal.apkprotector.patchers.ManifestPatcher;
 import com.mcal.apkprotector.signer.ApkSigner;
 import com.mcal.apkprotector.utils.*;
 import org.jetbrains.annotations.NotNull;
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.zip.ZipEntry;
 
 public class Main {
     public static void main(String @NotNull ... args) {
@@ -58,12 +52,7 @@ public class Main {
         long time = System.currentTimeMillis();
 
         try {
-            Path source = Paths.get(apkPath);
-            Path target = Paths.get(Constants.OUTPUT_PATH);
-
-            ExtractApk.unzipFolder(source, target);
-            FileUtils.deleteDir(new File(Constants.OUTPUT_PATH + File.separator + "META-INF"));
-            //FastZip.extract(apkPath, Constants.OUTPUT_PATH);
+            FastZip.extract(apkPath, Constants.OUTPUT_PATH);
             LoggerUtils.writeLog("Success unpack: " + apkPath);
 
             ByteArrayInputStream bis = new ByteArrayInputStream(ManifestPatcher.parseManifest());
@@ -77,24 +66,10 @@ public class Main {
             LoggerUtils.writeLog("Success patch: " + Constants.MANIFEST_PATH);
 
             DexCrypto.encodeDexes();
-            for (File file : new File(Constants.OUTPUT_PATH).listFiles()) {
-                if (file.getName().endsWith(".dex")) {
-                    FileUtils.delete(file);
-                }
-            }
-
-            try {
-                DexBackedDexFile dex = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), new BufferedInputStream(new FileInputStream(Constants.DEXLOADER_PATH)));
-                byte[] dexData = DexPatcher.patchDex(dex);
-                FileUtils.byteToFile(Constants.OUTPUT_PATH + File.separator + "classes.dex", dexData);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             LoggerUtils.writeLog("Dex files successful encrypted");
 
-            //FastZip.repack(apkPath, Constants.UNSIGNED_PATH);
-            BuildApk.buildApk(Paths.get(Constants.OUTPUT_PATH), Constants.UNSIGNED_PATH);
+            FastZip.repack(apkPath, Constants.UNSIGNED_PATH);
             LoggerUtils.writeLog("Success compiled: " + Constants.UNSIGNED_PATH);
 
             if (!new ApkSigner().apksigner(Constants.UNSIGNED_PATH, Constants.SIGNED_PATH)) {

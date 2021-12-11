@@ -17,7 +17,7 @@ public class Constants {
     public final static String SIGNED_PATH = FileUtils.getWorkPath() + File.separator + "release" + File.separator + "app-signed.apk";
     public final static String MANIFEST_PATH = FileUtils.getWorkPath() + File.separator + "output" + File.separator + "AndroidManifest.xml";
     public final static String CONFIG_PATH = FileUtils.getWorkPath() + File.separator + "tools" + File.separator + "config.json";
-    public final static String DEXLOADER_PATH = FileUtils.getWorkPath() + File.separator + "tools" + File.separator + "dexloader.dex";
+    public final static String DEXLOADER_PATH = FileUtils.getWorkPath() + File.separator + "tools" + File.separator + "classes.dex";
     public final static String CONFIG_TEMP_PATH = Constants.TOOLS_PATH + File.separator + "config-temp.json";
     public static String PACKAGE_NAME = "com.android.protector";
     public static String DEX_PREFIX = "protect-v";

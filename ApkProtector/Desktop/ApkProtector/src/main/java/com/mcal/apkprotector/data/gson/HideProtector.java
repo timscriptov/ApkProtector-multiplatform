@@ -18,13 +18,14 @@ public class HideProtector {
     @SerializedName("alphabet")
     public String alphabet;
 
-    public HideProtector(int type, String packageName, String dexFolder, String dexPrefix, String dexSuffix, String proxyApp, String alphabet) {
-        this.type = type;
-        this.packageName = packageName;
-        this.dexFolder = dexFolder;
-        this.dexPrefix = dexPrefix;
-        this.dexSuffix = dexSuffix;
-        this.proxyApp = proxyApp;
-        this.alphabet = alphabet;
-    }
+    @SerializedName("SECONDARY_DEXES")
+    public String SECONDARY_DEXES;
+    @SerializedName("MULTIDEX_LOCK")
+    public String MULTIDEX_LOCK;
+    @SerializedName("CLASSES")
+    public String CLASSES;
+    @SerializedName("ZIP")
+    public String ZIP;
+    @SerializedName("CODE_CACHE")
+    public String CODE_CACHE;
 }

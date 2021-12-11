@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 31
+    buildToolsVersion = '31.0.0'
+
+    defaultConfig {
+        applicationId "com.secure.dex"
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 119
+        versionName "1.1.9"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+dependencies {
+    //implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.multidex:multidex:2.0.1'
+    //implementation 'org.jetbrains:annotations:22.0.0'
+}

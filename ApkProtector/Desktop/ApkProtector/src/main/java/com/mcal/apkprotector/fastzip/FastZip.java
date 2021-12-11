@@ -18,7 +18,7 @@ import java.util.zip.ZipOutputStream;
 
 public class FastZip {
 
-    public static final String[] n = {".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
+    public static final String[] n = {"resources.arsc", ".jpg", ".jpeg", ".png", ".gif", ".wav", ".mp2", ".mp3", ".ogg", ".aac", ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet", ".rtttl", ".imy", ".xmf", ".mp4", ".m4a", ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2", ".amr", ".awb", ".wma", ".wmv"};
 
     public static void extract(File zip, @NotNull File extractDir) throws IOException {
         extractDir.mkdirs();
@@ -112,7 +112,7 @@ public class FastZip {
             String name = entry.getName();
             if (name.startsWith("META-INF/")) continue;
             for (String endsWith : n) {
-                if (name.equals(endsWith) || name.equals("resources.arsc") && !entry.isDirectory()) {
+                if (name.equals(endsWith) && !entry.isDirectory()) {
                     fzos.setLevel(ZipEntry.STORED);
                 } else {
                     fzos.setLevel(ZipEntry.DEFLATED);
