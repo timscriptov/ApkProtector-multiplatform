@@ -2,8 +2,8 @@
 <resources>
     <color name="bg">#FF000000</color>
     <color name="cardView">#FF202125</color>
-    <color name="colorAccent">#64A610</color>
-    <color name="colorPrimary">#64A610</color>
+    <color name="colorAccent">#1de9b6</color>
+    <color name="colorPrimary">#1de9b6</color>
     <color name="colorPrimaryDark">#FF202125</color>
     <color name="colorBackground">#FF202125</color>
 

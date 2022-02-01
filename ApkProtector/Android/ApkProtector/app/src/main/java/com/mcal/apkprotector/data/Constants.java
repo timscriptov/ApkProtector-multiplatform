@@ -12,7 +12,7 @@ public class Constants {
     public final static String RELEASE_PATH = ScopedStorage.getFilesDir() + File.separator + "release";
     public final static String OUTPUT_PATH = ScopedStorage.getFilesDir() + File.separator + "output";
     public final static String ASSETS_PATH = ScopedStorage.getFilesDir() + File.separator + "output" + File.separator + "assets";
-    public final static String LOG_PATH = ScopedStorage.getStorageDirectory() + File.separator + "ApkProtect" + File.separator + "Log.txt";
+    public final static String LOG_PATH = ScopedStorage.getStorageDirectory() + File.separator + "Log.txt";
     public final static String UNSIGNED_PATH = ScopedStorage.getFilesDir() + File.separator + "release" + File.separator + "app-unsigned.apk";
     public final static String MANIFEST_PATH = ScopedStorage.getFilesDir() + File.separator + "output" + File.separator + "AndroidManifest.xml";
     public static final String UTF_8 = "UTF-8";

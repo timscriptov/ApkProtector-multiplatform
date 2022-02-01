@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import androidx.multidex.MultiDexApplication;
@@ -12,6 +13,8 @@ import com.secure.dex.data.Const;
 import com.secure.dex.utils.DexProtector;
 import com.secure.dex.utils.Reflect;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -29,73 +32,76 @@ public class ProxyApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Application app = realApplication();
-        if (app != null) {
-            app.onCreate();
+        if (!TextUtils.isEmpty(Const.REAL_APP)) {
+            try {
+                android.app.Application app = bindRealApplication(Const.REAL_APP);
+                if (app != null) {
+                    app.onCreate();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private Application realApplication() {
-        // Определяем наличие Applicaiton
-        Object currentActivityThread = Reflect.invokeMethod("android.app.ActivityThread", null, "currentActivityThread", new Object[]{}, null);
-        Object mBoundApplication = Reflect.getFieldValue(
-                "android.app.ActivityThread", currentActivityThread,
-                "mBoundApplication");
-        Object loadedApkInfo = Reflect.getFieldValue(
-                "android.app.ActivityThread$AppBindData",
-                mBoundApplication, "info");
-        // Установить для текущего процесса Application значение null
-        Reflect.setFieldValue("android.app.LoadedApk", loadedApkInfo, "mApplication", null);
-        Object oldApplication = Reflect.getFieldValue(
-                "android.app.ActivityThread", currentActivityThread,
-                "mInitialApplication");
-        // http://www.codeceo.com/article/android-context.html
-        ArrayList<Application> mAllApplications = (ArrayList<Application>) Reflect
-                .getFieldValue("android.app.ActivityThread",
-                        currentActivityThread, "mAllApplications");
-        if (mAllApplications != null) {
-            mAllApplications.remove(oldApplication);// Удалить старый Application
+    public Application bindRealApplication(String packagen) throws Exception{
+        if (TextUtils.isEmpty(packagen)){
+            return null;
         }
+        //Get the context passed in attchBaseContext(context) ContextImpl
+        Context baseContext = getBaseContext();
+        //Create the user's real application (MyApplication)
+        Class<?> delegateClass = null;
+        delegateClass = Class.forName(packagen);
 
-        ApplicationInfo loadedApk = (ApplicationInfo) Reflect
-                .getFieldValue("android.app.LoadedApk", loadedApkInfo,
-                        "mApplicationInfo");
-        ApplicationInfo appBindData = (ApplicationInfo) Reflect
-                .getFieldValue("android.app.ActivityThread$AppBindData",
-                        mBoundApplication, "appInfo");
+        Application delegate = (Application) delegateClass.newInstance();
 
-        if (loadedApk != null) {
-            loadedApk.className = Const.REAL_APP;
-        }
-        if (appBindData != null) {
-            appBindData.className = Const.REAL_APP;
-        }
+        //Get the atch() method
+        Method attach = Application.class.getDeclaredMethod("attach",Context.class);
+        attach.setAccessible(true);
+        attach.invoke(delegate,baseContext);
 
-        Application app = (Application) Reflect.invokeMethod(
-                "android.app.LoadedApk", loadedApkInfo, "makeApplication",
-                new Object[]{false, null},
-                boolean.class, Instrumentation.class); // Выполнить makeApplication (false, null)
+        //Get ContextImpl ---->, mOuterContext(app); Get through the AttachBaseContext callback parameter of Application
+        Class<?> contextImplClass = Class.forName("android.app.ContextImpl");
+        //Get the mOuterContext attribute
+        Field mOuterContextField = contextImplClass.getDeclaredField("mOuterContext");
+        mOuterContextField.setAccessible(true);
+        mOuterContextField.set(baseContext,delegate);
 
-        Reflect.setFieldValue("android.app.ActivityThread", currentActivityThread, "mInitialApplication", app);
+        //ActivityThread ----> mAllApplication(ArrayList) mMainThread property of ContextImpl
+        Field mMainThreadField = contextImplClass.getDeclaredField("mMainThread");
+        mMainThreadField.setAccessible(true);
+        Object mMainThread = mMainThreadField.get(baseContext);
 
-        //
-        ArrayMap<String, String> mProviderMap = (ArrayMap<String, String>) Reflect.getFieldOjbect(
-                "android.app.ActivityThread", currentActivityThread,
-                "mProviderMap");
-        Iterator<String> it = null;
-        if (mProviderMap != null) {
-            it = mProviderMap.values().iterator();
-        }
-        if (it != null) {
-            while (it.hasNext()) {
-                Object providerClientRecord = it.next();
-                Object localProvider = Reflect.getFieldOjbect(
-                        "android.app.ActivityThread$ProviderClientRecord",
-                        providerClientRecord, "mLocalProvider");
-                Reflect.setFieldOjbect("android.content.ContentProvider",
-                        "mContext", localProvider, app);
-            }
-        }
-        return app;
+        //ActivityThread -----> mMainThread attribute of mInitialApplication ContextImpl
+        Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
+        Field mInitialApplicationField = activityThreadClass.getDeclaredField("mInitialApplication");
+        mInitialApplicationField.setAccessible(true);
+        mInitialApplicationField.set(mMainThread,delegate);
+
+        //ActivityThread ------> mAllApplications(ArrayList) mMainThread property of ContextImpl
+        Field mAllApplicationsField = activityThreadClass.getDeclaredField("mAllApplications");
+        mAllApplicationsField.setAccessible(true);
+        ArrayList<Application> mApplications = (ArrayList<Application>) mAllApplicationsField.get(mMainThread);
+        mApplications.remove(this);
+        mApplications.add(delegate);
+
+        //LoadedApk -----> mPackageInfo attribute of mApplicaion ContextImpl
+        Field mPackageInfoField = contextImplClass.getDeclaredField("mPackageInfo");
+        mPackageInfoField.setAccessible(true);
+        Object mPackageInfo = mPackageInfoField.get(baseContext);
+
+
+        Class<?> loadedApkClass = Class.forName("android.app.LoadedApk");
+        Field mApplicationField = loadedApkClass.getDeclaredField("mApplication");
+        mApplicationField.setAccessible(true);
+        mApplicationField.set(mPackageInfo,delegate);
+
+        //Modify ApplicationInfo className LoadedApk
+        Field mApplicationInfoField = loadedApkClass.getDeclaredField("mApplicationInfo");
+        mApplicationInfoField.setAccessible(true);
+        ApplicationInfo mApplicationInfo = (ApplicationInfo) mApplicationInfoField.get(mPackageInfo);
+        mApplicationInfo.className = packagen;
+        return delegate;
     }
 }

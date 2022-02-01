@@ -115,10 +115,10 @@ public class Dialogs {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://android.googlesource.com/platform/tools/apksig/+/master/")));
             dialog.cancel();
         });
-        dialog.addAction(R.drawable.ic_link, "ZipAligner", view -> {
+        /*dialog.addAction(R.drawable.ic_link, "ZipAligner", view -> {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://android.googlesource.com/platform/build/+/master/tools/zipalign")));
             dialog.cancel();
-        });
+        });*/
         dialog.show();
     }
 

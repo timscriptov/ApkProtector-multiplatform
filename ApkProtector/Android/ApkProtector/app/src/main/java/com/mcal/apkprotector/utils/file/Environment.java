@@ -14,6 +14,9 @@ public class Environment {
     }
 
     public void init() {
+        if (!ScopedStorage.getStorageDirectory().exists()) {
+            ScopedStorage.getStorageDirectory().mkdir();
+        }
         installKeys();
         installDexloader();
     }

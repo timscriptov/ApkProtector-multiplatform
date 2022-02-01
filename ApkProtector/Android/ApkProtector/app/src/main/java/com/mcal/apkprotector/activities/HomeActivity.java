@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        xpath = ScopedStorage.getStorageDirectory() + "/ApkProtect";
+        xpath = ScopedStorage.getStorageDirectory().getPath();
 
         setContentView(R.layout.activity_landing);
         setupToolbar(getString(R.string.protected_apps));

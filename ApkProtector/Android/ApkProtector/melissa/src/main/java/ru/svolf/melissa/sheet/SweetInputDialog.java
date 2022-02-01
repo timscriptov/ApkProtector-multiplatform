@@ -58,4 +58,12 @@ public class SweetInputDialog extends AppCompatDialog {
     public EditText getInputField() {
         return mEditText;
     }
+
+    @Override
+    public void dismiss() {
+        mContext = null;
+        mPositive = null;
+        mEditText = null;
+        super.dismiss();
+    }
 }

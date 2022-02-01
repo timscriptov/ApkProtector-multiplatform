@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -189,7 +191,11 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
             adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
                 switch (p2) {
                     case 0:
-                        selectApkFromSdcard();
+                        if (!(Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager())) {
+                            selectApkFromSdcard();
+                        } else {
+                            Toast.makeText(getContext(), "Not support Android 10+", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case 1:
                         new AppListDialog(getActivity(), apkPath);
@@ -271,7 +277,7 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
 
     @Nullable
     private Function0<Unit> start(File apk) {
-        final File sourceDir = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + MyAppInfo.getPackage() + "");
+        final File sourceDir = new File(ScopedStorage.getStorageDirectory() + "/output/" + MyAppInfo.getPackage() + "");
         if (sourceDir.exists()) {
             showAlreadyExistsDialog(apk.getAbsolutePath(), sourceDir);
         } else {
@@ -315,8 +321,7 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
     }
 
     private void writeFolder() {
-        String fold = "ApkProtect/";
-        String[] folder = {fold + "key", fold + "output"};
+        String[] folder = {"key", "output"};
         for (String s : folder) {
             File f = new File(ScopedStorage.getStorageDirectory() + "/" + s);
             if (!f.exists()) {

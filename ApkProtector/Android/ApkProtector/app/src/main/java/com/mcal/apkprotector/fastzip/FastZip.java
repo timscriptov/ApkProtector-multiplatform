@@ -112,13 +112,6 @@ public class FastZip {
             String name = entry.getName();
 
             if (name.startsWith("META-INF/")) continue;
-            for (String endsWith : n) {
-                if (name.equals(endsWith) || name.equals("resources.arsc") && !entry.isDirectory()) {
-                    fzos.setLevel(ZipOutputStream.STORED);
-                } else {
-                    fzos.setLevel(ZipOutputStream.DEFLATED);
-                }
-            }
 
             if (name.equals("AndroidManifest.xml")
                     || name.matches("classes\\.dex")

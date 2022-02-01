@@ -89,6 +89,15 @@ public class SweetContentDialog extends BottomSheetDialog {
         setView(LayoutInflater.from(getContext()).inflate(resId, null));
     }
 
+    /**
+     * @param activity parent activity
+     * @param percent  percentage of the screen height to which the dialog box will be expanded
+     */
+    public void peekFullScreen(Activity activity, int percent){
+        int peekLimit = ((percent * 100) / Render.getScreenHeight(activity));
+        getBehavior().setPeekHeight(peekLimit, true);
+    }
+
     public void setPositive(@DrawableRes int resId, CharSequence text, View.OnClickListener listener) {
         mControls.add(new ControlsItem(resId, text, listener));
     }
@@ -120,7 +129,7 @@ public class SweetContentDialog extends BottomSheetDialog {
     public void makeBlur() {
         if (mContext instanceof Activity) {
             Bitmap screen = Render.takeScreenShot((Activity) mContext);
-            Bitmap fast = Render.fastblur(screen, 70, 50);
+            Bitmap fast = Render.fastblur(screen, 20, 50);
             final Drawable draw = new BitmapDrawable(mContext.getResources(), fast);
             getWindow().setBackgroundDrawable(draw);
         }
@@ -230,5 +239,14 @@ public class SweetContentDialog extends BottomSheetDialog {
         public void show() {
             create().show();
         }
+    }
+
+    @Override
+    public void dismiss() {
+        mControls = null;
+        mContentFrame = null;
+        mCaption = null;
+        mControllerView = null;
+        super.dismiss();
     }
 }

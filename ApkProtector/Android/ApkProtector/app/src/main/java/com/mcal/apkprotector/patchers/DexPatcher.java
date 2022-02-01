@@ -60,7 +60,7 @@ public class DexPatcher {
                     .replace("$DEX_DIR", enc(Preferences.getFolderDexesName()))
                     .replace("$DEX_PREFIX", enc(Preferences.getPrefixDexesName()))
                     .replace("$APP_NAME", "")
-                    .replace("$DEX_SUFIX", enc(Preferences.getSuffixDexesName()))
+                    .replace("$DEX_SUFFIX", enc(Preferences.getSuffixDexesName()))
 
                     .replace("$SECONDARY_DEXES", enc(Constants.SECONDARY_DEXES))
                     .replace("$MULTIDEX_LOCK", enc(Constants.MULTIDEX_LOCK))
@@ -78,9 +78,9 @@ public class DexPatcher {
                     }
                     customApplicationName = packageName + customApplicationName;
                 }
-                smaliData = smaliData.replace("$APPLICATION", customApplicationName);
+                smaliData = smaliData.replace("$REAL_APP", customApplicationName);
             } else {
-                smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
+                smaliData = smaliData.replace("$REAL_APP", "android.app.Application");
             }
             FileUtils.writeString(smali, smaliData);
         }

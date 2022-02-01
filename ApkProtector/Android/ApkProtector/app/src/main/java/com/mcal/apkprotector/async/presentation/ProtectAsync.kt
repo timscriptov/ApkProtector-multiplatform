@@ -36,7 +36,7 @@ class ProtectAsync(
     @field:SuppressLint("StaticFieldLeak") private val listener: ProtectAsyncListener,
     @field:SuppressLint("StaticFieldLeak") private val context: Context
 ) : CoroutineScope {
-    private val path: String = ScopedStorage.getStorageDirectory().toString() + "/ApkProtect"
+    private val path: String = ScopedStorage.getStorageDirectory().path
     private val xpath: String = context.filesDir.absolutePath
     private var mi: MyAppInfo? = null
     private var protectLoadDialog: SweetViewDialog? = null
@@ -75,7 +75,7 @@ class ProtectAsync(
             listener.onCompleted()
         } else {
             val sourceDir =
-                File(ScopedStorage.getStorageDirectory().absolutePath + "/ApkProtect/output/" + MyAppInfo.getPackage() + "")
+                File(ScopedStorage.getStorageDirectory().absolutePath + "/output/" + MyAppInfo.getPackage() + "")
             if (sourceDir.exists()) {
                 FileUtils.deleteDir(sourceDir)
             }

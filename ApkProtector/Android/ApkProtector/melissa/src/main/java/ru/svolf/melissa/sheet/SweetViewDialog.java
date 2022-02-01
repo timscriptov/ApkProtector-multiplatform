@@ -1,24 +1,29 @@
 package ru.svolf.melissa.sheet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import ru.svolf.melissa.R;
+import ru.svolf.melissa.util.Render;
 
 public class SweetViewDialog extends BottomSheetDialog {
-    private Context mContext;
+    private final Context mContext;
     private FrameLayout mContentFrame;
     private TextView mCaption;
     private Button mPositive, mNegative, mNeutral;
-    private View.OnClickListener positiveSet = null, negativeSet = null, neutralSet = null;
+    private View.OnClickListener positiveSet = null;
+    private View.OnClickListener negativeSet = null;
+    private View.OnClickListener neutralSet = null;
 
     public SweetViewDialog(@NonNull Context context) {
         super(context);
@@ -50,10 +55,22 @@ public class SweetViewDialog extends BottomSheetDialog {
         mContentFrame.addView(view);
     }
 
+    /**
+     * @param percent  percentage of the screen height to which the dialog box will be expanded
+     */
+    public void peekFullScreen(int percent){
+        if (mContext instanceof Activity){
+            int peekLimit = (Render.getScreenHeight((Activity) mContext) / 100) * percent;
+            getBehavior().setPeekHeight(peekLimit, true);
+        } else {
+            getBehavior().setPeekHeight(1200, true);
+        }
+    }
+
     public void setNeutral(CharSequence text, View.OnClickListener listener) {
-        mNegative.setText(text);
-        mNegative.setOnClickListener(listener);
-        negativeSet = listener;
+        mNeutral.setText(text);
+        mNeutral.setOnClickListener(listener);
+        neutralSet = listener;
     }
 
     public void setPositive(CharSequence text, View.OnClickListener listener) {
@@ -69,9 +86,9 @@ public class SweetViewDialog extends BottomSheetDialog {
     }
 
     public void setNeutral(int resId, View.OnClickListener listener) {
-        mNegative.setText(resId);
-        mNegative.setOnClickListener(listener);
-        negativeSet = listener;
+        mNeutral.setText(resId);
+        mNeutral.setOnClickListener(listener);
+        neutralSet = listener;
     }
 
     public void setPositive(int resId, View.OnClickListener listener) {
@@ -101,5 +118,16 @@ public class SweetViewDialog extends BottomSheetDialog {
         if (mNegative.getVisibility() == View.VISIBLE && negativeSet == null) {
             mNegative.setOnClickListener(view -> dismiss());
         }
+    }
+
+    @Override
+    public void dismiss() {
+        mContentFrame = null;
+        mCaption = null;
+        mContentFrame = null;
+        mPositive = null;
+        mNegative = null;
+        mNeutral = null;
+        super.dismiss();
     }
 }

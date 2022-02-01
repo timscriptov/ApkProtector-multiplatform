@@ -1,10 +1,12 @@
 package com.mcal.apkprotector.utils;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
@@ -17,24 +19,26 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 public class InstallProvider {
+    private static final String TAG = InstallProvider.class.getSimpleName();
 
-    public static void install(Context context, @NotNull File file) {
-        if (file.exists()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Uri apkUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
-                Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                intent.setData(apkUri);
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                context.startActivity(intent);
-            } else {
-                Uri apkUri = Uri.fromFile(file);
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
+    public static void installApplication(Context context, File filePath) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uriFromFile(context, filePath), "application/vnd.android.package-archive");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error in opening the file!");
+        }
+    }
+
+    public static Uri uriFromFile(Context context, File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
         } else {
-            Toast.makeText(context, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+            return Uri.fromFile(file);
         }
     }
 

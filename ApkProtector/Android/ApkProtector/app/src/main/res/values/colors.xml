@@ -2,9 +2,9 @@
 <resources>
     <color name="bg">#FFF8F8F8</color>
     <color name="cardView">#FFFFFFFF</color>
-    <color name="colorAccent">#64A610</color>
-    <color name="colorPrimary">#64A610</color>
-    <color name="colorPrimaryDark">#64A610</color>
+    <color name="colorAccent">#1de9b6</color>
+    <color name="colorPrimary">#1de9b6</color>
+    <color name="colorPrimaryDark">#1de9b6</color>
     <color name="colorBackground">#FFFFFFFF</color>
 
     <color name="dialog_style">#FFF8F8F8</color>

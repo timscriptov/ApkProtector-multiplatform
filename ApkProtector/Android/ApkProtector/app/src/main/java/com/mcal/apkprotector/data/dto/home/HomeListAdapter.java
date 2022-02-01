@@ -70,7 +70,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.history_list_item, null);
         }
         final SourceInfo pkg = getItem(position);
-        String iconPath = ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk";
+        String iconPath = ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk";
         Log.e(TAG, "getView: " + iconPath);
 
         final ViewHolder holder = new ViewHolder();
@@ -100,7 +100,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
         }
         View finalConvertView = convertView;
         holder.cardlayout.setOnClickListener(v -> {
-            apk = new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
+            apk = new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName() + "/" + pkg.getPackageLabel() + ".apk");
 
             View apk_info = LayoutInflater.from(getContext()).inflate(R.layout.apk_info, null);
 
@@ -119,7 +119,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
                 try {
                     if (apk.exists()) {
                         if (CommonUtils.isSameSign(getContext(), apk.getAbsolutePath(), pkg.getPackageName())) {
-                            InstallProvider.install(getContext(), apk);
+                            InstallProvider.installApplication(getContext(), apk);
                         } else {
                             new AlertDialog.Builder(finalConvertView.getContext())
                                     .setCancelable(false)
@@ -130,7 +130,7 @@ public class HomeListAdapter extends ArrayAdapter<SourceInfo> {
                                     .create().show();
                         }
                     } else {
-                        Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/ApkProtect/output/" + pkg.getPackageName()));
+                        Utils.deleteFolder(new File(ScopedStorage.getStorageDirectory() + "/output/" + pkg.getPackageName()));
                         // FIXME СУКА
                         notifyDataSetChanged();
                     }

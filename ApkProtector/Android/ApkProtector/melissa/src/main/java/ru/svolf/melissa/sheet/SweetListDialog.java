@@ -1,5 +1,6 @@
 package ru.svolf.melissa.sheet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.ArrayList;
 
 import ru.svolf.melissa.R;
+import ru.svolf.melissa.util.Render;
 
 /**
  * Created by Snow Volf on 20.08.2017, 19:56
@@ -77,6 +79,15 @@ public class SweetListDialog extends BottomSheetDialog {
     }
 
     /**
+     * @param activity parent activity
+     * @param percent  percentage of the screen height to which the dialog box will be expanded
+     */
+    public void peekFullScreen(Activity activity, int percent){
+        int peekLimit = ((percent * 100) / Render.getScreenHeight(activity));
+        getBehavior().setPeekHeight(peekLimit, true);
+    }
+
+    /**
      * Start the dialog and display it on screen.  The window is placed in the
      * application layer and opaque.  Note that you should not override this
      * method to do initialization when the dialog is shown, instead implement
@@ -128,5 +139,15 @@ public class SweetListDialog extends BottomSheetDialog {
         public void show() {
             SweetListDialog.this.show();
         }
+    }
+
+    @Override
+    public void dismiss() {
+        mItems = null;
+        mAdapter = null;
+        mContext = null;
+        mTitle = null;
+        mList = null;
+        super.dismiss();
     }
 }
