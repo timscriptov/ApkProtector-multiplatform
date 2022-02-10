@@ -1,5 +1,7 @@
 package com.mcal.dexprotect.patchers;
 
+import androidx.annotation.NonNull;
+
 import com.mcal.dexprotect.data.Constants;
 import com.mcal.dexprotect.data.Preferences;
 import com.mcal.dexprotect.utils.LoggerUtils;
@@ -19,6 +21,7 @@ public class ManifestPatcher {
     public static String customApplicationName = "";
     public static String packageName = "";
 
+    @NonNull
     public static byte[] parseManifest() throws IOException {
         FileInputStream fis = new FileInputStream(Constants.MANIFEST_PATH);
         AXmlDecoder axml = AXmlDecoder.decode(fis);

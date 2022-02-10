@@ -12,7 +12,7 @@ import java.io.File;
 public class ScopedStorage {
     public static File getStorageDirectory() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager()) {
-            return App.getContext().getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath());
+            return App.getContext().getExternalFilesDir("ApkProtect");
         } else {
             return new File(Environment.getExternalStorageDirectory() + "/ApkProtect");
         }

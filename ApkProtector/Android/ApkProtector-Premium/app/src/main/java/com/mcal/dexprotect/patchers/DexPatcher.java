@@ -57,17 +57,18 @@ public class DexPatcher {
                 smaliData = smaliData.replaceFirst(matcher.group(), Preferences.getPackageName().replace(".", matcher.group(1)));
             }
             smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
+                    .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
+                    .replace("$AppName", "Security")
                     .replace("$DEX_DIR", enc(Preferences.getFolderDexesName()))
                     .replace("$DEX_PREFIX", enc(Preferences.getPrefixDexesName()))
-                    .replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
                     .replace("$APP_NAME", "")
-                    .replace("$DEX_SUFIX", enc(Preferences.getSuffixDexesName()))
+                    .replace("$DEX_SUFFIX", enc(Preferences.getSuffixDexesName()))
 
-                    .replace("$SECONDARY_DEXES", "SECONDARY_DEXES")
-                    .replace("$MULTIDEX_LOCK", "MULTIDEX_LOCK")
-                    .replace("$CLASSES", "CLASSES")
-                    .replace("$ZIP", "ZIP")
-                    .replace("$CODE_CACHE", "CODE_CACHE");
+                    .replace("$SECONDARY_DEXES", enc(Constants.SECONDARY_DEXES))
+                    .replace("$MULTIDEX_LOCK", enc(Constants.MULTIDEX_LOCK))
+                    .replace("$CLASSES", enc(Constants.CLASSES))
+                    .replace("$ZIP", enc(Constants.ZIP))
+                    .replace("$CODE_CACHE", enc(Constants.CODE_CACHE));
 
             if (customApplication) {
                 LoggerUtils.writeLog("Custom application detected");
@@ -79,9 +80,9 @@ public class DexPatcher {
                     }
                     customApplicationName = packageName + customApplicationName;
                 }
-                smaliData = smaliData.replace("$APPLICATION", customApplicationName);
+                smaliData = smaliData.replace("$REAL_APP", customApplicationName);
             } else {
-                smaliData = smaliData.replace("$APPLICATION", "android.app.Application");
+                smaliData = smaliData.replace("$REAL_APP", "android.app.Application");
             }
             FileUtils.writeString(smali, smaliData);
         }

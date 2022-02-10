@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -190,7 +192,11 @@ public class HomeFragment extends Fragment {
             adb.setItems(new String[]{getString(R.string.pick_from_sdcard), getString(R.string.pick_from_installed)}, (p112, p2) -> {
                 switch (p2) {
                     case 0:
-                        selectApkFromSdcard();
+                        if (!(Build.VERSION.SDK_INT > Build.VERSION_CODES.Q && !Environment.isExternalStorageManager())) {
+                            selectApkFromSdcard();
+                        } else {
+                            Toast.makeText(getContext(), "Not support Android 10+", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case 1:
                         new AppListDialog(getActivity(), apkPath);
@@ -581,7 +587,7 @@ public class HomeFragment extends Fragment {
         completeDialog.show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
+    /*@RequiresApi(api = Build.VERSION_CODES.R)
     private void showScopedStorageDialog() {
         SweetContentDialog permissionDialog = new SweetContentDialog(getContext());
         permissionDialog.setTitle(getString(R.string.scoped_storage_title));
@@ -592,7 +598,7 @@ public class HomeFragment extends Fragment {
             permissionDialog.dismiss();
         });
         permissionDialog.show();
-    }
+    }*/
 
     @Override
     public void onResume() {

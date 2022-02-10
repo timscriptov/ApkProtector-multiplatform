@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.mcal.apkprotector.data.Const;
 import com.mcal.apkprotector.multidex.MultiDex;
+import com.mcal.apkprotector.security.Security;
 import com.mcal.apkprotector.utils.RefInvoke;
 
 import java.lang.ref.WeakReference;
@@ -31,12 +32,12 @@ public class ProtectApplication extends Application {
                 "mPackages");
         WeakReference wr = (WeakReference) mPackages.get(packageName);
 
-        MultiDex.install(this);
-        /*try {
+        //MultiDex.install(this);
+        try {
             new Security(this, Const.DATA);
         } finally {
             MultiDex.install(this);
-        }*/
+        }
     }
 
     @Override
