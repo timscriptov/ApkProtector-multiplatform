@@ -23,7 +23,7 @@ public class Constants {
     public static String DEX_PREFIX = "classes-v";
     public static String DEX_SUFFIX = ".bin";
     public static String ASSETS_DIR_DEX  = "dexes";
-    public static String PROXY_APP = "MyApplication";
+    public static String PROXY_APP = "ProtectApplication";
 
     // Others
     public static final String SECONDARY_DEXES = "secondary-dexes";

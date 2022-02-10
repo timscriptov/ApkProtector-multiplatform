@@ -5,13 +5,11 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
         classpath "net.sf.proguard:proguard-gradle:6.2.2"
         classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
     }
 }
 
-apply plugin: 'kotlin'
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'application'
 
@@ -21,7 +19,6 @@ compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
 sourceSets {
-    main.kotlin.srcDirs = [ 'src/main/java' ]
     main.resources.srcDirs = [ 'src/main/resources' ]
 }
 
@@ -32,7 +29,6 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0'
     implementation 'org.smali:dexlib2:2.5.2'
     implementation 'org.smali:smali:2.5.2'
     implementation 'org.smali:baksmali:2.5.2'
@@ -47,8 +43,7 @@ dependencies {
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
     implementation 'com.madgag.spongycastle:prov:1.58.0.0'
 
-    implementation('io.ktor:ktor-server-netty:1.6.6')
-    implementation('io.ktor:ktor-html-builder:1.6.6')
     implementation 'ch.qos.logback:logback-classic:1.2.7'
     implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'org.conscrypt:conscrypt-openjdk:2.5.2'
 }

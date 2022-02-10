@@ -41,19 +41,21 @@ public class DexPatcher {
                 smaliData = smaliData.replaceFirst(matcher.group(), Preferences.getPackageName().replace(".", matcher.group(1)));
             }
             smaliData = smaliData.replace("$PROTECT_KEY", enc(Preferences.getProtectKey()))
-                    .replace("$DEX_DIR", enc(Preferences.getDexDir()))
-                    .replace("$DEX_PREFIX", enc(Preferences.getDexPrefix()))
+                    
                     //.replace("$DATA", CommonUtils.encryptStrings(Security.write(Constants.RELEASE_PATH + File.separator + "app-temp.apk"), 2))
                     .replace("$DATA", "")
+                    .replace("$AppName", "Security")
+                    .replace("$DEX_DIR", enc(Preferences.getDexDir()))
+                    .replace("$DEX_PREFIX", enc(Preferences.getDexPrefix()))
                     .replace("$APP_NAME", "")
                     .replace("$DEX_SUFFIX", enc(Preferences.getDexSuffix()))
-                    //.replace("ProtectApplication", Preferences.getProxyAppName())
 
-                    .replace("$SECONDARY_DEXES", enc(Preferences.SECONDARY_DEXES()))
-                    .replace("$MULTIDEX_LOCK", enc(Preferences.MULTIDEX_LOCK()))
-                    .replace("$CLASSES", enc(Preferences.CLASSES()))
-                    .replace("$ZIP", enc(Preferences.ZIP()))
-                    .replace("$CODE_CACHE", enc(Preferences.CODE_CACHE()))
+                    .replace("$SECONDARY_DEXES", enc(Constants.SECONDARY_DEXES))
+                    .replace("$MULTIDEX_LOCK", enc(Constants.MULTIDEX_LOCK))
+                    .replace("$CLASSES", enc(Constants.CLASSES))
+                    .replace("$ZIP", enc(Constants.ZIP))
+                    .replace("$CODE_CACHE", enc(Constants.CODE_CACHE))
+
                     .replace("ProtectApplication", Preferences.getProxyAppName());
             if (customApplication) {
                 LoggerUtils.writeLog("Custom application detected");
@@ -90,7 +92,8 @@ public class DexPatcher {
         return dexBytes;
     }
 
-    private static @NotNull String enc(String text) {
+    private static @NotNull
+    String enc(String text) {
         String str = CommonUtils.encryptStrings(text, 2);
         byte[] charset = str.getBytes(StandardCharsets.UTF_8);
         return new String(charset, StandardCharsets.UTF_8);

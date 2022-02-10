@@ -1,8 +1,6 @@
 package com.mcal.apkprotector.fastzip;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,15 +15,14 @@ public class CRC32Utils {
     public static boolean isNoCompressFileType(String entryName) {
         for (int i = 0; i < noCompressExt.length; i++) {
             if (entryName.endsWith(noCompressExt[i])) {
-                Log.d("DEBUG", entryName + " not compress.");
+                //Log.d("DEBUG", entryName + " not compress.");
                 return true;
             }
         }
         return false;
     }
 
-    @NonNull
-    public static CRC32 calculateCrc(@NonNull InputStream input) throws IOException {
+    public static @NotNull CRC32 calculateCrc(@NotNull InputStream input) throws IOException {
         CRC32 crc = new CRC32();
         int bytesRead;
         byte[] buffer = new byte[8192];
