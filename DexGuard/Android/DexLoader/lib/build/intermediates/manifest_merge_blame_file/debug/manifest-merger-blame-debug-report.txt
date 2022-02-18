@@ -1,0 +1,40 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.admin.ffffffffffffffffffffffff" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="21"
+6-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml
+7        android:targetSdkVersion="32" />
+7-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml
+8
+9    <application
+9-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:5:5-19:19
+10        android:allowBackup="true"
+10-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:6:9-35
+11        android:icon="@mipmap/ic_launcher"
+11-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:7:9-43
+12        android:roundIcon="@mipmap/ic_launcher_round"
+12-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:8:9-54
+13        android:supportsRtl="true" >
+13-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:9:9-35
+14        <activity
+14-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:10:9-18:20
+15            android:name="com.admin.ffffffffffffffffffffffff.MainActivity"
+15-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:11:13-41
+16            android:exported="true" >
+16-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:12:13-36
+17            <intent-filter>
+17-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:13:13-17:29
+18                <action android:name="android.intent.action.MAIN" />
+18-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:14:17-69
+18-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:14:25-66
+19
+20                <category android:name="android.intent.category.LAUNCHER" />
+20-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:16:17-77
+20-->H:\AppProjects\ApkProtector-multiplatform\DexGuard\Android\DexLoader\lib\src\main\AndroidManifest.xml:16:27-74
+21            </intent-filter>
+22        </activity>
+23    </application>
+24
+25</manifest>

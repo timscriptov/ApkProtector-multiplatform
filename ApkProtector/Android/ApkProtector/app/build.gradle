@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'applovin-quality-service'
+
+applovin {
+    apiKey "BO6DpSm55CZ1mCteqM8qs3tFy1LXCp5q-TEHbi2MwruVAbgTBd1fFvenwZiZKhNiIaHohRuGfqw6T-pwTIT1Ap"
+}
 
 android {
     compileSdk 32
@@ -11,8 +16,8 @@ android {
         applicationId "com.mcal.apkprotector"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 29
-        versionName "2.9"
+        versionCode 30
+        versionName "3.0"
 
         //ndk {
         //    abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
@@ -79,11 +84,10 @@ dependencies {
     implementation project(':apksigner')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
-    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
+    implementation 'org.jetbrains:annotations:23.0.0'
 
-    implementation 'com.google.android.gms:play-services-ads:19.5.0'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.google.guava:guava:30.1.1-android'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
@@ -104,4 +108,9 @@ dependencies {
     implementation 'org.smali:smali:2.5.2'
     implementation 'org.smali:dexlib2:2.5.2'
     implementation 'org.smali:baksmali:2.5.2'
+
+    // ADS
+    implementation 'com.google.android.gms:play-services-ads:19.5.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation 'com.applovin:applovin-sdk:10.3.2'
 }

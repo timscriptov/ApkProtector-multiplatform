@@ -66,6 +66,9 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
+        <meta-data android:name="applovin.sdk.key"
+            android:value="JaJHyxq_d_Au8f5bHtOuUMHOZOA1ub-ISqVnxKoxP4gxG3eps1KOD3qLV1Wo8RaqovBt4LBHgJ9ThPqoaDNmtV"/>
+
     </application>
 
 </manifest>

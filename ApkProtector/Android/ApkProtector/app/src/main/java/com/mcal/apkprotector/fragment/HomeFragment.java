@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -27,6 +29,11 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdViewAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxAdView;
+import com.applovin.sdk.AppLovinSdk;
 import com.developer.filepicker.model.DialogConfigs;
 import com.developer.filepicker.model.DialogProperties;
 import com.developer.filepicker.view.FilePickerDialog;
@@ -60,8 +67,11 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import ru.svolf.melissa.sheet.SweetContentDialog;
 
-public class HomeFragment extends Fragment implements RewardedVideoAdListener {
+public class HomeFragment extends Fragment implements RewardedVideoAdListener, MaxAdViewAdListener {
     private static final String TAG = "";
+
+    private View mView;
+
     private AppCompatEditText apkPath;
     private AppCompatImageView apkIcon;
     private AppCompatTextView apkName;
@@ -70,7 +80,10 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
     private AppCompatRadioButton dexProtect;
     private AppCompatRadioButton shrinkResources;
     private AppCompatRadioButton signApk;
+
     private AdmobHelper admobHelper;
+    private MaxAdView adView;
+
     View.OnClickListener radioButtonClickListener = v -> {
         AppCompatRadioButton rb = (AppCompatRadioButton) v;
         switch (rb.getId()) {
@@ -127,13 +140,19 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
     @SuppressLint("CutPasteId")
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View mView = inflater.inflate(R.layout.activity_main, container, false);
+        mView = inflater.inflate(R.layout.activity_main, container, false);
         writeFolder();
 
         apkIcon = mView.findViewById(R.id.apkIcon);
         apkName = mView.findViewById(R.id.apkName);
         apkPack = mView.findViewById(R.id.apkPackage);
         apkPath = mView.findViewById(R.id.apkpath);
+
+        // Please make sure to set the mediation provider value to "max" to ensure proper functionality
+        AppLovinSdk.getInstance(getActivity()).setMediationProvider( "max" );
+        AppLovinSdk.initializeSdk(getActivity(), configuration -> {
+            // AppLovin SDK is initialized, start loading ads
+        });
 
         admobHelper = new AdmobHelper(getActivity());
         admobHelper.setMobileAdsId(Constants.mobileAdsId);
@@ -245,7 +264,30 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
         });
 
         initVideoAds();
+        createBannerAd();
         return mView;
+    }
+
+    private void createBannerAd() {
+        adView = new MaxAdView( "0fd0a47c97bb150f", getActivity());
+        adView.setListener( this );
+
+        // Stretch to the width of the screen for banners to be fully functional
+        int width = ViewGroup.LayoutParams.MATCH_PARENT;
+
+        // Banner height on phones and tablets is 50 and 90, respectively
+        int heightPx = getResources().getDimensionPixelSize( R.dimen.banner_height );
+
+        adView.setLayoutParams( new FrameLayout.LayoutParams( width, heightPx ) );
+
+        // Set background or background color for banners to be fully functional
+        //adView.setBackgroundColor();
+
+        ViewGroup rootView = mView.findViewById(R.id.ads);
+        rootView.addView(adView);
+
+        // Load the ad
+        adView.loadAd();
     }
 
     private void runProcess(final File apk) {
@@ -457,5 +499,45 @@ public class HomeFragment extends Fragment implements RewardedVideoAdListener {
     public void onDestroy() {
         super.onDestroy();
         mAd.resume(getContext());
+    }
+
+    @Override
+    public void onAdExpanded(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdCollapsed(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdLoaded(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdDisplayed(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdHidden(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdClicked(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdLoadFailed(String adUnitId, MaxError error) {
+
+    }
+
+    @Override
+    public void onAdDisplayFailed(MaxAd ad, MaxError error) {
+
     }
 }

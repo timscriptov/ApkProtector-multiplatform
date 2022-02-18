@@ -1,0 +1,51 @@
+-- Merging decision tree log ---
+manifest
+ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:2:1-21:12
+INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:2:1-21:12
+INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:2:1-21:12
+	package
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:3:5-49
+		INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+		INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:2:11-69
+application
+ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:5:5-19:19
+	android:supportsRtl
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:9:9-35
+	android:roundIcon
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:8:9-54
+	android:icon
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:7:9-43
+	android:allowBackup
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:6:9-35
+activity#com.admin.ffffffffffffffffffffffff.MainActivity
+ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:10:9-18:20
+	android:exported
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:12:13-36
+	android:name
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:11:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:13:13-17:29
+action#android.intent.action.MAIN
+ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:14:17-69
+	android:name
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:14:25-66
+category#android.intent.category.LAUNCHER
+ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:16:17-77
+	android:name
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml:16:27-74
+uses-sdk
+INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+		INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+		ADDED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml
+		INJECTED from H:\AppProjects\ApkProtector-multiplatform\ApkProtector\Android\DexLoader\lib\src\main\AndroidManifest.xml

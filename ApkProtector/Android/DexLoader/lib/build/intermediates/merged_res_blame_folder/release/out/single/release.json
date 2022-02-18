@@ -1,0 +1,58 @@
+[
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\drawable-anydpi-v24_ic_launcher_foreground.xml.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\generated\\res\\pngs\\release\\drawable-anydpi-v24\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\drawable_ic_launcher_background.xml.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\build\\intermediates\\merged_res\\release\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "H:\\AppProjects\\ffffffffffffffffffffffff\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.webp"
+    }
+]

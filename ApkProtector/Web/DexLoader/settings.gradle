@@ -1,0 +1,3 @@
+rootProject.name = "DexLoader"
+include ':app',
+':lib'
